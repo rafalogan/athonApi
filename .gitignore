@@ -1,0 +1,7 @@
+# IDE ignore
+\.idea
+.DS_Store
+
+# API ignore
+node_modules
+.env
