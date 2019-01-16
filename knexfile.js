@@ -1,8 +1,8 @@
 // Update with your config settings.
-const { client, connection } = require('./.env');
+const { connection } = require('./.env');
 
 module.exports = {
-  client,
+  client: 'mysql',
   connection,
   pool: {
     min: 2,
