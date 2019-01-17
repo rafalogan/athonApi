@@ -45,5 +45,19 @@ module.exports = app => {
         }
     };
 
-    return { existsOrError, notExistisOrError, equalsOrError, categoryFilter, userFilter }
+    const articleFilter = req => {
+        return {
+            id: req.body.id,
+            title: req.body.title,
+            subtitle: req.body.subtitle,
+            description: req.body.description,
+            coverImg: req.body.coverImg,
+            cardImg: req.body.cardImg,
+            content: req.body.content,
+            categoryId: req.body.categoryId,
+            userId: req.body.userId
+        }
+    };
+
+    return { existsOrError, notExistisOrError, equalsOrError, categoryFilter, userFilter, articleFilter }
 };
