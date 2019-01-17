@@ -1,11 +1,11 @@
 module.exports = app => {
-    const existsOrError = (value, msg) => {
+    function existsOrError(value, msg) {
         if (!value) throw msg;
         if (Array.isArray(value) && value.length === 0) throw msg;
         if (typeof value === 'string' && !value.trim()) throw msg;
-    };
+    }
 
-    const notExistisOrError  = (value, msg) => {
+    function notExistisOrError(value, msg) {
         try {
             existsOrError(value, msg);
         } catch (msg) {
@@ -13,11 +13,11 @@ module.exports = app => {
         }
 
         throw msg;
-    };
+    }
 
-    const equalsOrError = (valueA, valueB, msg) => {
+    function equalsOrError(valueA, valueB, msg) {
         if (valueA !== valueB) throw msg
-    };
+    }
 
     return { existsOrError, notExistisOrError, equalsOrError }
 };
