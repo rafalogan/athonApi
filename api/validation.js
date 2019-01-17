@@ -19,5 +19,31 @@ module.exports = app => {
         if (valueA !== valueB) throw msg
     }
 
-    return { existsOrError, notExistisOrError, equalsOrError }
+    const userFilter = req => {
+        const user = {
+            id: req.body.id,
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            admin: req.body.admin
+        };
+
+        if (req.body.confirmPassword) user.confirmPassword = req.body.confirmPassword;
+
+        return user
+    };
+
+    const categoryFilter = req => {
+        return {
+            id: req.body.id,
+            name: req.body.name,
+            description: req.body.description,
+            url: req.body.url,
+            status: req.body.status,
+            parentId: req.body.parentId,
+            userId: req.body.userId
+        }
+    };
+
+    return { existsOrError, notExistisOrError, equalsOrError, categoryFilter, userFilter }
 };

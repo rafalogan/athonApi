@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt-nodejs');
 
 module.exports = app => {
-    const { existsOrError, notExistisOrError, equalsOrError } = app.api.validation;
+    const { existsOrError, notExistisOrError, equalsOrError, userFilter } = app.api.validation;
     const limit = 10; //Pagination
 
     const encryptPassword = password => {
@@ -10,7 +10,7 @@ module.exports = app => {
     };
 
     const save = async (req, res) =>  {
-        const user = { ...req.body };
+        const user = userFilter(req);
 
         if (req.params.id) user.id = req.params.id;
 
