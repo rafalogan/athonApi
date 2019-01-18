@@ -59,5 +59,24 @@ module.exports = app => {
         }
     };
 
-    return { existsOrError, notExistisOrError, equalsOrError, categoryFilter, userFilter, articleFilter }
+    const socialFilter = req => {
+        return {
+            id: req.body.id,
+            network: req.body.network,
+            url: req.body.url,
+            visible: req.body.visible,
+            userUpdatedId: req.body.userUpdatedId,
+            userId: req.body.userId
+        }
+    };
+
+    return {
+        existsOrError,
+        notExistisOrError,
+        equalsOrError,
+        categoryFilter,
+        userFilter,
+        articleFilter,
+        socialFilter
+    }
 };

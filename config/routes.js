@@ -18,5 +18,27 @@ module.exports = app => {
     app.route('/categories/:id')
         .get(app.api.category.getById)
         .put(app.api.category.save)
-        .delete(app.api.category.remove)
+        .delete(app.api.category.remove);
+
+    app.route('/articles')
+        .get(app.api.article.get)
+        .post(app.api.article.save);
+
+    app.route('/articles/:id')
+        .get(app.api.article.getById)
+        .put(app.api.article.save)
+        .delete(app.api.article.remove);
+
+    app.route('/categories/:id/articles')
+        .get(app.api.article.getByCategory);
+
+    app.route('/socialmedias')
+        .get(app.api.social.get)
+        .post(app.api.social.save);
+
+    app.route('/socialmedias/:id')
+        .get(app.api.social.getById)
+        .put(app.api.social.save)
+        .delete(app.api.social.remove);
+
 };
