@@ -105,9 +105,9 @@ module.exports = app => {
             const articles = await app.db('articles').where({ categoryId: req.params.id });
             notExistisOrError(articles, 'A categoria possui artigos!');
 
-            const rowsDeteted = await app.db('categories')
+            const rowsDeleted = await app.db('categories')
                 .where({ id: req.params.id }).del();
-            existsOrError(rowsDeteted, 'Categoria não encontrada!');
+            existsOrError(rowsDeleted, 'Categoria não encontrada!');
 
             return res.status(204).send()
         } catch (msg) {

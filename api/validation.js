@@ -70,6 +70,17 @@ module.exports = app => {
         }
     };
 
+    const contactFilter = req => {
+        return {
+            id: req.body.id,
+            name: req.body.name,
+            email: req.body.email,
+            subject: req.body.subject,
+            phone: req.body.phone,
+            content: req.body.content
+        }
+    };
+
     return {
         existsOrError,
         notExistisOrError,
@@ -77,6 +88,7 @@ module.exports = app => {
         categoryFilter,
         userFilter,
         articleFilter,
-        socialFilter
+        socialFilter,
+        contactFilter
     }
 };

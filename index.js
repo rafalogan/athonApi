@@ -2,8 +2,10 @@ const app = require('express')();
 const consign = require('consign');
 
 const db = require('./config/db');
+const mailer = require('./config/mailer');
 
 app.db = db;
+app.mailer = mailer;
 
 consign()
     .then( './config/middleware.js')

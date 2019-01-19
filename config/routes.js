@@ -41,4 +41,11 @@ module.exports = app => {
         .put(app.api.social.save)
         .delete(app.api.social.remove);
 
+    app.route('/contacts')
+        .get(app.api.contact.get)
+        .post(app.api.contact.save);
+
+    app.route('/contacts/:id')
+        .get(app.api.contact.getById)
+        .delete(app.api.contact.remove);
 };
