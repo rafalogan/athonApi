@@ -8,6 +8,7 @@ app.db = db;
 app.mailer = mailer;
 
 consign()
+    .include('./config/passport.js')
     .then( './config/middleware.js')
     .then('./api/validation.js')
     .then('./api')

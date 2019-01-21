@@ -90,6 +90,13 @@ module.exports = app => {
         }
     };
 
+    const signinFilter = req => {
+        return {
+            email: req.body.email,
+            password: req.body.password
+        }
+    };
+
     return {
         existsOrError,
         notExistisOrError,
@@ -99,6 +106,7 @@ module.exports = app => {
         articleFilter,
         socialFilter,
         contactFilter,
-        newsLetterFilter
+        newsLetterFilter,
+        signinFilter
     }
 };
