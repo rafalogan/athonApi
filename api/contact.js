@@ -20,7 +20,7 @@ module.exports = app => {
 
         try {
             const mailOptions = {
-                from: mailer.user,
+                from: 'no-replay@contact.com',
                 to,
                 subject: contact.subject,
                 text: ` O usuário ${contact.name} acabou de mandar a seguinte mensagem: 

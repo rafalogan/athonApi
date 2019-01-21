@@ -48,4 +48,16 @@ module.exports = app => {
     app.route('/contacts/:id')
         .get(app.api.contact.getById)
         .delete(app.api.contact.remove);
+
+    app.route('/newsletter')
+        .get(app.api.newsletter.get)
+        .post(app.api.newsletter.save);
+
+    app.route('/newsletter/sendnew')
+        .post(app.api.newsletter.sendNews);
+
+    app.route('/newsletter/:id')
+        .get(app.api.newsletter.getById)
+        .put(app.api.newsletter.save)
+        .delete(app.api.newsletter.remove);
 };

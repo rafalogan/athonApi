@@ -44,7 +44,7 @@ module.exports = app => {
     };
 
     const get = async (req, res) => {
-        const page = req.body.page || 1;
+        const page = req.query.page || 1;
         const result = await app.db('users').count('id').first();
         const count = parseInt(result.count);
 

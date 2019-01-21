@@ -81,6 +81,15 @@ module.exports = app => {
         }
     };
 
+    const newsLetterFilter = req => {
+        return {
+            id: req.body.id,
+            name: req.body.name,
+            email: req.body.email,
+            active: req.body.active
+        }
+    };
+
     return {
         existsOrError,
         notExistisOrError,
@@ -89,6 +98,7 @@ module.exports = app => {
         userFilter,
         articleFilter,
         socialFilter,
-        contactFilter
+        contactFilter,
+        newsLetterFilter
     }
 };
