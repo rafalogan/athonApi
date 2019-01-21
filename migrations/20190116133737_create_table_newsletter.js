@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
       table.string('name');
       table.string('email').notNullable().unique();
       table.timestamp('createdAt').notNullable();
-      table.boolean('status').notNullable().defaultTo(true);
+      table.boolean('active').notNullable().defaultTo(true);
     })
 };
 
