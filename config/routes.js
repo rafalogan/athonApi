@@ -87,4 +87,8 @@ module.exports = app => {
         .get(app.api.newsletter.getById)
         .put(admin(app.api.newsletter.save))
         .delete(admin(app.api.newsletter.remove));
+
+    app.route('/stats')
+        .all(app.config.passport.authenticate())
+        .get(app.api.stat.get);
 };
