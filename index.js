@@ -3,9 +3,11 @@ const consign = require('consign');
 
 const db = require('./config/db');
 const mailer = require('./config/mailer');
+const statsDb = require('./config/lowdb');
 
 app.db = db;
 app.mailer = mailer;
+app.statsDb = statsDb;
 
 consign()
     .include('./config/passport.js')
