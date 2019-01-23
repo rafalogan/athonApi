@@ -13,6 +13,8 @@ module.exports = app => {
         const user = userFilter(req);
 
         if (req.params.id) user.id = req.params.id;
+        if (!req.originalUrl.startsWith('/users')) user.admin = false;
+        if (!req.user || !req.user.admin) user.admin = false;
 
         try {
             existsOrError(user.name, 'Nome Completo precisa ser informado!');
