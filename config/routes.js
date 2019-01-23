@@ -73,6 +73,21 @@ module.exports = app => {
         .get(app.api.contact.getById)
         .delete(admin(app.api.contact.remove));
 
+    app.route('/answers')
+        .all(app.config.passport.authenticate())
+        .get(app.api.answer.get)
+        .post(app.api.answer.save);
+
+    app.route('/answers/:id')
+        .all(app.config.passport.authenticate())
+        .get(app.api.answer.getById)
+        .put(app.api.answer.save)
+        .delete(admin(app.api.answer.remove));
+
+    app.route('/answers/send')
+        .all(app.config.passport.authenticate())
+        .post(app.api.answer.sendAnswer);
+
     app.route('/newsletter')
         .all(app.config.passport.authenticate())
         .get(app.api.newsletter.get)

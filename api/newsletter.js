@@ -1,5 +1,3 @@
-const { mailer } = require('../.env');
-
 module.exports = app => {
     const {existsOrError, notExistisOrError, newsLetterFilter}  = app.api.validation;
     const limit = 10;
@@ -36,7 +34,7 @@ module.exports = app => {
 
     const get = async (req, res) => {
         const page = req.query.page || 1;
-        const result = await app.db('newsletter').count('id').first();
+        const result = await app.db('newsletter').count({ count: 'id' }).first();
         const count = parseInt(result.count);
 
         app.db('newsletter')
