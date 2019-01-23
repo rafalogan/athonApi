@@ -6,7 +6,7 @@ module.exports = app => {
     app.post('/validateToken', app.api.auth.validateToken);
     app.post('/contact', app.api.contact.save);
     app.post('/subscribe', app.api.newsletter.save);
-    app.post('/subscribe/cancel/:id', app.api.newsletter.save);
+    app.put('/subscribe/:id', app.api.newsletter.save);
 
     app.get('/navbar', app.api.category.getTree);
     app.get('/card/:id/content', app.api.article.getByCategory);
@@ -84,7 +84,7 @@ module.exports = app => {
         .put(app.api.answer.save)
         .delete(admin(app.api.answer.remove));
 
-    app.route('/answers/send')
+    app.route('/answers/notification')
         .all(app.config.passport.authenticate())
         .post(app.api.answer.sendAnswer);
 
@@ -93,7 +93,7 @@ module.exports = app => {
         .get(app.api.newsletter.get)
         .post(admin(app.api.newsletter.save));
 
-    app.route('/newsletter/sendnew')
+    app.route('/newsletter/notification')
         .all(app.config.passport.authenticate())
         .post(app.api.newsletter.sendNews);
 
