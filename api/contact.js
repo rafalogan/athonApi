@@ -55,7 +55,7 @@ module.exports = app => {
 
     const get = async (req, res) => {
         const page = req.query.page || 1;
-        const result = await app.db('contact').count('id').first();
+        const result = await app.db('contact').count({ count: 'id' }).first();
         const count = parseInt(result.count);
 
         app.db('contact')

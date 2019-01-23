@@ -97,6 +97,16 @@ module.exports = app => {
         }
     };
 
+    const answerFilter = req => {
+        return {
+            id: req.body.id,
+            subject: req.body.subject,
+            content: req.body.content,
+            userId: req.body.userId,
+            contactId: req.body.contactId
+        }
+    };
+
     return {
         existsOrError,
         notExistisOrError,
@@ -107,6 +117,7 @@ module.exports = app => {
         socialFilter,
         contactFilter,
         newsLetterFilter,
-        signinFilter
+        signinFilter,
+        answerFilter
     }
 };
