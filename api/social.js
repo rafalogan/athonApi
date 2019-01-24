@@ -27,7 +27,7 @@ module.exports = app => {
             if (!social.visible) social.visible = true;
 
             app.db('socialmedia').insert(social)
-                .then(_ => res.status(204).send())
+                .then(_ => res.status(201).send())
                 .catch(err => res.status(500).send(err))
         }
     };

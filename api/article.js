@@ -30,7 +30,7 @@ module.exports = app => {
 
             app.db('articles')
                 .insert(article)
-                .then(_ => res.status(204).send())
+                .then(_ => res.status(201).send())
                 .catch(err => res.status(500).send(err))
         }
     };

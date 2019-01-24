@@ -49,7 +49,7 @@ module.exports = app => {
 
         app.db('contact')
             .insert(contact)
-            .then(_ => res.status(204).send(sendMail.msg))
+            .then(_ => res.status(201).send(sendMail.msg))
             .catch(err => res.status(500).send(err))
     };
 
