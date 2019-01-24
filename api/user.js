@@ -57,8 +57,11 @@ module.exports = app => {
             .catch(err => res.status(500).send(err));
     };
 
-    const getById = (req, res) => {
-        const id = req.params.id ? req.params.id : '';
+    const getById = async (req, res) => {
+        const validId = await app.db('users').count({ count: 'id' })
+            .where({ id: req.params.id }).first();
+
+        if (!validId.count) return res.status(404).send();
 
         app.db('users')
             .select('id', 'name', 'email', 'admin', 'deletedAt')
