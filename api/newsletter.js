@@ -27,7 +27,7 @@ module.exports = app => {
             subscribe.createdAt = new Date();
 
             app.db('newsLetter').insert(subscribe)
-                .then(_ => res.status(204).send())
+                .then(_ => res.status(201).send())
                 .catch(err => res.status(500).send(err))
         }
     };
@@ -43,7 +43,12 @@ module.exports = app => {
             .catch(err => res.status(500).send(err))
     };
 
-    const getById = (req, res) => {
+    const getById = async (req, res) => {
+        const validId = await app.db('newsletter').count({ count: 'id' })
+            .where({ id: req.params.id }).first();
+
+        if (!validId.count) return res.status(404).send();
+
         app.db('newsletter')
             .where({ id: req.params.id })
             .then(subscribe => res.json(subscribe))

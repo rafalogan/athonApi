@@ -53,7 +53,7 @@ module.exports = app => {
 
             app.db('answer')
                 .insert(answer)
-                .then(_ => res.status(204).send())
+                .then(_ => res.status(201).send())
                 .catch(err => res.status(500).send(err))
         }
     };
@@ -69,9 +69,14 @@ module.exports = app => {
             .catch(err => res.status(500).send(err))
     };
 
-    const getById = (req, res) => {
+    const getById = async (req, res) => {
+        const validId = await app.db('answer').count({ count: 'id' })
+            .where({ id: req.params.id }).first();
+
+         if (!validId.count) return res.status(404).send();
+
         app.db('answer')
-            .where({ id: req.params.id })
+            .where({ id: id })
             .then(answer => res.json(answer))
             .catch(err => res.status(500).send(err))
     };
