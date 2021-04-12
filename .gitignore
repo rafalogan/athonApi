@@ -11,6 +11,7 @@
 \build
 **/database/postegres
 **/database/mongodb
+**/database/redis
 \coverage
 \.nyc_output
 
