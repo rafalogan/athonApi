@@ -1,7 +1,18 @@
-# IDE ignore
+# idea's
 \.idea
-.DS_Store
+\.vscode
 
-# API ignore
-node_modules
+# files
+.DS_Store
 .env
+
+# folders
+\dist
+\build
+**/database/postegres
+**/database/mongodb
+\coverage
+\.nyc_output
+
+# Modules
+node_modules
