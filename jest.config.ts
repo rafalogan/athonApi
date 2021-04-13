@@ -1,8 +1,8 @@
 export default {
 	clearMocks: true,
-	coverageDirectory: "coverage",
-	coverageProvider: "v8",
-	coverageReporters: ["json", "text", "lcov", "clover"],
+	coverageDirectory: 'coverage',
+	coverageProvider: 'v8',
+	coverageReporters: ['json', 'text', 'lcov', 'clover'],
 	coverageThreshold: {
 		global: {
 			branch: 100,
@@ -12,6 +12,6 @@ export default {
 		},
 	},
 
-	maxWorkers: "50%",
-	testEnvironment: "node",
+	maxWorkers: '50%',
+	testEnvironment: 'node',
 };
