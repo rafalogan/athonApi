@@ -1,8 +1,16 @@
 export default {
 	clearMocks: true,
-	coverageDirectory: 'coverage',
-	coverageProvider: 'v8',
-	coverageReporters: ['json', 'text', 'lcov', 'clover'],
+	coverageDirectory: "coverage",
+	coverageProvider: "v8",
+	coverageReporters: ["json", "text", "lcov", "clover"],
+	moduleFileExtensions: ["js", "json", "jsx", "ts", "tsx", "node"],
+	moduleNameMapper: {
+		"src/(.*)": "<rootDir>/src/$1",
+	},
+	roots: ["<rootDir>/src"],
+	transform: {
+		".+\\.ts$": "ts-jest"
+	},
 	coverageThreshold: {
 		global: {
 			branch: 100,
@@ -12,6 +20,7 @@ export default {
 		},
 	},
 
-	maxWorkers: '50%',
-	testEnvironment: 'node',
+	maxWorkers: "50%",
+	testEnvironment: "node",
+	watchPathIgnorePatterns: ["node_modules"]
 };

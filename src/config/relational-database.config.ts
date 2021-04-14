@@ -1,18 +1,17 @@
 import { IConnection, IMigration, IPool, IRelational } from 'src/config/types/database';
 
 export default class RelationalDatabaseConfig implements IRelational {
-	client: string;
+	client = process.env.DB_CLIENT || 'pg';
 	connection: string | IConnection;
 	pool: IPool;
 	migrations: IMigration;
-	timezone: string;
+	timezone = process.env.TIMEZONE || 'America/Sao_Paulo';
+	port = Number(process.env.DB_PORT) || 5432;
 
 	constructor() {
-		this.client = process.env.DB_CLIENT || 'pg';
 		this.connection = this._setConnection();
 		this.pool = this._setPool();
 		this.migrations = this._setMigrations();
-		this.timezone = process.env.TIMEZONE || 'America/Sao_Paulo';
 	}
 
 	private _setConnection(): IConnection {

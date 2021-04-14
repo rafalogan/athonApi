@@ -4,6 +4,17 @@ export interface IRelational {
 	pool?: IPool;
 	migrations?: IMigration;
 	timezone?: string;
+	port:number;
+}
+
+export interface INoRelational {
+	prefix: string;
+	user: string;
+	password: string;
+	host: string;
+	port: number;
+	database: string;
+	connection?: string;
 }
 
 export interface IConnection {

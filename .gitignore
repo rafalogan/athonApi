@@ -1,12 +1,12 @@
-# idea's
+# IDEA'S
 \.idea
 \.vscode
 
-# files
+# FILES
 .DS_Store
 .env
 
-# folders
+# FOLDERS
 \dist
 \build
 **/database/postegres
@@ -15,5 +15,6 @@
 \coverage
 \.nyc_output
 
-# Modules
+# MODULES
 node_modules
+vnedor

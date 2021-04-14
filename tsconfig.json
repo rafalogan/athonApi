@@ -1,7 +1,8 @@
 {
+	"compileOnSave": false,
 	"compilerOptions": {
 		"target": "es6",
-		"module": "commonjs",
+		"module": "esnext",
 		"baseUrl": "src",
 		"rootDir": "src",
 		"outDir": "./dist",
@@ -28,7 +29,9 @@
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
-		"noImplicitAny": false
+		"noImplicitAny": false,
+		"importHelpers": true,
+		"skipLibCheck": true,
 	},
 	"ts-node": {
 		"transpileOnly": true
