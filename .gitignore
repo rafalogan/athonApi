@@ -5,11 +5,13 @@
 # FILES
 .DS_Store
 .env
+.env.testing
 
 # FOLDERS
 # TYPESCRIPT COPILETD CODE
 dist
 \build
+ssl/
 **/database/postegres
 **/database/mongodb
 **/database/redis

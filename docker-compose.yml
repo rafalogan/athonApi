@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: "root"
       POSTGRES_PASSWORD: "root@100"
-      POSTGRES_DB: "athon-db"
+      POSTGRES_DB: "athon_db"
     volumes:
       - ./database/postegres:/var/lib/postgresql/data
     ports:
