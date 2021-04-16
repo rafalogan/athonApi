@@ -5,12 +5,12 @@ export default {
 	coverageProvider: 'v8',
 	coverageReporters: ['json', 'text', 'lcov', 'clover'],
 	moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node'],
-	preset: 'ts-jest',
 	moduleNameMapper: {
 		'src/(.*)': '<rootDir>/src/$1',
-		'test/(.*)': '<rootDir>/test/$1',
 	},
-	// roots: ['<rootDir>/src'],
+	roots: ['<rootDir>/src'],
+	modulePaths: ['<rootDir>'],
+	testEnvironment: 'node',
 	transform: {
 		'.+\\.ts$': 'ts-jest',
 	},
@@ -24,6 +24,5 @@ export default {
 	},
 
 	maxWorkers: '50%',
-	testEnvironment: 'node',
 	watchPathIgnorePatterns: ['node_modules', '<rootDir>/test'],
 };
