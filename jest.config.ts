@@ -22,7 +22,6 @@ export default {
 			statements: 100,
 		},
 	},
-
 	maxWorkers: '50%',
 	watchPathIgnorePatterns: ['node_modules', '<rootDir>/test'],
 };

@@ -1,12 +1,8 @@
-import dotenv from 'dotenv';
-
 import { IProfile } from 'src/environment/types/profile';
 import { INoRelationalDatabase } from 'src/environment/types/no-relational-database';
 import { ICache } from 'src/environment/types/cache';
 import { ISecurity } from 'src/environment/types/security';
 import { IConnection, IConnectionSqlite, IRelationalDatabase } from 'src/environment/types/relational-database';
-
-if (!process.env.NODE_ENV || process.env.NODE_ENV !== 'production') dotenv.config({ path: process.env.NODE_ENV === 'test' ? '.env.testing' : '.env' });
 
 export default class ProfileEnv implements IProfile {
 	env: string = process.env.NODE_ENV || '';
