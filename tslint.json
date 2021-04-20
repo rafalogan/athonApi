@@ -19,6 +19,8 @@
 			"single"
 		],
 		"no-console": false,
+		"no-var-requires": false,
+		"no-namespace": false,
 		"space-before-function-paren": {
 			"options": {
 				"anonymous": "never",
