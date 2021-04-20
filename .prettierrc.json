@@ -3,7 +3,7 @@
 	"tabWidth": 2,
 	"semi": true,
 	"singleQuote": true,
-	"printWidth": 500,
+	"printWidth": 250,
 	"arrowParens": "avoid",
 	"preserve": "never",
 	"tslintIntegration": true
