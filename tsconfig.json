@@ -13,15 +13,19 @@
 			"es2020"
 		],
 		"strict": true,
-		"baseUrl": "src",
+		"baseUrl": ".",
 		"rootDirs": [
 			"src",
-			"test"
+			"test",
+			"migrations"
 		],
 		"outDir": "dist",
 		"paths": {
+			"migrations": [
+				"./migrations/*"
+			],
 			"src/*": [
-				"*"
+				"./src/*"
 			],
 			"test/*": [
 				"./test/*"
@@ -56,8 +60,10 @@
 		"skipLibCheck": true
 	},
 	"include": [
+		"migrations/**/*",
 		"src/**/*",
-		"test/**/*"
+		"test/**/*",
+		"knexfile.ts"
 	],
 	"exclude": [
 		"node_modules",
