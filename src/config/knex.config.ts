@@ -1,7 +1,6 @@
 import { IConnection, IConnectionSqlite } from 'src/environment/types/relational-database';
 import { IProfile } from 'src/environment/types/profile';
 import { IKnexFile, IMigration, IPool } from 'src/config/types/knex-file';
-import { camelToSnake, snakeToCamel } from 'src/util';
 
 export default class KnexConfig implements IKnexFile {
 	client: string;
