@@ -1,10 +1,8 @@
 import { format, LoggerOptions, transports } from 'winston';
 
-import KnexConfig from 'src/config/knex.config';
-import { profile } from 'src/environment';
 import LoggerConfig from 'src/config/logger.config';
 
-const loggerOptions: LoggerOptions = {
+const MockLoggerOptions: LoggerOptions = {
 	level: 'info',
 	format: format.combine(
 		format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
@@ -21,5 +19,11 @@ const loggerOptions: LoggerOptions = {
 	],
 };
 
-export const knexConfig = new KnexConfig(profile);
-export const logger = new LoggerConfig(loggerOptions).logger;
+describe('#LoggerConfig Suit', () => {
+	beforeEach(() => jest.clearAllMocks());
+
+	test('Should return settings to an information log', async () => {
+		const loggerTest = new LoggerConfig(MockLoggerOptions);
+		expect(loggerTest.logger).toBeDefined();
+	});
+});

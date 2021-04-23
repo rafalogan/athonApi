@@ -12,7 +12,7 @@ describe('#KenexConfig Suite', () => {
 		jest.clearAllMocks();
 	});
 
-	test('Should', () => {
+	test('Should to return the object needed to configure Knex', () => {
 		const knexConfig = new KnexConfig(profile);
 		const expected = MockKnexFile;
 
