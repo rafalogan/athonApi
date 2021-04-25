@@ -1,4 +1,5 @@
 import KnexConfig from 'src/config/knex.config';
+
 import MockProfile from 'database/tests/mocks/mock-profile.json';
 import MockKnexFile from 'database/tests/mocks/mock-knex-file.json';
 
