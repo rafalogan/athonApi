@@ -4,6 +4,8 @@ import KnexConfig from 'src/config/knex.config';
 import { profile } from 'src/environment';
 import LoggerConfig from 'src/config/logger.config';
 
+const { relationalDatabase, timezone } = profile;
+
 const loggerOptions: LoggerOptions = {
 	level: 'info',
 	format: format.combine(
@@ -21,5 +23,5 @@ const loggerOptions: LoggerOptions = {
 	],
 };
 
-export const knexConfig = new KnexConfig(profile);
+export const knexConfig = new KnexConfig(relationalDatabase, timezone);
 export const logger = new LoggerConfig(loggerOptions).logger;

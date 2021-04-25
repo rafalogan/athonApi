@@ -1,0 +1,27 @@
+{
+	"env": "",
+	"host": "",
+	"port": 0,
+	"timezone": "",
+	"relationalDatabase": {
+		"client": "",
+		"port": 0,
+		"connection": { "host": "", "user": "", "password": "", "database": "" }
+	},
+	"noRelationalDatabase": {
+		"prefix": "",
+		"user": "",
+		"password": "",
+		"host": "",
+		"port": 0,
+		"database": ""
+	},
+	"cache": { "host": "", "port": 0 },
+	"security": {
+		"saltRounds": 0,
+		"EnableHTTPS": false,
+		"cert": "",
+		"key": "",
+		"authSecret": ""
+	}
+}

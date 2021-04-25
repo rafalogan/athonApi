@@ -1,0 +1,6 @@
+{
+	"name": "athon_api",
+	"version": "1.4.0",
+	"cert": "-----BEGIN CERTIFICATE REQUEST-----\nYXNkYXNqYWhraiBBcnF1aXZvIGRlIHRlc3RlIHBhcmEgY29u\nZmlncyBkbyBzZXJ2aWRvciBodHRwcy9zc2wgbGtzYWxrbmRzY\nWxrCmFzZGtmbmFzamZhaXNuZGZvLiBhaXNkIGZhc2QgaWZhbi\nBzb2YgYWkgZm9haSBhaXNkZiBpc2EgaW9mIGRzaQphZGZhaXN\nkamYgaXNhZCBmaWFkcyBmb2lzZGEgZmFzZGFkZiBhaWRzamYgb\n2lhc2RqIGZhcyBsamEgc2Rma25sLGEgZGZwYXNkZmlhIGZhCmZ\nhbGRmIHBhaiBmcGEgZjtrYSBvaWZlIGZpYWllZmogYXBlaWogZ\nmFtc2Rmc2phZmlvdWV3aiA=\n-----END CERTIFICATE REQUEST-----\n",
+	"key": "-----BEGIN CERTIFICATE REQUEST-----\nYXNkYXNqYWhraiBBcnF1aXZvIGRlIHRlc3RlIHBhcmEgY29u\nZmlncyBkbyBzZXJ2aWRvciBodHRwcy9zc2wgbGtzYWxrbmRzY\nWxrCmFzZGtmbmFzamZhaXNuZGZvLiBhaXNkIGZhc2QgaWZhbi\nBzb2YgYWkgZm9haSBhaXNkZiBpc2EgaW9mIGRzaQphZGZhaXN\nkamYgaXNhZCBmaWFkcyBmb2lzZGEgZmFzZGFkZiBhaWRzamYgb\n2lhc2RqIGZhcyBsamEgc2Rma25sLGEgZGZwYXNkZmlhIGZhCmZ\nhbGRmIHBhaiBmcGEgZjtrYSBvaWZlIGZpYWllZmogYXBlaWogZ\nmFtc2Rmc2phZmlvdWV3aiA=\n-----END CERTIFICATE REQUEST-----\n"
+}

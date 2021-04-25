@@ -1,5 +1,4 @@
-import { IConnection, IConnectionSqlite } from 'src/environment/types/relational-database';
-import { IProfile } from 'src/environment/types/profile';
+import { IConnection, IConnectionSqlite, IRelationalDatabase } from 'src/environment/types/relational-database';
 import { IKnexFile, IMigration, IPool } from 'src/config/types/knex-file';
 
 export default class KnexConfig implements IKnexFile {
@@ -10,20 +9,19 @@ export default class KnexConfig implements IKnexFile {
 	migration: IMigration;
 	timezone: string;
 
-	constructor(private profile: IProfile) {
-		const { relationalDatabase, timezone } = this.profile;
-
-		this.client = relationalDatabase.client;
-		this.connection = relationalDatabase.connection;
-		this.pool = this.setPool();
-		this.migration = this.setMigration();
+	constructor(props: IRelationalDatabase, timezone: string, version = '') {
+		this.client = props.client;
+		this.connection = props.connection;
+		this.version = version;
+		this.pool = this.setDefaultPool();
+		this.migration = this.setDefaultMigration();
 		this.timezone = timezone;
 	}
 
 	getFile(): IKnexFile {
 		return {
 			client: this.client,
-			version: this.version ? this.version : '',
+			version: this.version,
 			connection: this.connection,
 			pool: this.pool,
 			migration: this.migration,
@@ -31,14 +29,14 @@ export default class KnexConfig implements IKnexFile {
 		};
 	}
 
-	private setPool(): IPool {
+	private setDefaultPool(): IPool {
 		return {
 			min: 1,
 			max: 10,
 		};
 	}
 
-	private setMigration(): IMigration {
+	private setDefaultMigration(): IMigration {
 		return {
 			tableName: 'knex_migrations',
 			directory: 'migrations',
