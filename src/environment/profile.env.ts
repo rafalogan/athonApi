@@ -1,10 +1,10 @@
-import { IProfile } from 'src/environment/types/profile';
+import { IProfileEnv } from 'src/environment/types/profile';
 import { INoRelationalDatabase } from 'src/environment/types/no-relational-database';
 import { ICache } from 'src/environment/types/cache';
 import { ISecurity } from 'src/environment/types/security';
 import { IConnection, IConnectionSqlite, IRelationalDatabase } from 'src/environment/types/relational-database';
 
-export default class ProfileEnv implements IProfile {
+export default class ProfileEnv implements IProfileEnv {
 	env: string = process.env.NODE_ENV || '';
 	host: string = process.env.HOST || '';
 	port: number = Number(process.env.PORT) || 0;
