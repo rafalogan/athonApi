@@ -1,6 +1,6 @@
-export interface IProfileRule {
+import { ITimestampsfileds } from 'src/core/entities/types/timestamps';
+
+export interface IProfileRule extends ITimestampsfileds {
 	profileId: number;
 	ruleId: number;
-	createdAt?: Date;
-	updatedAt?: Date;
 }

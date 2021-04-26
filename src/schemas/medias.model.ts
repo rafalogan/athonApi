@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose';
 const MediasSchema = new Schema(
 	{
 		file: {
-			type: Schema,
+			type: String,
 			required: true,
 		},
 		title: {
