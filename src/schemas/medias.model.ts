@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 
+import { IMediaModel } from 'src/core/entities/types/media';
+
 const MediasSchema = new Schema(
 	{
 		file: {
@@ -29,6 +31,6 @@ const MediasSchema = new Schema(
 	}
 );
 
-const MediasModel = model('Medias', MediasSchema);
+const MediasModel = model<IMediaModel>('Medias', MediasSchema);
 
 export default MediasModel;
