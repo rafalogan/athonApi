@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 
+import { ICategoryModel } from 'src/core/entities/types/category';
+
 const CategoriesSchema = new Schema(
 	{
 		name: {
@@ -34,6 +36,6 @@ const CategoriesSchema = new Schema(
 	{ timestamps: true }
 );
 
-const CategoriesModel = model('Categories', CategoriesSchema);
+const CategoriesModel = model<ICategoryModel>('Categories', CategoriesSchema);
 
 export default CategoriesModel;

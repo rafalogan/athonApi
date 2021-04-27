@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
+
 import SocialMediaModel from 'src/schemas/social-media.model';
+import { IArticleModel } from 'src/core/entities/types/article';
 
 const ArticlesSchema = new Schema(
 	{
@@ -40,6 +42,6 @@ const ArticlesSchema = new Schema(
 	{ timestamps: true }
 );
 
-const ArticlesModel = model('Articles', ArticlesSchema);
+const ArticlesModel = model<IArticleModel>('Articles', ArticlesSchema);
 
 export default ArticlesModel;
