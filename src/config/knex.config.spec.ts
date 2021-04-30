@@ -11,8 +11,6 @@ describe('#KenexConfig Suite', () => {
 		const knexConfig = new KnexConfig(relationalDatabase, timezone);
 		const expected = MockKnexFile;
 
-		const result = knexConfig.getFile();
-
-		expect(result).toStrictEqual(expected);
+		expect(knexConfig).toEqual(expected);
 	});
 });

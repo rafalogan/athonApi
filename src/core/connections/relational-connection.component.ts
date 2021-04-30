@@ -4,7 +4,7 @@ import Config = Knex.Config;
 import LogHandler from 'src/core/handlers/log.handler';
 import KnexConfig from 'src/config/knex.config';
 
-export default class RelationalConnection {
+export default class RelationalConnectionComponent {
 	connection: Knex;
 
 	constructor(private file: KnexConfig, private log: LogHandler) {

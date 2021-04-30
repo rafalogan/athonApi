@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import LogHandler from 'src/core/handlers/log.handler';
 import { INoRelationalDatabase } from 'src/environment/types/no-relational-database';
 
-export default class NoRelationalConnection {
+export default class NoRelationalConnectionComponent {
 	private connectionString: string;
 	connection: Promise<mongoose.Mongoose | void>;
 
