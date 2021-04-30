@@ -61,11 +61,12 @@
 		"skipLibCheck": true
 	},
 	"include": [
-		"migrations/**/*",
-		"src/**/*",
-		"test/**/*",
-		"knexfile.ts"
-	],
+      "migrations/**/*",
+      "src/**/*",
+      "test/**/*",
+      "knexfile.ts",
+      "node_modules/pg-protocol/dist/connection.d.ts"
+    ],
 	"exclude": [
 		"node_modules",
 		"dist",

@@ -16,7 +16,7 @@ export default class ProfileEnv implements IProfileEnv {
 
 	constructor() {
 		this.relationalDatabase = this.setRelationalDatabase();
-		this.noRelationalDatabase = this.setNorelationalDatabase();
+		this.noRelationalDatabase = this.setNoRelationalDatabase();
 		this.cache = this.setCache();
 		this.security = this.setSecurity();
 	}
@@ -43,7 +43,7 @@ export default class ProfileEnv implements IProfileEnv {
 		};
 	}
 
-	private setNorelationalDatabase(): INoRelationalDatabase {
+	private setNoRelationalDatabase(): INoRelationalDatabase {
 		return {
 			prefix: process.env.DBNR_PREFIX || '',
 			user: process.env.DBNR_USER || '',

@@ -1,3 +1,6 @@
+import { Knex } from 'knex';
+import MigratorConfig = Knex.MigratorConfig;
+
 import { IConnection, IConnectionSqlite, IRelationalDatabase } from 'src/environment/types/relational-database';
 import { IKnexFile, IMigration, IPool } from 'src/config/types/knex-file';
 
@@ -16,17 +19,6 @@ export default class KnexConfig implements IKnexFile {
 		this.pool = this.setDefaultPool();
 		this.migration = this.setDefaultMigration();
 		this.timezone = timezone;
-	}
-
-	getFile(): IKnexFile {
-		return {
-			client: this.client,
-			version: this.version,
-			connection: this.connection,
-			pool: this.pool,
-			migration: this.migration,
-			timezone: this.timezone,
-		};
 	}
 
 	private setDefaultPool(): IPool {

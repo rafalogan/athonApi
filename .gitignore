@@ -12,8 +12,9 @@
 dist
 \build
 ssl/
-**/database/postegres
+**/database/postgres
 **/database/mongodb
+**/database/mongo
 **/database/redis
 # COVERAGE DIRECTORY USED BY TOOLS LIKE ISTANBUL
 \coverage
