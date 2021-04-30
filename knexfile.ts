@@ -3,4 +3,4 @@ require('tsconfig-paths/register');
 
 import { knexConfig } from 'src/config';
 
-module.exports = knexConfig.getFile();
+module.exports = knexConfig;
