@@ -1,11 +1,11 @@
 import { Logger, createLogger, LoggerOptions } from 'winston';
 
-export default class LoggerConfig {
+export class LoggerConfig {
 	private readonly _logger: Logger;
 
 	constructor(private options: LoggerOptions) {
 		this._logger = this.create();
-		this._logger.stream({ write: this.write() });
+		// this._logger.stream({ write: (message: string) => this.logger.info(message.trim()) });
 	}
 
 	get logger() {
@@ -13,9 +13,5 @@ export default class LoggerConfig {
 	}
 	private create() {
 		return createLogger(this.options);
-	}
-
-	private write() {
-		return (message: string) => this.logger.info(message.trim());
 	}
 }

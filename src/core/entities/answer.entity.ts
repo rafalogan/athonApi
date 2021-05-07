@@ -1,6 +1,6 @@
 import { IAnswer } from 'src/core/entities/types/answer';
 
-export default class Answer implements IAnswer {
+export class Answer implements IAnswer {
 	id: number;
 	subject: string;
 	content: string;

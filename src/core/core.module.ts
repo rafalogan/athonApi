@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
@@ -7,7 +7,7 @@ import { Logger } from 'winston';
 export default class CoreModule {
 	private readonly _express: Application;
 
-	constructor(private logger: Logger) {
+	constructor(private emv: string, private logger: Logger) {
 		this._express = express();
 
 		this.expressInit();
@@ -20,12 +20,21 @@ export default class CoreModule {
 
 	private expressInit() {
 		this.express.use(cors());
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		this.express.use(morgan('combined', { stream: this.logger.stream }));
+		this.express.use(this._morganConfig());
 		this.express.use(bodyParser.urlencoded({ extended: false }));
 		this.express.use(bodyParser.json());
 	}
 
-	private modules() {}
+	private _morganConfig() {
+		const format = this.emv === 'development' || this.emv === 'test' ? 'dev' : 'combined';
+		const stream = {
+			write: (message: string) => this.logger.info(message.trim()),
+		};
+
+		return morgan(format, { stream });
+	}
+
+	private modules() {
+		this.express.get('/', (req: Request, res: Response) => res.status(200).json({ status: 200, message: "OK: Api ist work's" }));
+	}
 }

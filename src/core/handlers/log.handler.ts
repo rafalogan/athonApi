@@ -1,6 +1,6 @@
 import { Logger } from 'winston';
 
-export default class LogHandler {
+export class LogHandler {
 	env: string;
 	isDebug: boolean;
 
@@ -10,26 +10,26 @@ export default class LogHandler {
 	}
 
 	error(msg: string, ...data: any[]): void {
-		this.logger.error(`ERROR: ${msg}`, ...data);
+		this.logger.error(`${msg}: ${data}`);
 
 		if (this.isDebug) console.error(`ERROR: ${msg}`, data);
 	}
 
 	warn(msg: string, ...optionalParams: any[]) {
-		this.logger.warn(`WARN: ${msg}`, ...optionalParams);
+		this.logger.warn(`${msg}: ${optionalParams} `);
 		if (this.isDebug) console.warn(`WARN: ${msg}`, ...optionalParams);
 	}
 
 	info(msg: string, ...data: any[]) {
-		this.logger.info(`INFO: ${msg}`, ...data);
+		this.logger.info(`${msg} ${data}`);
 	}
 
 	http(msg: string, ...data: any[]) {
-		this.logger.http(`HTTP: ${msg}`, ...data);
+		this.logger.http(`${msg} ${data}`);
 	}
 
 	debug(msg: string, options: any) {
-		if (this.isDebug || options?.acttive) this.logger.debug(`DEBUG: ${msg}`, ...options?.data);
+		if (this.isDebug || options?.acttive) this.logger.debug(`${msg} ${options}`);
 		if (this.isDebug) console.log(`DEBUG: ${msg}`, options?.data);
 	}
 }

@@ -1,6 +1,6 @@
 import { IUserRule } from 'src/core/entities/types/user-rule';
 
-export default class UserRule implements IUserRule {
+export class UserRule implements IUserRule {
 	userId: number;
 	ruleId: number;
 	createdAt?: Date;

@@ -2,7 +2,7 @@ import { Schema, Document } from 'mongoose';
 
 import { ICategory } from 'src/core/entities/types/category';
 
-export default class Category extends Document implements ICategory {
+export class Category extends Document implements ICategory {
 	_id: Schema.Types.ObjectId;
 	name: string;
 	description: string;

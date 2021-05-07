@@ -1,6 +1,6 @@
 import { IUser } from 'src/core/entities/types/user';
 
-export default class User implements IUser {
+export class User implements IUser {
 	id: number;
 	name: string;
 	email: string;

@@ -4,7 +4,7 @@ import { ICache } from 'src/environment/types/cache';
 import { ISecurity } from 'src/environment/types/security';
 import { IConnection, IConnectionSqlite, IRelationalDatabase } from 'src/environment/types/relational-database';
 
-export default class ProfileEnv implements IProfileEnv {
+export class ProfileEnv implements IProfileEnv {
 	env: string = process.env.NODE_ENV || '';
 	host: string = process.env.HOST || '';
 	port: number = Number(process.env.PORT) || 0;
@@ -64,9 +64,10 @@ export default class ProfileEnv implements IProfileEnv {
 	private setSecurity(): ISecurity {
 		return {
 			saltRounds: Number(process.env.SALT_ROUNDS) || 0,
-			EnableHTTPS: process.env.ENABLE_HTTPS === 'true',
+			enableHTTPS: process.env.ENABLE_HTTPS === 'true',
 			cert: process.env.CERT || '',
 			key: process.env.KEY || '',
+			passphrase: process.env.PASSPHRASE || '',
 			authSecret: process.env.AUTHSECRET || '',
 		};
 	}

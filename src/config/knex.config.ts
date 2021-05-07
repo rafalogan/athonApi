@@ -1,10 +1,7 @@
-import { Knex } from 'knex';
-import MigratorConfig = Knex.MigratorConfig;
-
 import { IConnection, IConnectionSqlite, IRelationalDatabase } from 'src/environment/types/relational-database';
 import { IKnexFile, IMigration, IPool } from 'src/config/types/knex-file';
 
-export default class KnexConfig implements IKnexFile {
+export class KnexConfig implements IKnexFile {
 	client: string;
 	version?: string;
 	connection: string | IConnection | IConnectionSqlite;

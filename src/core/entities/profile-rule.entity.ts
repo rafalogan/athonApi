@@ -1,6 +1,6 @@
 import { IProfileRule } from 'src/core/entities/types/profile-rule';
 
-export default class ProfileRule implements IProfileRule {
+export class ProfileRule implements IProfileRule {
 	profileId: number;
 	ruleId: number;
 	createdAt?: Date;

@@ -1,14 +1,15 @@
 import { Schema } from 'mongoose';
 
 import { IArticle } from 'src/core/entities/types/article';
+import { IMedia } from 'src/core/entities/types/media';
 
-export default class Article implements IArticle {
+export class Article implements IArticle {
 	_id: Schema.Types.ObjectId;
 	title: string;
 	subtitle: string;
 	description: string;
 	content: string;
-	medias: Schema.Types.ObjectId;
+	medias: IMedia[];
 	userId: number;
 	categoryId: Schema.Types.ObjectId;
 	createdAt?: Date;

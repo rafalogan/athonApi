@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 
 import { ISocialMedia } from 'src/core/entities/types/social-media';
 
-export default class SocialMedia implements ISocialMedia {
+export class SocialMedia implements ISocialMedia {
 	_id: Schema.Types.ObjectId;
 	url: string;
 	visible: boolean;

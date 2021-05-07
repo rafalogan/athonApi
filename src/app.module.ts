@@ -1,31 +1,35 @@
-import { Application } from 'express';
 import http from 'http';
 import https from 'https';
+import { Application } from 'express';
 
-import LogHandler from 'src/core/handlers/log.handler';
-import { IHttpsOptions } from 'src/environment/types/https-options';
+import { LogHandler } from 'src/core/handlers';
+import { HttpsEnv } from 'src/environment';
 
 export default class AppModule {
-	express: Application;
-	httpsOptions: IHttpsOptions;
-	port: number;
-	enableHTTPS: boolean;
 	baseURL: string;
+	server?: http.Server | https.Server;
 
-	constructor(private log: LogHandler, express: Application, options: IHttpsOptions, baseURL: string, port: number, enableHTTPS: boolean) {
-		this.express = express;
-		this.httpsOptions = options;
-		this.port = port;
-		this.enableHTTPS = enableHTTPS;
-		this.baseURL = baseURL;
+	constructor(
+		private log: LogHandler,
+		private express: Application,
+		private httpsOptions: HttpsEnv,
+		private port: number,
+		private host: string,
+		private enableHTTPS: boolean
+	) {
+		this.baseURL = this._setBaseURL();
 	}
 
 	createServer() {
-		this.enableHTTPS ? this._createHttpServer() : this._createHttpsServer();
+		this.enableHTTPS ? this._createHttpsServer() : this._createHttpServer();
 	}
 
 	private _createHttpServer() {
-		http.createServer(this.express).listen(this.port).on('listening', this._onServerUp.bind(this)).on('error', this._onServerError.bind(this));
+		http
+			.createServer(this.express)
+			.listen(this.port)
+			.on('listening', this._onServerUp.bind(this))
+			.on('error', this._onServerError.bind(this));
 	}
 
 	private _createHttpsServer() {
@@ -38,6 +42,11 @@ export default class AppModule {
 
 	private _onServerUp() {
 		this.log.http(`SERVER ONLINE: ${this.baseURL}`);
+	}
+
+	private _setBaseURL() {
+		const prefix = this.enableHTTPS ? 'https' : 'http';
+		return `${prefix}://${this.host}:${this.port}`;
 	}
 
 	private _onServerError(error: NodeJS.ErrnoException) {

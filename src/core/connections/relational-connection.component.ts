@@ -1,10 +1,10 @@
 import knex, { Knex } from 'knex';
 import Config = Knex.Config;
 
-import LogHandler from 'src/core/handlers/log.handler';
-import KnexConfig from 'src/config/knex.config';
+import { LogHandler } from 'src/core/handlers';
+import { KnexConfig } from 'src/config';
 
-export default class RelationalConnectionComponent {
+export class RelationalConnectionComponent {
 	connection: Knex;
 
 	constructor(private file: KnexConfig, private log: LogHandler) {

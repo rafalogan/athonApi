@@ -1,11 +1,24 @@
 import './util/module-alias';
-import { httpOptions, profile } from 'src/environment';
-import { knexConfig } from 'src/config';
-import { camelToSnake, snakeToCamel } from 'src/util';
 
-console.log(profile);
-console.log(knexConfig);
-console.log(httpOptions);
+import { HttpsEnv, ProfileEnv } from 'src/environment';
+import { LoggerComponent } from 'src/core/libs';
+import { LogHandler } from 'src/core/handlers';
 
-console.log('teste to camel', snakeToCamel('teste_to_camel_case'));
-console.log('teste to saker', camelToSnake('testeToSanker'));
+import CoreModule from 'src/core/core.module';
+import AppModule from 'src/app.module';
+
+import { execDotenv } from 'src/util/validate';
+
+execDotenv();
+
+const profile = new ProfileEnv();
+const { security, port, host } = profile;
+const httpsOptions = new HttpsEnv(security.cert, security.key, security.passphrase);
+
+const logger = new LoggerComponent(profile.env).logger;
+const logHandler = new LogHandler(logger, profile.env);
+
+const coreModule = new CoreModule(profile.env, logger);
+const appModule = new AppModule(logHandler, coreModule.express, httpsOptions, port, host, security.enableHTTPS);
+
+(async () => appModule.createServer())();

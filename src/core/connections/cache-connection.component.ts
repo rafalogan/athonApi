@@ -1,8 +1,8 @@
 import redis, { ClientOpts, RedisClient } from 'redis';
 
-import LogHandler from 'src/core/handlers/log.handler';
+import { LogHandler } from 'src/core/handlers';
 
-export default class CacheConnectionComponent {
+export class CacheConnectionComponent {
 	connection: RedisClient;
 	connectonUp = false;
 

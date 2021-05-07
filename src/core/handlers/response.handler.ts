@@ -1,9 +1,9 @@
 import { Response } from 'express';
 import httpStatus from 'http-status';
 
-import LogHandler from 'src/core/handlers/log.handler';
+import { LogHandler } from 'src/core/handlers/log.handler';
 
-export default class ResponseHandler {
+export class ResponseHandler {
 	private status = httpStatus;
 
 	constructor(private log: LogHandler) {}

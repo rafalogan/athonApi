@@ -1,4 +1,5 @@
 import isEmpty from 'is-empty';
+import dotenv from 'dotenv';
 
 export const existsOrError = (value: any, message: string) => {
 	if (isEmpty(value)) throw message;
@@ -20,4 +21,12 @@ export const notExistisOrError = (value: any, message: string) => {
 
 export const equalsOrError = (valueA: any, valueB: any, message: string) => {
 	if (valueA !== valueB) throw message;
+};
+
+export const execDotenv = () => {
+	const isEnvValid = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
+
+	if (isEnvValid) return dotenv.config({ path: process.env.NODE_ENV === 'test' ? './.emv.testing' : './.env' });
+
+	return;
 };

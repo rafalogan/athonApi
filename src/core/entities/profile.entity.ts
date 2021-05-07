@@ -1,6 +1,6 @@
 import { IProfile } from 'src/core/entities/types/profile';
 
-export default class Profile implements IProfile {
+export class Profile implements IProfile {
 	id: number;
 	title: string;
 	description: string;

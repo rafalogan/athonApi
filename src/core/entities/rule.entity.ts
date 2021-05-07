@@ -1,6 +1,6 @@
 import { IRule } from 'src/core/entities/types/rule';
 
-export default class Rule implements IRule {
+export class Rule implements IRule {
 	id: number;
 	name: string;
 	description: string;

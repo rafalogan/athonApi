@@ -1,7 +1,7 @@
 import { IPayload } from 'src/core/entities/types/payload';
 import { IProfile } from 'src/core/entities/types/profile';
 
-export default class Payload implements IPayload {
+export class Payload implements IPayload {
 	id: number;
 	name: string;
 	email: string;

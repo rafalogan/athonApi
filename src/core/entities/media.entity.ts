@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 
 import { IMedia } from 'src/core/entities/types/media';
 
-export default class Media implements IMedia {
+export class Media implements IMedia {
 	_id: Schema.Types.ObjectId;
 	file: string;
 	title: string;

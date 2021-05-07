@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-import LogHandler from 'src/core/handlers/log.handler';
+import { LogHandler } from 'src/core/handlers';
 import { INoRelationalDatabase } from 'src/environment/types/no-relational-database';
 
-export default class NoRelationalConnectionComponent {
+export class NoRelationalConnectionComponent {
 	private connectionString: string;
 	connection: Promise<mongoose.Mongoose | void>;
 

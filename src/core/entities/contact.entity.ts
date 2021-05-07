@@ -1,6 +1,6 @@
 import { IContact } from 'src/core/entities/types/contact';
 
-export default class Contact implements IContact {
+export class Contact implements IContact {
 	id: number;
 	name: string;
 	email: string;

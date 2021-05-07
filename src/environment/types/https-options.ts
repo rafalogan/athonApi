@@ -3,4 +3,5 @@ export interface IHttpsOptions {
 	version?: string;
 	cert: string;
 	key: string;
+	passphrase: string;
 }

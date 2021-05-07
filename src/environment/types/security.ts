@@ -1,7 +1,8 @@
 export interface ISecurity {
 	saltRounds: number;
-	EnableHTTPS: boolean;
+	enableHTTPS: boolean;
 	cert: string;
 	key: string;
+	passphrase: string;
 	authSecret: string;
 }
