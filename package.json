@@ -1,6 +1,6 @@
 {
   "name": "athon_api",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "",
   "main": "server.ts",
   "scripts": {
@@ -35,7 +35,7 @@
     "git:c": "git add -A && git status && git commit -am",
     "up:branch": "BRANCH=$(git branch --show-current) && git push --set-upstream origin $BRANCH",
     "up:commit": "git pull && git push",
-		"up:tags": "git push --follow-tags",
+    "up:tags": "git push --follow-tags",
     "knex:migrate:make": "npx knex migrate:make --knexfile knexfile.ts -x ts",
     "knex:migrate:latest": "npx knex migrate:latest --knexfile knexfile.ts",
     "knex:migrate:rollback": "npx knex migrate:rollback --knexfile knexfile.ts"
