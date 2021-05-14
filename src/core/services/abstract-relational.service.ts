@@ -1,19 +1,12 @@
 import { Knex } from 'knex';
 
 import { LogHandler } from 'src/core/handlers';
-import { IPagination, IReadOptions, IRelationalContext } from 'src/services/types/relational-context';
 import { existsOrError } from 'src/util/validate';
+import { IRPginationOptions, IRelationalContext } from 'src/core/services/types/relational-context';
+import { IPagination } from 'src/core/services/types/pagination';
 
 export abstract class AbstractRelationalService implements IRelationalContext {
-	instance: Knex;
-	table: string;
-	fields: string[];
-
-	constructor(private log: LogHandler, conn: Knex, table: string, fields?: string[]) {
-		this.instance = conn;
-		this.table = table;
-		this.fields = fields || [];
-	}
+	constructor(protected log: LogHandler, protected instance: Knex, protected table: string, protected fields: string[] = []) {}
 
 	create(item: any): Promise<any> {
 		return this.instance(this.table)
@@ -22,7 +15,7 @@ export abstract class AbstractRelationalService implements IRelationalContext {
 			.catch(err => this.log.error(`Insert Failed in Table: ${this.table}`, err));
 	}
 
-	read(options: IReadOptions, id?: number): Promise<any> {
+	read(options: IRPginationOptions, id?: number): Promise<any> {
 		const columns = options.fields ?? this.fields;
 
 		if (id) return this._findOneById(id, columns);
@@ -70,9 +63,9 @@ export abstract class AbstractRelationalService implements IRelationalContext {
 			.catch(err => this.log.error(`Find register failed in ${this.table}`, err));
 	}
 
-	private async _findAll(options: IReadOptions) {
+	private async _findAll(options: IRPginationOptions) {
 		const page = options.page ?? 1;
-		const limit = options.total ?? 1;
+		const limit = options.total ?? 10;
 		const columns = options.fields ?? this.fields;
 		const count = await this._countById();
 		const pagination = this.pagination(page, count, limit);

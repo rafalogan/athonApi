@@ -1,7 +1,6 @@
 import { Schema, Document } from 'mongoose';
 
 import { ITimestampsfileds } from 'src/core/entities/types/timestamps';
-import { ISocialMedia } from 'src/core/entities/types/social-media';
 import { IMedia } from 'src/core/entities/types/media';
 
 export interface IArticle extends ITimestampsfileds {
