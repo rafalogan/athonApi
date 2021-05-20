@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
 
 import { LogHandler } from 'src/core/handlers';
-import { existsOrError } from 'src/util/validate';
 import { IRPginationOptions, IRelationalContext } from 'src/core/services/types/relational-context';
 import { IPagination } from 'src/core/services/types/pagination';
+import { existsOrError } from 'src/util';
 
 export abstract class AbstractRelationalService implements IRelationalContext {
 	constructor(protected log: LogHandler, protected instance: Knex, protected table: string, protected fields: string[] = []) {}
