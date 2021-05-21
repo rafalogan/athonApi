@@ -1,12 +1,27 @@
 import { Knex } from 'knex';
+import { RedisClient } from 'redis';
 
 import { LogHandler } from 'src/core/handlers';
 import { IRPginationOptions, IRelationalContext } from 'src/core/services/types/relational-context';
 import { IPagination } from 'src/core/services/types/pagination';
 import { existsOrError } from 'src/util';
+import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
 
-export abstract class AbstractRelationalService implements IRelationalContext {
-	constructor(protected log: LogHandler, protected instance: Knex, protected table: string, protected fields: string[] = []) {}
+export abstract class AbstractRelationalService extends AbstractCacheService implements IRelationalContext {
+	constructor(
+		protected instance: Knex,
+		protected table: string,
+		protected fields: string[] = [],
+		protected enableCache: boolean,
+		private serviceName: string,
+		log: LogHandler,
+		cacheClient: RedisClient,
+		cachedSattus: boolean,
+		env: string,
+		protected cacheTime?: number
+	) {
+		super(cacheClient, cachedSattus, log, env);
+	}
 
 	create(item: any): Promise<any> {
 		return this.instance(this.table)
@@ -18,15 +33,18 @@ export abstract class AbstractRelationalService implements IRelationalContext {
 	read(options: IRPginationOptions, id?: number): Promise<any> {
 		const columns = options.fields ?? this.fields;
 
-		if (id) return this._findOneById(id, columns);
-		return this._findAll(options);
+		if (this.enableCache) return this._checkCache(options, id, columns);
+		return id ? this._findOneById(id, columns) : this._findAll(options);
 	}
 
 	update(values: any, id: number): Promise<any> {
 		return this.instance(this.table)
 			.update(values)
 			.where({ id })
-			.then(result => result)
+			.then(async result => {
+				await this._clearCache(id);
+				return result;
+			})
 			.catch(err => this.log.error(`Update on register nº ${id} in table: ${this.table}`, err));
 	}
 
@@ -41,7 +59,13 @@ export abstract class AbstractRelationalService implements IRelationalContext {
 		return this.instance(this.table)
 			.where({ id })
 			.del()
-			.then(result => ({ deleted: result > 0, element }))
+			.then(async result => {
+				await this._clearCache(id);
+				return {
+					deleted: result > 0,
+					element,
+				};
+			})
 			.catch(err => this.log.error(`Not possible to delete nº ${id} in table: ${this.table}`, err));
 	}
 
@@ -82,5 +106,16 @@ export abstract class AbstractRelationalService implements IRelationalContext {
 	private async _countById() {
 		const result = await this.instance(this.table).count({ count: 'id' }).first();
 		return Number(result?.count);
+	}
+
+	private _checkCache(options: IRPginationOptions, id?: number, columns: string[] = []) {
+		return id
+			? this.findCahce({ serviceName: this.serviceName, id }, () => this._findOneById(id, columns), this.cacheTime)
+			: this.findCahce({ serviceName: this.serviceName, id: 'list' }, () => this._findAll(options), this.cacheTime);
+	}
+
+	private async _clearCache(id: any = 'list') {
+		if (id !== 'list') await this.deleteCahce({ serviceName: this.serviceName, id });
+		return this.deleteCahce({ serviceName: this.serviceName, id: 'list' });
 	}
 }
