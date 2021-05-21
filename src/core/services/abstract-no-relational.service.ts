@@ -1,27 +1,25 @@
 import mongoose from 'mongoose';
 
-import { INoRelationaContext } from 'src/core/services/types/no-relationa-context';
-import { LogHandler } from 'src/core/handlers';
-import { IPaginationOptions } from 'src/core/services/types/pagination';
-import { existsOrError } from 'src/util/validate';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
-import { RedisClient } from 'redis';
+import { IEnvServiceOptions } from 'src/services/types';
+import { existsOrError } from 'src/util/validate';
+import { ICServiceOptions, INoRelationaContext, INRServiceOptions, IPaginationOptions } from 'src/core/services/types';
 
 export abstract class AbstractNoRelationalService<D extends mongoose.Document> extends AbstractCacheService implements INoRelationaContext {
 	protected name: string;
+	protected instanceModel: mongoose.Model<D>;
+	protected enableCache: boolean;
+	protected cacheTime?: number;
 
-	constructor(
-		protected instanceModel: mongoose.Model<D>,
-		protected enableCache: boolean,
-		private serviceName: string,
-		log: LogHandler,
-		cacheClient: RedisClient,
-		cachedSattus: boolean,
-		env: string,
-		protected cacheTime?: number
-	) {
-		super(cacheClient, cachedSattus, log, env);
-		this.name = this.instanceModel.name;
+	private serviceName: string;
+
+	constructor(serviceOptions: INRServiceOptions, cacheServiceOptions: ICServiceOptions, envServiceOptions: IEnvServiceOptions) {
+		super(cacheServiceOptions, serviceOptions.log, envServiceOptions.env);
+		this.instanceModel = serviceOptions.instanceModel;
+		this.enableCache = envServiceOptions?.enableCache || false;
+		this.cacheTime = envServiceOptions?.defaultCacheTime;
+		this.name = serviceOptions.colectionName;
+		this.serviceName = serviceOptions.serviceName;
 	}
 
 	create(values: any): Promise<any> {

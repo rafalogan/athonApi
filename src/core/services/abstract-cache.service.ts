@@ -2,7 +2,7 @@ import { promisify } from 'util';
 import { RedisClient } from 'redis';
 import md5 from 'md5';
 
-import { IkeyOptions } from 'src/core/services/types';
+import { ICServiceOptions, IkeyOptions } from 'src/core/services/types';
 import { existsOrError } from 'src/util';
 import { LogHandler } from 'src/core/handlers';
 import isEmpty from 'is-empty';
@@ -11,13 +11,21 @@ export abstract class AbstractCacheService {
 	private _getAsync: (key: any) => Promise<any>;
 	private _setAsync: (key: any, parseData: string, ex: string, parseTime: number) => Promise<any>;
 	private _delAsync: (key: any) => Promise<any>;
-	protected isValidEnv: boolean;
+	private client: RedisClient;
+	private clientActive: boolean;
 
-	constructor(private client: RedisClient, private clientActive: boolean, protected log: LogHandler, env: string) {
+	protected isValidEnv: boolean;
+	protected log: LogHandler;
+
+	constructor(serviceOptions: ICServiceOptions, log: LogHandler, env: string) {
+		this.client = serviceOptions.client;
+		this.clientActive = serviceOptions.status;
+		this.log = log;
+		this.isValidEnv = env !== 'production';
+
 		this._getAsync = promisify(this.client.get).bind(this.client);
 		this._setAsync = promisify(this.client.set).bind(this.client);
 		this._delAsync = promisify(this.client.del).bind(this.client);
-		this.isValidEnv = env !== 'production';
 	}
 
 	private async _create(key: any, fn: () => Promise<any>, time?: number) {

@@ -1,4 +1,7 @@
+import { Knex } from 'knex';
+
 import { IPagination, IPaginationOptions } from 'src/core/services/types/pagination';
+import { LogHandler } from 'src/core/handlers';
 
 export interface IRelationalContext {
 	create: (values: any) => Promise<any | void>;
@@ -10,4 +13,12 @@ export interface IRelationalContext {
 
 export interface IRPginationOptions extends IPaginationOptions {
 	fields?: string[];
+}
+
+export interface IRServiceOptions {
+	serviceName: string;
+	instance: Knex;
+	table: string;
+	fields?: string[];
+	log: LogHandler;
 }

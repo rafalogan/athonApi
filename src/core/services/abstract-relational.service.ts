@@ -1,26 +1,27 @@
 import { Knex } from 'knex';
-import { RedisClient } from 'redis';
 
-import { LogHandler } from 'src/core/handlers';
-import { IRPginationOptions, IRelationalContext } from 'src/core/services/types/relational-context';
+import { IRPginationOptions, IRelationalContext, IRServiceOptions, ICServiceOptions } from 'src/core/services/types/';
 import { IPagination } from 'src/core/services/types/pagination';
 import { existsOrError } from 'src/util';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
+import { IEnvServiceOptions } from 'src/services/types';
 
 export abstract class AbstractRelationalService extends AbstractCacheService implements IRelationalContext {
-	constructor(
-		protected instance: Knex,
-		protected table: string,
-		protected fields: string[] = [],
-		protected enableCache: boolean,
-		private serviceName: string,
-		log: LogHandler,
-		cacheClient: RedisClient,
-		cachedSattus: boolean,
-		env: string,
-		protected cacheTime?: number
-	) {
-		super(cacheClient, cachedSattus, log, env);
+	protected instance: Knex;
+	protected table: string;
+	protected fields: string[];
+	protected enableCache: boolean;
+	protected cacheTime?: number;
+
+	private serviceName: string;
+
+	constructor(serviceOptions: IRServiceOptions, cacheServiceOptions: ICServiceOptions, envOptions: IEnvServiceOptions) {
+		super(cacheServiceOptions, serviceOptions.log, envOptions.env);
+		this.instance = serviceOptions.instance;
+		this.table = serviceOptions.table;
+		this.fields = serviceOptions?.fields || [];
+		this.enableCache = envOptions?.enableCache || false;
+		this.serviceName = serviceOptions.serviceName;
 	}
 
 	create(item: any): Promise<any> {
