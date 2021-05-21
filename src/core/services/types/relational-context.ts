@@ -12,6 +12,7 @@ export interface IRelationalContext {
 }
 
 export interface IRPginationOptions extends IPaginationOptions {
+	id?: number;
 	fields?: string[];
 }
 

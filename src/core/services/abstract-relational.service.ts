@@ -31,11 +31,11 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.catch(err => this.log.error(`Insert Failed in Table: ${this.table}`, err));
 	}
 
-	read(options: IRPginationOptions, id?: number): Promise<any> {
-		const columns = options.fields ?? this.fields;
+	read(options?: IRPginationOptions): Promise<any> {
+		const columns = options?.fields ?? this.fields;
 
-		if (this.enableCache) return this._checkCache(options, id, columns);
-		return id ? this._findOneById(id, columns) : this._findAll(options);
+		if (this.enableCache) return this._checkCache(options);
+		return options?.id ? this._findOneById(options.id, columns) : this._findAll(options);
 	}
 
 	update(values: any, id: number): Promise<any> {
@@ -88,10 +88,10 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.catch(err => this.log.error(`Find register failed in ${this.table}`, err));
 	}
 
-	private async _findAll(options: IRPginationOptions) {
-		const page = options.page ?? 1;
-		const limit = options.total ?? 10;
-		const columns = options.fields ?? this.fields;
+	private async _findAll(options?: IRPginationOptions) {
+		const page = options?.page ?? 1;
+		const limit = options?.total ?? 10;
+		const columns = options?.fields ?? this.fields;
 		const count = await this._countById();
 		const pagination = this.pagination(page, count, limit);
 
@@ -109,7 +109,10 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 		return Number(result?.count);
 	}
 
-	private _checkCache(options: IRPginationOptions, id?: number, columns: string[] = []) {
+	private _checkCache(options?: IRPginationOptions) {
+		const id = options?.id;
+		const columns = options?.fields ?? this.fields;
+
 		return id
 			? this.findCahce({ serviceName: this.serviceName, id }, () => this._findOneById(id, columns), this.cacheTime)
 			: this.findCahce({ serviceName: this.serviceName, id: 'list' }, () => this._findAll(options), this.cacheTime);
