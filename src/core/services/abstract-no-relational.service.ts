@@ -4,11 +4,23 @@ import { INoRelationaContext } from 'src/core/services/types/no-relationa-contex
 import { LogHandler } from 'src/core/handlers';
 import { IPaginationOptions } from 'src/core/services/types/pagination';
 import { existsOrError } from 'src/util/validate';
+import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
+import { RedisClient } from 'redis';
 
-export abstract class AbstractNoRelationalService<D extends mongoose.Document> implements INoRelationaContext {
+export abstract class AbstractNoRelationalService<D extends mongoose.Document> extends AbstractCacheService implements INoRelationaContext {
 	protected name: string;
 
-	constructor(protected instanceModel: mongoose.Model<D>, protected log: LogHandler) {
+	constructor(
+		protected instanceModel: mongoose.Model<D>,
+		protected enableCache: boolean,
+		private serviceName: string,
+		log: LogHandler,
+		cacheClient: RedisClient,
+		cachedSattus: boolean,
+		env: string,
+		protected cacheTime?: number
+	) {
+		super(cacheClient, cachedSattus, log, env);
 		this.name = this.instanceModel.name;
 	}
 
@@ -20,14 +32,17 @@ export abstract class AbstractNoRelationalService<D extends mongoose.Document> i
 	}
 
 	read(options: IPaginationOptions, id?: any): Promise<any> {
-		if (id) return this._findById(id);
-		return this._findAll(options);
+		if (this.enableCache) return this._checkCache(options, id);
+		return id ? this._findById(id) : this._findAll(options);
 	}
 
 	update(valies: any, _id: any): Promise<any> {
 		return this.instanceModel
 			.updateOne({ _id }, valies)
-			.then(result => ({ matched: result.n, modified: result.nModified }))
+			.then(async result => {
+				if (this.enableCache) await this._clearCache(_id);
+				return { matched: result.n, modified: result.nModified };
+			})
 			.catch(err => this.log.error(`Update registe "${_id}" failed`, err));
 	}
 
@@ -42,7 +57,10 @@ export abstract class AbstractNoRelationalService<D extends mongoose.Document> i
 
 		this.instanceModel
 			.remove({ _id })
-			.then(result => ({ deleted: result.deletedCount, element }))
+			.then(async result => {
+				if (this.enableCache) await this._clearCache(_id);
+				return { deleted: result.deletedCount, element };
+			})
 			.catch(err => this.log.error(`Delete registe "${_id}" failed`, err));
 	}
 
@@ -77,5 +95,16 @@ export abstract class AbstractNoRelationalService<D extends mongoose.Document> i
 					}))
 					.catch(err => this.log.error(`Find All registers fail on ${this.name}`, err))
 			);
+	}
+
+	private _checkCache(options: IPaginationOptions, id: any) {
+		return id
+			? this.findCahce({ serviceName: this.serviceName, id }, () => this._findById(id), this.cacheTime)
+			: this.findCahce({ serviceName: this.serviceName, id: 'list' }, () => this._findAll(options), this.cacheTime);
+	}
+
+	private async _clearCache(id: any = 'list') {
+		if (id !== 'list') await this.deleteCahce({ serviceName: this.serviceName, id });
+		return this.deleteCahce({ serviceName: this.serviceName, id: 'list' });
 	}
 }
