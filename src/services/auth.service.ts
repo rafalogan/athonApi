@@ -37,6 +37,7 @@ export class AuthService {
 			const id = payload.id;
 			const user: IUser = await this.userService.read({ id });
 			const profile: IProfile = user.profileId ? await this.profileService.read({ id: user.profileId }) : {};
+			const rules =
 
 			const result = user
 				? {

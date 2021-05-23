@@ -6,4 +6,6 @@ export class ProfileRulesService extends AbstractRelationalService {
 	constructor(profileRulesServiceOptions: IRServiceOptions, cacheServiceOptions: ICServiceOptions, envServiceOptions: IEnvServiceOptions) {
 		super(profileRulesServiceOptions, cacheServiceOptions, envServiceOptions);
 	}
+
+	findRulesByProfileId(profileId: number) {}
 }
