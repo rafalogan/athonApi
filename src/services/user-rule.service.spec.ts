@@ -1,0 +1,1 @@
+describe('#UserRuleService suit test', () => {});

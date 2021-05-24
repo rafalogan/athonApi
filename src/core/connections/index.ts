@@ -1,3 +1,7 @@
-export * from './cache-connection.component';
-export * from './relational-connection.component';
-export * from './no-relational-connection.component';
+// interfaces
+export * from 'src/core/connections/types/context';
+
+// components
+export * from 'src/core/connections/cache-connection.component';
+export * from 'src/core/connections/relational-connection.component';
+export * from 'src/core/connections/no-relational-connection.component';
