@@ -4,7 +4,7 @@ export class User implements IUser {
 	id: number;
 	name: string;
 	email: string;
-	password?: string;
+	password: string;
 	profile?: Profile;
 	permissions?: Rule[];
 
@@ -15,7 +15,7 @@ export class User implements IUser {
 		this.id = Number(id ? id : props.id);
 		this.name = props.name;
 		this.email = props.email;
-		this.password = props?.password;
+		this.password = props.password;
 		this.profileId = Number(props.profileId);
 		this.profile = this._setProfile(props?.profile);
 		this.permissions = this._setRules(props?.permissions);

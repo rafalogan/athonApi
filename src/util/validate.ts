@@ -1,5 +1,9 @@
 import isEmpty from 'is-empty';
 import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+
+import { ICredentials } from 'src/modules/auth/types/auth';
+import { User } from 'src/core/entities';
 
 export const existsOrError = (value: any, message: string) => {
 	if (isEmpty(value)) throw message;
@@ -30,3 +34,5 @@ export const execDotenv = () => {
 
 	return;
 };
+
+export const isMatch = (credentials: ICredentials, user: User) => bcrypt.compareSync(credentials.password, user.password);

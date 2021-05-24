@@ -24,6 +24,14 @@ export class UserService extends AbstractRelationalService {
 		});
 	}
 
+	findByEmail(email: string) {
+		return this.instance(this.table)
+			.select()
+			.where({ email })
+			.then(user => this._setUserRules(user))
+			.catch(err => this.log.error(`Find user by email: ${email} failed`, err));
+	}
+
 	private async _setUserRules(user: any) {
 		const { id } = user;
 

@@ -13,3 +13,10 @@ export class ResponseException extends Error {
 		super(`${message}: in Response`);
 	}
 }
+
+export class AuthException extends Error {
+	name = AuthException.name;
+	constructor(message: string) {
+		super(`${message}: in Auth`);
+	}
+}
