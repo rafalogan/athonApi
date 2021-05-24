@@ -1,6 +1,5 @@
-import { AbstractRelationalService } from 'src/core/services';
-import { ICServiceOptions, IRServiceOptions } from 'src/core/services/types';
-import { IEnvServiceOptions } from 'src/services/types';
+import { AbstractRelationalService, ICServiceOptions, IRServiceOptions } from 'src/core/services';
+import { IEnvServiceOptions } from 'src/services';
 
 export class ContactService extends AbstractRelationalService {
 	constructor(contactServiceOptions: IRServiceOptions, cacheServiceOptions: ICServiceOptions, envServiceOptions: IEnvServiceOptions) {

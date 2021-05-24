@@ -1,0 +1,1 @@
+describe('#ContactService suit test', () => {});

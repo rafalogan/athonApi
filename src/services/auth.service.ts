@@ -1,12 +1,8 @@
 import passport from 'passport';
 import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 
-import { IAuthServiceOptions } from 'src/services/types';
-import { ProfileService } from './profile.service';
-import { UserService } from './user.service';
-import { IPayload } from 'src/core/entities/types/payload';
-import { IUser } from 'src/core/entities/types/user';
-import { IProfile } from 'src/core/entities/types/profile';
+import { Payload, User } from 'src/core/entities/';
+import { IAuthServiceOptions, ProfileService, UserService } from 'src/services';
 
 export class AuthService {
 	private params: StrategyOptions;
@@ -29,26 +25,13 @@ export class AuthService {
 		};
 	}
 
-	private async _setStrategyResponse(
-		payload: IPayload,
-		done: (arg0: null, arg1: boolean | { id: number; name: string; email: string; profile: IProfile }) => any
-	) {
+	private async _setStrategyResponse(payload: Payload, done: (arg0: any, arg1: any) => any) {
 		try {
-			const id = payload.id;
-			const user: IUser = await this.userService.read({ id });
-			const profile: IProfile = user.profileId ? await this.profileService.read({ id: user.profileId }) : {};
-			const rules =
+			const { id } = payload;
+			const user: User = new User(await this.userService.read({ id }));
 
-			const result = user
-				? {
-						id: user.id,
-						name: user.name,
-						email: user.email,
-						profile,
-				  }
-				: false;
-
-			return done(null, result);
+			Reflect.deleteProperty(user, 'password');
+			return done(null, user ?? false);
 		} catch (err) {
 			return done(err, false);
 		}

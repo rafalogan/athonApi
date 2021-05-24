@@ -1,7 +1,6 @@
-import { AbstractNoRelationalService } from 'src/core/services';
-import { ICategoryModel } from 'src/core/entities/types/category';
-import { ICServiceOptions, INRServiceOptions } from 'src/core/services/types';
-import { IEnvServiceOptions } from 'src/services/types';
+import { AbstractNoRelationalService, ICServiceOptions, INRServiceOptions } from 'src/core/services';
+import { ICategoryModel } from 'src/core/entities';
+import { IEnvServiceOptions } from 'src/services';
 
 export class CategoryService extends AbstractNoRelationalService<ICategoryModel> {
 	constructor(categorYServiceOptions: INRServiceOptions, cacheServiceOptions: ICServiceOptions, envServiceOptions: IEnvServiceOptions) {

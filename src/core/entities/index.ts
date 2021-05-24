@@ -11,3 +11,19 @@ export * from './rule.entity';
 export * from './social-media.entity';
 export * from './user.entity';
 export * from './user-rule.entity';
+
+// Interfaces
+export * from 'src/core/entities/types/answer';
+export * from 'src/core/entities/types/article';
+export * from 'src/core/entities/types/category';
+export * from 'src/core/entities/types/contact';
+export * from 'src/core/entities/types/media';
+export * from 'src/core/entities/types/newsletter';
+export * from 'src/core/entities/types/payload';
+export * from 'src/core/entities/types/profile';
+export * from 'src/core/entities/types/profile-rule';
+export * from 'src/core/entities/types/rule';
+export * from 'src/core/entities/types/social-media';
+export * from 'src/core/entities/types/timestamps';
+export * from 'src/core/entities/types/user';
+export * from 'src/core/entities/types/user-rule';
