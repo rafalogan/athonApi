@@ -5,16 +5,16 @@ export * from 'src/services/types/auth';
 export * from 'src/services/types/profile-service';
 
 // services
-export * from './auth.service';
-export * from './media.service';
-export * from './newsletter.service';
+export * from 'src/services/auth.service';
+export * from 'src/services/media.service';
+export * from 'src/services/newsletter.service';
 export * from 'src/services/profile-rule.service';
-export * from './profile.service';
+export * from 'src/services/profile.service';
 export * from 'src/services/rule.service';
-export * from './social-media.service';
-export * from './user.service';
+export * from 'src/services/social-media.service';
+export * from 'src/services/user.service';
 export * from 'src/services/user-rule.service';
-export * from './answer.service';
-export * from './article.service';
-export * from './category.service';
-export * from './contact.service';
+export * from 'src/services/answer.service';
+export * from 'src/services/article.service';
+export * from 'src/services/category.service';
+export * from 'src/services/contact.service';
