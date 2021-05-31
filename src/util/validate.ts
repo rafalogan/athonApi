@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 
 import { ICredentials } from 'src/modules/auth/types/auth';
-import { User } from 'src/core/entities';
+import { User } from 'src/core/domains';
 
 export const existsOrError = (value: any, message: string) => {
 	if (isEmpty(value)) throw message;

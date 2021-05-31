@@ -1,14 +1,8 @@
-import { AuthService, UserService } from 'src/services';
-import { LogHandler, ResponseHandler } from 'src/core/handlers';
+import { AuthService } from 'src/services';
+import { LogController, ResponseController } from 'src/core/controller';
 
-export interface IAuthControllerOptions {
+export interface AuthControllerOptions {
 	authService: AuthService;
-	userService: UserService;
-	responseHandler: ResponseHandler;
-	logHandler: LogHandler;
-}
-
-export interface ICredentials {
-	email: string;
-	password: string;
+	responseController: ResponseController;
+	logController: LogController;
 }

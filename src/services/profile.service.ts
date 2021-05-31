@@ -1,16 +1,20 @@
-import { AbstractRelationalService, ICServiceOptions, IRPginationOptions } from 'src/core/services';
-import { IEnvServiceOptions, IProfileServiceOptions, ProfileRuleService, RuleService } from 'src/services';
+import { ProfileServiceOptions, ProfileRuleService, RuleService } from 'src/services';
+import { AbstractRelationalService } from 'src/core/services';
+import { RelationalReadOptions } from 'src/core/types';
+
+const fields = ['id', 'title', 'description', 'created_at as createdAt', 'updated_at as updatedAt'];
 
 export class ProfileService extends AbstractRelationalService {
 	private profileRulesService: ProfileRuleService;
 	private ruleService: RuleService;
-	constructor(profileServiceOptions: IProfileServiceOptions, cacheOptions: ICServiceOptions, env: IEnvServiceOptions) {
-		super(profileServiceOptions, cacheOptions, env);
-		this.profileRulesService = profileServiceOptions.profileRulesService;
-		this.ruleService = profileServiceOptions.ruleService;
+
+	constructor(options: ProfileServiceOptions) {
+		super({ ...options, serviceName: ProfileService.name, table: 'profiles', fields });
+		this.profileRulesService = options.profileRuleService;
+		this.ruleService = options.ruleService;
 	}
 
-	async read(options?: IRPginationOptions): Promise<any> {
+	async read(options?: RelationalReadOptions): Promise<any> {
 		return super.read(options).then(result => {
 			if (result.data) {
 				result.data = result.data.map(this._setProfilePermissions);

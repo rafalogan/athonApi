@@ -1,27 +1,26 @@
 import { Knex } from 'knex';
 
-import { IRPginationOptions, IRelationalContext, IRServiceOptions, ICServiceOptions } from 'src/core/services/types/';
-import { IPagination } from 'src/core/services/types/pagination';
 import { existsOrError } from 'src/util';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
-import { IEnvServiceOptions } from 'src/services/types';
+import { PaginationDomain } from 'src/core/domains';
+import { RelationalContext, RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 
-export abstract class AbstractRelationalService extends AbstractCacheService implements IRelationalContext {
+export abstract class AbstractRelationalService extends AbstractCacheService implements RelationalContext {
 	protected instance: Knex;
 	protected table: string;
 	protected fields: string[];
 	protected enableCache: boolean;
 	protected cacheTime?: number;
 
-	private serviceName: string;
+	private readonly serviceName: string;
 
-	constructor(serviceOptions: IRServiceOptions, cacheServiceOptions: ICServiceOptions, envOptions: IEnvServiceOptions) {
-		super(cacheServiceOptions, serviceOptions.log, envOptions.env);
-		this.instance = serviceOptions.instance;
-		this.table = serviceOptions.table;
-		this.fields = serviceOptions?.fields || [];
-		this.enableCache = envOptions?.enableCache || false;
-		this.serviceName = serviceOptions.serviceName;
+	protected constructor(options: RelationalServiceOptions) {
+		super(options);
+		this.instance = options.instance;
+		this.table = options.table;
+		this.fields = options?.fields || [];
+		this.enableCache = options?.enableCache || false;
+		this.serviceName = options.serviceName;
 	}
 
 	create(item: any): Promise<any> {
@@ -31,7 +30,7 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.catch(err => this.log.error(`Insert Failed in Table: ${this.table}`, err));
 	}
 
-	read(options?: IRPginationOptions): Promise<any> {
+	read(options?: RelationalReadOptions): Promise<any> {
 		const columns = options?.fields ?? this.fields;
 
 		if (this.enableCache) return this._checkCache(options);
@@ -70,15 +69,6 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.catch(err => this.log.error(`Not possible to delete nº ${id} in table: ${this.table}`, err));
 	}
 
-	pagination(page: number, count: number, limit: number): IPagination {
-		return {
-			count,
-			page,
-			pages: Number(Math.ceil(count / limit)),
-			limit,
-		};
-	}
-
 	private _findOneById(id: number, columns: string[] = []) {
 		return this.instance(this.table)
 			.select(...columns)
@@ -88,12 +78,12 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.catch(err => this.log.error(`Find register failed in ${this.table}`, err));
 	}
 
-	private async _findAll(options?: IRPginationOptions) {
+	private async _findAll(options?: RelationalReadOptions) {
 		const page = options?.page ?? 1;
-		const limit = options?.total ?? 10;
+		const limit = options?.limit ?? 10;
 		const columns = options?.fields ?? this.fields;
 		const count = await this._countById();
-		const pagination = this.pagination(page, count, limit);
+		const pagination = new PaginationDomain({ page, count, limit });
 
 		return this.instance(this.table)
 			.select(...columns)
@@ -109,7 +99,7 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 		return Number(result?.count);
 	}
 
-	private _checkCache(options?: IRPginationOptions) {
+	private _checkCache(options?: RelationalReadOptions) {
 		const id = options?.id;
 		const columns = options?.fields ?? this.fields;
 

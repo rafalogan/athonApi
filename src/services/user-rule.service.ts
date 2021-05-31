@@ -1,9 +1,11 @@
-import { AbstractRelationalService, ICServiceOptions, IRServiceOptions } from 'src/core/services';
-import { IEnvServiceOptions } from 'src/services/types/enviroment-service';
+import { AbstractRelationalService } from 'src/core/services';
+import { RelationalServiceOptions } from 'src/core/types';
+
+const fields = ['user_id as userId', 'rule_id as ruleId', 'created_at as createdAt', 'updated_at as updatedAt'];
 
 export class UserRuleService extends AbstractRelationalService {
-	constructor(userServiceOptions: IRServiceOptions, cacheServiceOptions: ICServiceOptions, envServiceOptions: IEnvServiceOptions) {
-		super(userServiceOptions, cacheServiceOptions, envServiceOptions);
+	constructor(options: RelationalServiceOptions) {
+		super({ ...options, serviceName: UserRuleService.name, table: 'user_rules', fields });
 	}
 
 	findRulesByUserId(id: number) {

@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 export const snakeToCamel = (field: string): string => {
 	let toArray = field.split('_');
 	toArray = toArray.map((word, index) => {
@@ -15,3 +17,5 @@ export const camelToSnake = (field: string): string => {
 		.join('_')
 		.toLowerCase();
 };
+
+export const hashString = (field: string, salt: number) => bcrypt.hashSync(field, salt);

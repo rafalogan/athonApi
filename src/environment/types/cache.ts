@@ -1,3 +1,7 @@
-import { IServer } from 'src/environment/types/profile';
+import { ClientOpts } from 'redis';
 
-export type ICache = IServer;
+export interface CacheConfigOptions {
+	enableCache: boolean;
+	cacheTime: number;
+	client: ClientOpts;
+}

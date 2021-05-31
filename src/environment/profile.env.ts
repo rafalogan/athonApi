@@ -1,18 +1,23 @@
-import { IProfileEnv } from 'src/environment/types/profile';
-import { INoRelationalDatabase } from 'src/environment/types/no-relational-database';
-import { ICache } from 'src/environment/types/cache';
-import { ISecurity } from 'src/environment/types/security';
-import { IConnection, IConnectionSqlite, IRelationalDatabase } from 'src/environment/types/relational-database';
+import {
+	CacheConfigOptions,
+	ConnectionDBOptions,
+	NoRelationalDBConfigOptions,
+	ProfileEnviromnet,
+	RelationalDBConfigOptions,
+	SecurityOptions,
+	SqliteConnectionOptions,
+} from 'src/environment/';
+import { ClientOpts } from 'redis';
 
-export class ProfileEnv implements IProfileEnv {
+export class ProfileEnv implements ProfileEnviromnet {
 	env: string = process.env.NODE_ENV || '';
 	host: string = process.env.HOST || '';
 	port: number = Number(process.env.PORT) || 0;
 	timezone: string = process.env.TIMEZONE || '';
-	relationalDatabase: IRelationalDatabase;
-	noRelationalDatabase: INoRelationalDatabase;
-	cache: ICache;
-	security: ISecurity;
+	relationalDatabase: RelationalDBConfigOptions;
+	noRelationalDatabase: NoRelationalDBConfigOptions;
+	cache: CacheConfigOptions;
+	security: SecurityOptions;
 
 	constructor() {
 		this.relationalDatabase = this.setRelationalDatabase();
@@ -21,7 +26,7 @@ export class ProfileEnv implements IProfileEnv {
 		this.security = this.setSecurity();
 	}
 
-	private setRelationalDatabase(): IRelationalDatabase {
+	private setRelationalDatabase(): RelationalDBConfigOptions {
 		return {
 			client: process.env.DB_CLIENT || '',
 			port: Number(process.env.DB_PORT) || 0,
@@ -29,7 +34,7 @@ export class ProfileEnv implements IProfileEnv {
 		};
 	}
 
-	private setConnection(): IConnection | IConnectionSqlite {
+	private setConnection(): ConnectionDBOptions | SqliteConnectionOptions {
 		if (process.env.DB_FILENAME)
 			return {
 				filename: process.env.DB_FILENAME,
@@ -43,7 +48,7 @@ export class ProfileEnv implements IProfileEnv {
 		};
 	}
 
-	private setNoRelationalDatabase(): INoRelationalDatabase {
+	private setNoRelationalDatabase(): NoRelationalDBConfigOptions {
 		return {
 			prefix: process.env.DBNR_PREFIX || '',
 			user: process.env.DBNR_USER || '',
@@ -54,14 +59,20 @@ export class ProfileEnv implements IProfileEnv {
 		};
 	}
 
-	private setCache(): ICache {
-		return {
+	private setCache(): CacheConfigOptions {
+		const client: ClientOpts = {
 			host: process.env.REDISHOST || '',
 			port: Number(process.env.REDISPORT) || 0,
 		};
+
+		return {
+			enableCache: process.env.ENABLE_CACHE === 'tue',
+			cacheTime: Number(process.env.CACHE_TIME) || 5,
+			client,
+		};
 	}
 
-	private setSecurity(): ISecurity {
+	private setSecurity(): SecurityOptions {
 		return {
 			saltRounds: Number(process.env.SALT_ROUNDS) || 0,
 			enableHTTPS: process.env.ENABLE_HTTPS === 'true',

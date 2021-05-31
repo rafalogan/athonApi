@@ -1,9 +1,11 @@
-import { AbstractRelationalService, ICServiceOptions, IRServiceOptions } from 'src/core/services';
-import { IEnvServiceOptions } from 'src/services/types/enviroment-service';
+import { AbstractRelationalService } from 'src/core/services';
+import { RelationalServiceOptions } from 'src/core/types';
+
+const fields = ['profile_id as profileId', 'rule_id as ruleId', 'created_at as createdAt', 'updated_at as updatedAt'];
 
 export class ProfileRuleService extends AbstractRelationalService {
-	constructor(profileRulesServiceOptions: IRServiceOptions, cacheServiceOptions: ICServiceOptions, envServiceOptions: IEnvServiceOptions) {
-		super(profileRulesServiceOptions, cacheServiceOptions, envServiceOptions);
+	constructor(options: RelationalServiceOptions) {
+		super({ ...options, serviceName: ProfileRuleService.name, table: 'profiles_rules', fields });
 	}
 
 	findRulesByProfileId(profileId: number) {

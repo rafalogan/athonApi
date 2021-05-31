@@ -1,18 +1,18 @@
-export interface IRelationalDatabase {
+export interface RelationalDBConfigOptions {
 	client: string;
 	port?: number;
-	connection: string | IConnection | IConnectionSqlite;
+	connection: string | ConnectionDBOptions | SqliteConnectionOptions;
 }
 
-export interface IConnection extends IDatabase {
+export interface ConnectionDBOptions extends DatabaseConfigOptions {
 	host: string;
 }
 
-export interface IConnectionSqlite {
+export interface SqliteConnectionOptions {
 	filename: string;
 }
 
-export interface IDatabase {
+export interface DatabaseConfigOptions {
 	user: string;
 	password: string;
 	database: string;
