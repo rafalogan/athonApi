@@ -1,7 +1,8 @@
 // iterfaces
+export * from 'src/services/types/services';
 export * from 'src/services/types/user-service';
 export * from 'src/services/types/enviroment-service';
-export * from 'src/services/types/auth';
+export * from 'src/services/types/auth-service';
 export * from 'src/services/types/profile-service';
 
 // services

@@ -1,40 +1,50 @@
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import bodyParser from 'body-parser';
-import { Logger } from 'winston';
+import {
+	CacheConnectionController,
+	LogController,
+	LoggerController,
+	NoRelationalConnectionController,
+	RelationalConnectionController,
+	ResponseController,
+} from 'src/core/controller';
+import { ProfileEnv } from 'src/environment';
+import { KnexConfig } from 'src/config';
 
 export default class CoreModule {
-	private readonly _express: Application;
+	cacheConnectionController: CacheConnectionController;
+	logController: LogController;
+	loggerController: LoggerController;
+	noRelationalConnectionController: NoRelationalConnectionController;
+	relationalConnectionController: RelationalConnectionController;
+	responseController: ResponseController;
 
-	constructor(private emv: string, private logger: Logger) {
-		this._express = express();
-
-		this.expressInit();
-		this.modules();
+	constructor(options: { profileEnv: ProfileEnv; file: KnexConfig }) {
+		this.loggerController = new LoggerController(options.profileEnv.env);
+		this.logController = this._instanceLogController(options.profileEnv);
+		this.cacheConnectionController = this._instanceCacheController(options.profileEnv);
+		this.noRelationalConnectionController = this._instanceNoRelationalConnectionController(options.profileEnv);
+		this.relationalConnectionController = this._instanceRelationalConnectionController(options.file);
+		this.responseController = new ResponseController(this.logController);
 	}
 
-	get express(): Application {
-		return this._express;
+	private _instanceLogController(profileEnv: ProfileEnv) {
+		const { env } = profileEnv;
+		return new LogController(this.loggerController.logger, env);
 	}
 
-	private expressInit() {
-		this.express.use(cors());
-		this.express.use(this._morganConfig());
-		this.express.use(bodyParser.urlencoded({ extended: false }));
-		this.express.use(bodyParser.json());
+	private _instanceCacheController(profileEnv: ProfileEnv) {
+		const {
+			cache: { client },
+		} = profileEnv;
+		return new CacheConnectionController(client, this.logController);
 	}
 
-	private _morganConfig() {
-		const format = this.emv === 'development' || this.emv === 'test' ? 'dev' : 'combined';
-		const stream = {
-			write: (message: string) => this.logger.info(message.trim()),
-		};
+	private _instanceNoRelationalConnectionController(param: ProfileEnv) {
+		const { noRelationalDatabase } = param;
 
-		return morgan(format, { stream });
+		return new NoRelationalConnectionController(noRelationalDatabase, this.logController);
 	}
 
-	private modules() {
-		this.express.get('/', (req: Request, res: Response) => res.status(200).json({ status: 200, message: "OK: Api ist work's" }));
+	private _instanceRelationalConnectionController(parm: KnexConfig) {
+		return new RelationalConnectionController(parm, this.logController);
 	}
 }

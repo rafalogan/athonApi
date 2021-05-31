@@ -2,7 +2,7 @@ import http from 'http';
 import https from 'https';
 import { Application } from 'express';
 
-import { LogHandler } from 'src/core/handlers';
+import { LogController } from 'src/core/controller';
 import { HttpsEnv } from 'src/environment';
 
 export default class AppModule {
@@ -10,7 +10,7 @@ export default class AppModule {
 	server?: http.Server | https.Server;
 
 	constructor(
-		private log: LogHandler,
+		private log: LogController,
 		private express: Application,
 		private httpsOptions: HttpsEnv,
 		private port: number,

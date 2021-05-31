@@ -1,9 +1,9 @@
-import { AbstractNoRelationalService, ICServiceOptions, INRServiceOptions } from 'src/core/services';
-import { IEnvServiceOptions } from 'src/services/types/enviroment-service';
-import { IMediaModel } from 'src/core/entities';
+import { IMediaModel } from 'src/entities';
+import { AbstractNoRelationalService } from 'src/core/services';
+import { NoRelationalServiceOptions } from 'src/core/types';
 
 export class MediaService extends AbstractNoRelationalService<IMediaModel> {
-	constructor(mediaServiceOptions: INRServiceOptions, cacheServiceOptions: ICServiceOptions, envServiceOptions: IEnvServiceOptions) {
-		super(mediaServiceOptions, cacheServiceOptions, envServiceOptions);
+	constructor(options: NoRelationalServiceOptions) {
+		super({ ...options, serviceName: MediaService.name, schema: 'Media' });
 	}
 }

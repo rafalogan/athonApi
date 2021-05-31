@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-import { ISocialMediaModel } from 'src/core/entities/types/social-media';
+import { ISocialMediaModel } from 'src/core/domains/types/social-media';
 
 const SocialMediaSchema = new Schema(
 	{

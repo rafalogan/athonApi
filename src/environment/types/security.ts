@@ -1,4 +1,4 @@
-export interface ISecurity {
+export interface SecurityOptions {
 	saltRounds: number;
 	enableHTTPS: boolean;
 	cert: string;

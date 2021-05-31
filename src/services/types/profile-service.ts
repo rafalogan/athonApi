@@ -1,7 +1,7 @@
-import { IRServiceOptions } from 'src/core/services/types';
 import { ProfileRuleService, RuleService } from 'src/services';
+import { RelationalServiceOptions } from 'src/core/types';
 
-export interface IProfileServiceOptions extends IRServiceOptions {
-	profileRulesService: ProfileRuleService;
+export interface ProfileServiceOptions extends RelationalServiceOptions {
+	profileRuleService: ProfileRuleService;
 	ruleService: RuleService;
 }

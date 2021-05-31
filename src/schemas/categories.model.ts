@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-import { ICategoryModel } from 'src/core/entities/types/category';
+import { ICategoryModel } from 'src/core/domains/types/category';
 
 const CategoriesSchema = new Schema(
 	{

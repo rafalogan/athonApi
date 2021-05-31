@@ -1,18 +1,15 @@
-import { INoRelationalDatabase } from 'src/environment/types/no-relational-database';
-import { IRelationalDatabase } from 'src/environment/types/relational-database';
-import { ISecurity } from 'src/environment/types/security';
-import { ICache } from 'src/environment/types/cache';
+import { CacheConfigOptions, NoRelationalDBConfigOptions, RelationalDBConfigOptions, SecurityOptions } from 'src/environment';
 
-export interface IProfileEnv extends IServer {
+export interface ProfileEnviromnet extends ServerConfigOptions {
 	env: string;
 	timezone: string;
-	relationalDatabase: IRelationalDatabase;
-	noRelationalDatabase: INoRelationalDatabase;
-	cache: ICache;
-	security: ISecurity;
+	relationalDatabase: RelationalDBConfigOptions;
+	noRelationalDatabase: NoRelationalDBConfigOptions;
+	cache: CacheConfigOptions;
+	security: SecurityOptions;
 }
 
-export interface IServer {
+export interface ServerConfigOptions {
 	host: string;
 	port: number;
 }

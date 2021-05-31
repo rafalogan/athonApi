@@ -1,6 +1,5 @@
-import { IServer } from 'src/environment/types/profile';
-import { IDatabase } from 'src/environment/types/relational-database';
+import { DatabaseConfigOptions, ServerConfigOptions } from 'src/environment';
 
-export interface INoRelationalDatabase extends IServer, IDatabase {
+export interface NoRelationalDBConfigOptions extends DatabaseConfigOptions, ServerConfigOptions {
 	prefix: string;
 }

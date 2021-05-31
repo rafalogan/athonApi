@@ -1,11 +1,11 @@
 import { promisify } from 'util';
+import isEmpty from 'is-empty';
 import { RedisClient } from 'redis';
 import md5 from 'md5';
 
-import { ICServiceOptions, IkeyOptions } from 'src/core/services/types';
 import { existsOrError } from 'src/util';
-import { LogHandler } from 'src/core/handlers';
-import isEmpty from 'is-empty';
+import { LogController } from 'src/core/controller';
+import { CacheServiceOptions, KeyOptions } from 'src/core/types';
 
 export abstract class AbstractCacheService {
 	private _getAsync: (key: any) => Promise<any>;
@@ -15,13 +15,13 @@ export abstract class AbstractCacheService {
 	private clientActive: boolean;
 
 	protected isValidEnv: boolean;
-	protected log: LogHandler;
+	protected log: LogController;
 
-	constructor(serviceOptions: ICServiceOptions, log: LogHandler, env: string) {
-		this.client = serviceOptions.client;
-		this.clientActive = serviceOptions.status;
-		this.log = log;
-		this.isValidEnv = env !== 'production';
+	constructor(options: CacheServiceOptions) {
+		this.client = options.client;
+		this.clientActive = options.status;
+		this.log = options.log;
+		this.isValidEnv = options.env !== 'production';
 
 		this._getAsync = promisify(this.client.get).bind(this.client);
 		this._setAsync = promisify(this.client.set).bind(this.client);
@@ -36,7 +36,7 @@ export abstract class AbstractCacheService {
 		return data;
 	}
 
-	async findCahce(args: IkeyOptions, fn: () => Promise<any>, time?: number) {
+	async findCahce(args: KeyOptions, fn: () => Promise<any>, time?: number) {
 		const key = this._generateKey(args);
 
 		if (!this.clientActive) return await fn();
@@ -52,7 +52,7 @@ export abstract class AbstractCacheService {
 		}
 	}
 
-	async deleteCahce(args: IkeyOptions) {
+	async deleteCahce(args: KeyOptions) {
 		if (!this.clientActive) return this._responseLog('Cache server disable', 'info');
 
 		const key = this._generateKey(args);
@@ -69,7 +69,7 @@ export abstract class AbstractCacheService {
 			.catch(err => this._responseLog(`Delete cache ${key} failed`, 'error', err));
 	}
 
-	private _generateKey(ags: IkeyOptions) {
+	private _generateKey(ags: KeyOptions) {
 		try {
 			existsOrError(ags, 'To generate the data key, the arguments must be filled in correctly');
 			const argsToString = `GET:Content:${ags.serviceName}:${ags.id}`;

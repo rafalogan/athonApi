@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 import SocialMediaModel from 'src/schemas/social-media.model';
-import { IArticleModel } from 'src/core/entities/types/article';
+import { IArticleModel } from 'src/core/domains/types/article';
 
 const ArticlesSchema = new Schema(
 	{

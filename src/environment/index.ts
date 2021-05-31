@@ -6,6 +6,6 @@ export * from 'src/environment/types/profile';
 export * from 'src/environment/types/relational-database';
 export * from 'src/environment/types/security';
 
-// enviroment entities
+// enviroment domains
 export * from 'src/environment/profile.env';
 export * from 'src/environment/https.env';
