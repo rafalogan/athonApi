@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 
-import { AbistractControler, ResponseController } from 'src/core/controller';
+import { AbistractController, ResponseController } from 'src/core/controller';
 import { UserService } from 'src/services';
 import { User } from 'src/entities';
 
-export class UserController extends AbistractControler {
+export class UserController extends AbistractController {
 	constructor(private userService: UserService, private response: ResponseController) {
 		super();
 	}

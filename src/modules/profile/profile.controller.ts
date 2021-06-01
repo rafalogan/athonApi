@@ -1,31 +1,29 @@
 import { Request, Response } from 'express';
 
 import { AbistractController, ResponseController } from 'src/core/controller';
-import { RuleService } from 'src/services';
-import { Rule } from 'src/entities';
+import { ProfileService } from 'src/services';
+import { Profile } from 'src/entities';
 
-export class RuleController extends AbistractController {
-	constructor(private ruleService: RuleService, private response: ResponseController) {
+export class ProfileController extends AbistractController {
+	constructor(private profileService: ProfileService, private response: ResponseController) {
 		super();
 	}
 
-	async save(req: Request, res: Response) {
-		const rule = await this.ruleService.validateFields(req.body);
+	save(req: Request, res: Response) {
+		const profile = new Profile(req.body);
 
-		if (!(rule instanceof Rule)) return this.response.onError(res, rule.message, undefined, rule.code);
-
-		this.ruleService
-			.create(rule)
+		this.profileService
+			.create(profile)
 			.then(result => this.response.onSuccess(res, result))
 			.catch(err => this.response.onError(res, 'unexpected error', err));
 	}
 
 	edit(req: Request, res: Response) {
-		const rule = new Rule(req.body, Number(req.params.id));
+		const profile = new Profile(req.body, Number(req.params.id));
 
-		this.ruleService
-			.update(rule, rule.id)
-			.then(data => this.response.onSuccess(res, data))
+		this.profileService
+			.update(profile, profile.id)
+			.then(result => this.response.onSuccess(res, result))
 			.catch(err => this.response.onError(res, 'unexpected error', err));
 	}
 
@@ -34,7 +32,7 @@ export class RuleController extends AbistractController {
 		const page = Number(req.query.page);
 		const limit = Number(req.query.limit);
 
-		this.ruleService
+		this.profileService
 			.read({ id, page, limit })
 			.then(data => this.response.onSuccess(res, data))
 			.catch(err => this.response.onError(res, 'unexpected error', err));
@@ -43,9 +41,9 @@ export class RuleController extends AbistractController {
 	remove(req: Request, res: Response) {
 		const id = Number(req.params.id);
 
-		this.ruleService
+		this.profileService
 			.delete(id)
-			.then(data => this.response.onSuccess(res, data))
+			.then(result => this.response.onSuccess(res, result))
 			.catch(err => this.response.onError(res, 'unexpected error', err));
 	}
 }

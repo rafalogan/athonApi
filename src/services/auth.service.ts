@@ -21,9 +21,6 @@ export class AuthService {
 		this.log = options.log;
 		this.authSecret = options.security.authSecret;
 		this.params = this._setStategyOtions();
-
-		console.log('params', this.params);
-		console.log('secret', this.authSecret);
 	}
 
 	init() {
