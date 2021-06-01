@@ -1,4 +1,4 @@
-import { Profile, ProfileEntity, Rule, UserEntity } from 'src/entities';
+import { Profile, ProfileEntity, Rule, RuleEntity, UserEntity } from 'src/entities';
 
 export class User implements UserEntity {
 	id: number;
@@ -28,7 +28,7 @@ export class User implements UserEntity {
 		return profile ? new Profile(profile) : undefined;
 	}
 
-	private _setRules(rules?: Rule[]): Rule[] | [] {
+	private _setRules(rules: Rule[] | RuleEntity[] | undefined): Rule[] | [] {
 		return rules ? rules.map(item => new Rule(item)) : [];
 	}
 }

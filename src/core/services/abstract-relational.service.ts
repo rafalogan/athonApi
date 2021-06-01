@@ -24,6 +24,8 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 	}
 
 	create(item: any): Promise<any> {
+		item.createdAt = new Date();
+
 		return this.instance(this.table)
 			.insert(item)
 			.then((result: any) => result)
@@ -38,6 +40,8 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 	}
 
 	update(values: any, id: number): Promise<any> {
+		values.updatedAt = new Date();
+
 		return this.instance(this.table)
 			.update(values)
 			.where({ id })

@@ -1,31 +1,30 @@
 import { Request, Response } from 'express';
 
 import { AbistractControler, ResponseController } from 'src/core/controller';
-import { UserService } from 'src/services';
-import { User } from 'src/entities';
+import { RuleService } from 'src/services';
+import { Rule } from 'src/entities';
 
-export class UserController extends AbistractControler {
-	constructor(private userService: UserService, private response: ResponseController) {
+export class RuleController extends AbistractControler {
+	constructor(private ruleService: RuleService, private response: ResponseController) {
 		super();
 	}
 
 	async save(req: Request, res: Response) {
-		const user = new User(req.body);
-		const isNotValidUser = await this.userService.userValidate(user);
+		const rule = await this.ruleService.validateFields(req.body);
 
-		if (isNotValidUser) return this.response.onError(res, isNotValidUser.msg, undefined, isNotValidUser.code);
+		if (!(rule instanceof Rule)) return this.response.onError(res, rule.message, undefined, rule.code);
 
-		this.userService
-			.create(user)
+		this.ruleService
+			.create(rule)
 			.then(result => this.response.onSuccess(res, result))
 			.catch(err => this.response.onError(res, 'unexpected error', err));
 	}
 
-	async edit(req: Request, res: Response) {
-		const user = new User(req.body, Number(req.params.id));
+	edit(req: Request, res: Response) {
+		const rule = new Rule(req.body, Number(req.params.id));
 
-		this.userService
-			.update(user, user.id)
+		this.ruleService
+			.update(rule, rule.id)
 			.then(data => this.response.onSuccess(res, data))
 			.catch(err => this.response.onError(res, 'unexpected error', err));
 	}
@@ -35,7 +34,7 @@ export class UserController extends AbistractControler {
 		const page = Number(req.query.page);
 		const limit = Number(req.query.limit);
 
-		this.userService
+		this.ruleService
 			.read({ id, page, limit })
 			.then(data => this.response.onSuccess(res, data))
 			.catch(err => this.response.onError(res, 'unexpected error', err));
@@ -44,9 +43,9 @@ export class UserController extends AbistractControler {
 	remove(req: Request, res: Response) {
 		const id = Number(req.params.id);
 
-		this.userService
+		this.ruleService
 			.delete(id)
 			.then(data => this.response.onSuccess(res, data))
-			.then(err => this.response.onError(res, 'unexpected error', err));
+			.catch(err => this.response.onError(res, 'unexpected error', err));
 	}
 }

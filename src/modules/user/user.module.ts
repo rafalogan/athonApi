@@ -3,10 +3,10 @@ import { Application } from 'express';
 import { UserController } from 'src/modules/user/user.controller';
 import { UserRouter } from 'src/modules/user/user.router';
 import { AuthService, UserService } from 'src/services';
-import { LogController, ResponseController } from 'src/core/controller';
+import { ResponseController } from 'src/core/controller';
 
 export default class UserModule {
-	private userController: UserController;
+	private readonly userController: UserController;
 	private userRouter: UserRouter;
 
 	constructor(userService: UserService, responseController: ResponseController, app: Application, atuh: AuthService) {

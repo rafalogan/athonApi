@@ -27,6 +27,7 @@ export default class ServicesModule {
 
 	private _istanceAutService() {
 		const { security } = this.profileEnv;
+		console.log('security', security);
 		return new AuthService({ userService: this.userService, log: this.logController, security });
 	}
 

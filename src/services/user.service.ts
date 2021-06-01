@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 
 import { ProfileService, RuleService, UserRuleService, UserServiceOptions } from 'src/services';
 import { equalsOrError, existsOrError, hashString, notExistisOrError } from 'src/util';
-import { Rule, User, UserEntity } from 'src/entities';
+import { ListUsers, Rule, User, UserEntity } from 'src/entities';
 import { AbstractRelationalService } from 'src/core/services';
 import { RelationalReadOptions } from 'src/core/types';
 
@@ -45,7 +45,7 @@ export class UserService extends AbstractRelationalService {
 		return super.create(item);
 	}
 
-	async read(options?: RelationalReadOptions): Promise<any> {
+	async read(options?: RelationalReadOptions): Promise<User | ListUsers> {
 		return super.read(options).then(result => (result.data ? this._setUserList(result) : this._setUserRules(result)));
 	}
 
@@ -53,7 +53,7 @@ export class UserService extends AbstractRelationalService {
 		return this.instance(this.table)
 			.select()
 			.where({ email })
-			.then(user => this._setUserRules(user))
+			.then((user: any) => this._setUserRules(user))
 			.catch(err => this.log.error(`Find user by email: ${email} failed`, err));
 	}
 
@@ -77,8 +77,7 @@ export class UserService extends AbstractRelationalService {
 		return Array.isArray(rulesIds)
 			? rulesIds.map(async (item: { ruleId: number }) => {
 					const { ruleId: id } = item;
-					const raw = await this.ruleService.read({ id });
-					return new Rule(raw);
+					return await this.ruleService.read({ id });
 			  })
 			: [];
 	}

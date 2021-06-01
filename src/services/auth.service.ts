@@ -11,20 +11,30 @@ import { Credential, Payload } from 'src/core/domains';
 import { existsOrError, isMatch } from 'src/util';
 
 export class AuthService {
-	private params: StrategyOptions;
+	private readonly params: StrategyOptions;
 	private userService: UserService;
 	private log: LogController;
-	private authSecret: string;
+	private readonly authSecret: string;
 
 	constructor(options: AuthServiceOptions) {
-		this.params = this._setStategyOtions();
 		this.userService = options.userService;
 		this.log = options.log;
 		this.authSecret = options.security.authSecret;
+		this.params = this._setStategyOtions();
+
+		console.log('params', this.params);
+		console.log('secret', this.authSecret);
 	}
 
 	init() {
-		const strategy = new Strategy(this.params, (payload, done) => this._setStrategyResponse(payload, done));
+		const strategy = new Strategy(this.params, (payload, done) => {
+			const id = Number(payload?.id);
+
+			this.userService
+				.read({ id })
+				.then(data => done(null, data instanceof User ? this._prepareUserToToken(data) : false))
+				.catch(err => done(err, false));
+		});
 		const session = false;
 
 		passport.use(strategy);
@@ -35,10 +45,10 @@ export class AuthService {
 
 	async verifyCredentials(credentials: Credential) {
 		try {
-			const user: User = new User(await this.userService.findByEmail(credentials.email));
+			const user = await this.userService.findByEmail(credentials.email);
 			existsOrError(user, 'User not found');
 
-			if (isMatch(credentials, user)) {
+			if (isMatch(credentials, user) && user) {
 				const payload = new Payload(user);
 				return { ...payload, token: jwt.encode(payload, this.authSecret) };
 			}
@@ -69,16 +79,9 @@ export class AuthService {
 		}
 	}
 
-	private async _setStrategyResponse(payload: Payload, done: (arg0: any, arg1: any) => any) {
-		try {
-			const { id } = payload;
-			const user: User = new User(await this.userService.read({ id }));
-
-			Reflect.deleteProperty(user, 'password');
-			return done(null, user ?? false);
-		} catch (err) {
-			return done(err, false);
-		}
+	private _prepareUserToToken(user: User) {
+		Reflect.deleteProperty(user, 'password');
+		return user;
 	}
 
 	private _setStategyOtions(): StrategyOptions {

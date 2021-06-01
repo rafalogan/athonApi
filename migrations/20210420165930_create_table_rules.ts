@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.string('name').notNullable();
 		table.string('description', 1000).notNullable();
 		table.timestamp('created_at').notNullable();
-		table.timestamp('updated_at').notNullable();
+		table.timestamp('updated_at');
 	});
 }
 

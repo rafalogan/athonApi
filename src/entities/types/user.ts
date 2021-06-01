@@ -1,4 +1,5 @@
-import { Profile, Rule } from 'src/entities';
+import { Profile, Rule, RuleEntity, User } from 'src/entities';
+import { PaginationDomain } from 'src/core/domains';
 
 export interface UserEntity {
 	id: number;
@@ -8,6 +9,11 @@ export interface UserEntity {
 	confirmPassword?: string;
 	profileId: number;
 	profile?: Profile;
-	permissions?: Rule[];
+	permissions?: Rule[] | RuleEntity[];
 	deleteAt?: Date;
+}
+
+export interface ListUsers {
+	data: User[];
+	pagination: PaginationDomain;
 }

@@ -1,4 +1,3 @@
-import { Logger } from 'winston';
 import express, { Application } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -9,19 +8,13 @@ import AuthModule from 'src/modules/auth/auth.module';
 import CoreModule from 'src/core/core.module';
 import ServicesModule from 'src/services/services.module';
 import UserModule from 'src/modules/user/user.module';
+import RuleModule from 'src/modules/rule/rule.module';
 
 export class AppController {
 	private _express: Application;
-	private authModule: AuthModule;
-	private userModule: UserModule;
 
 	constructor(private coreModule: CoreModule, private profileEnv: ProfileEnv, private servicesModule: ServicesModule) {
-		const { responseController, logController } = this.coreModule;
-		const { authService, userService } = this.servicesModule;
-
 		this._express = express();
-		this.authModule = new AuthModule({ authService, responseController, logController }, this.express);
-		this.userModule = new UserModule(userService, responseController, this.express, authService);
 
 		this.exec();
 	}
@@ -57,7 +50,15 @@ export class AppController {
 	}
 
 	private _initModules() {
-		this.authModule.init();
-		this.userModule.init();
+		const { responseController, logController } = this.coreModule;
+		const { authService, userService, ruleService } = this.servicesModule;
+
+		const authModule = new AuthModule({ authService, responseController, logController }, this.express);
+		const userModule = new UserModule(userService, responseController, this.express, authService);
+		const ruleModule = new RuleModule(ruleService, responseController, this.express, authService);
+
+		authModule.init();
+		userModule.init();
+		ruleModule.init();
 	}
 }
