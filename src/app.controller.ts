@@ -8,16 +8,20 @@ import { ProfileEnv } from 'src/environment';
 import AuthModule from 'src/modules/auth/auth.module';
 import CoreModule from 'src/core/core.module';
 import ServicesModule from 'src/services/services.module';
+import UserModule from 'src/modules/user/user.module';
 
 export class AppController {
 	private _express: Application;
 	private authModule: AuthModule;
+	private userModule: UserModule;
+
 	constructor(private coreModule: CoreModule, private profileEnv: ProfileEnv, private servicesModule: ServicesModule) {
 		const { responseController, logController } = this.coreModule;
-		const { authService } = this.servicesModule;
+		const { authService, userService } = this.servicesModule;
 
 		this._express = express();
 		this.authModule = new AuthModule({ authService, responseController, logController }, this.express);
+		this.userModule = new UserModule(userService, responseController, this.express, authService);
 
 		this.exec();
 	}
@@ -54,5 +58,6 @@ export class AppController {
 
 	private _initModules() {
 		this.authModule.init();
+		this.userModule.init();
 	}
 }

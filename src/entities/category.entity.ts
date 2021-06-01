@@ -1,8 +1,7 @@
 import { Schema, Document } from 'mongoose';
+import { CategoryEntity } from 'src/entities/types/category';
 
-import { ICategory } from 'src/entities/types/category';
-
-export class Category extends Document implements ICategory {
+export class Category extends Document implements CategoryEntity {
 	_id: Schema.Types.ObjectId;
 	name: string;
 	description: string;
@@ -13,7 +12,7 @@ export class Category extends Document implements ICategory {
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(props: ICategory, id: Schema.Types.ObjectId) {
+	constructor(props: CategoryEntity, id?: Schema.Types.ObjectId) {
 		super();
 		this._id = id || props._id;
 		this.name = props.name;

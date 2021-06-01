@@ -1,11 +1,11 @@
-import passport from 'passport';
 import { Application } from 'express';
+import { AuthService } from 'src/services';
 
 export abstract class AbstractRoutes {
 	protected app: Application;
-	protected auth?: passport.Authenticator;
+	protected auth?: AuthService;
 
-	constructor(app: Application, auth?: passport.Authenticator) {
+	constructor(app: Application, auth?: AuthService) {
 		this.app = app;
 		this.auth = auth;
 	}

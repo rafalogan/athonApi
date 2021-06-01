@@ -1,6 +1,6 @@
 import { Profile, Rule } from 'src/entities';
 
-export interface IUser {
+export interface UserEntity {
 	id: number;
 	name: string;
 	email: string;

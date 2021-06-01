@@ -12,7 +12,7 @@ export class UserRuleService extends AbstractRelationalService {
 		return this.instance(this.table)
 			.select('rule_id as ruleId')
 			.where({ id })
-			.then(result => result)
+			.then((result: any[]) => result)
 			.catch(err => this.log.error(`find rules by User ${id} failed`, err));
 	}
 }

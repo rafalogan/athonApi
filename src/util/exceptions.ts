@@ -10,7 +10,7 @@ export class ResponseException extends Error {
 	name = 'ResponseException';
 
 	constructor(message: string) {
-		super(`${message}: in Response`);
+		super(message);
 	}
 }
 

@@ -1,6 +1,6 @@
-import { IProfile, IRule, IUser, Profile, Rule } from 'src/entities/index';
+import { Profile, ProfileEntity, Rule, UserEntity } from 'src/entities';
 
-export class User implements IUser {
+export class User implements UserEntity {
 	id: number;
 	name: string;
 	email: string;
@@ -12,7 +12,7 @@ export class User implements IUser {
 	profileId: number;
 	deleteAt?: Date;
 
-	constructor(props: IUser, id?: number) {
+	constructor(props: UserEntity, id?: number) {
 		this.id = Number(id ? id : props.id);
 		this.name = props.name;
 		this.email = props.email;
@@ -24,11 +24,11 @@ export class User implements IUser {
 		this.deleteAt = props?.deleteAt;
 	}
 
-	private _setProfile(profile: IProfile | undefined): Profile | undefined {
+	private _setProfile(profile: ProfileEntity | undefined): Profile | undefined {
 		return profile ? new Profile(profile) : undefined;
 	}
 
-	private _setRules(rules: IRule[] | undefined): Rule[] | [] {
+	private _setRules(rules?: Rule[]): Rule[] | [] {
 		return rules ? rules.map(item => new Rule(item)) : [];
 	}
 }

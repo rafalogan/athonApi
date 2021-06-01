@@ -12,7 +12,7 @@ export class ResponseController {
 		return res.status(this.status.OK).json(data);
 	}
 
-	onError(res: Response, message: string, err?: Error, status = this.status.INTERNAL_SERVER_ERROR) {
+	onError(res: Response, message: string, err?: Error | any, status = this.status.INTERNAL_SERVER_ERROR) {
 		status >= 400 && status < 500 ? this.log.warn(message, err) : this.log.error(message, err);
 		return res.status(status).send(message);
 	}

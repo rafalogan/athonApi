@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-import { existsOrError } from 'src/util';
+import { existsOrError, ResponseException } from 'src/util';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
 import { PaginationDomain } from 'src/core/domains';
 import { RelationalContext, RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
@@ -53,7 +53,7 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 		try {
 			existsOrError(element, `The register nº ${id} not find in table: ${this.table}`);
 		} catch (msg) {
-			return msg;
+			return new ResponseException(msg);
 		}
 
 		return this.instance(this.table)

@@ -1,7 +1,8 @@
 import { Schema, Document } from 'mongoose';
-import { ITimestampsfileds } from 'src/entities/types/timestamps';
 
-export interface ICategory extends ITimestampsfileds {
+import { Timestampsfileds } from 'src/entities';
+
+export interface CategoryEntity extends Timestampsfileds {
 	_id: Schema.Types.ObjectId;
 	name: string;
 	description: string;

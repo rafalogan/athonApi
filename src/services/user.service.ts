@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 
 import { ProfileService, RuleService, UserRuleService, UserServiceOptions } from 'src/services';
 import { equalsOrError, existsOrError, hashString, notExistisOrError } from 'src/util';
-import { User } from 'src/entities';
+import { Rule, User, UserEntity } from 'src/entities';
 import { AbstractRelationalService } from 'src/core/services';
 import { RelationalReadOptions } from 'src/core/types';
 
@@ -22,9 +22,23 @@ export class UserService extends AbstractRelationalService {
 		this.salt = userServiceOptions.salt;
 	}
 
-	async create(item: User): Promise<any> {
-		await this._userValidate(item);
+	async userValidate(user: User) {
+		const userDB = await this.findByEmail(user.email);
 
+		try {
+			existsOrError(user.name, 'Field Name is required.');
+			existsOrError(user.email, 'Field E-mail is required.');
+			existsOrError(user.password, 'Field Password is required.');
+			existsOrError(user.confirmPassword, 'Field Confirm Password');
+			equalsOrError(user.password, user.confirmPassword, 'passwords do not match.');
+			notExistisOrError(userDB, `User ${user.email}, already registered`);
+			return;
+		} catch (msg) {
+			return { code: httpStatus.BAD_REQUEST, msg };
+		}
+	}
+
+	async create(item: User): Promise<any> {
 		item.password = hashString(item.password, this.salt);
 		Reflect.deleteProperty(item, 'confirmPassword');
 
@@ -32,14 +46,7 @@ export class UserService extends AbstractRelationalService {
 	}
 
 	async read(options?: RelationalReadOptions): Promise<any> {
-		return super.read(options).then(result => {
-			if (result.data) {
-				result.data = result.data.map(this._setUserRules);
-				return result;
-			}
-
-			return this._setUserRules(result);
-		});
+		return super.read(options).then(result => (result.data ? this._setUserList(result) : this._setUserRules(result)));
 	}
 
 	findByEmail(email: string) {
@@ -50,36 +57,29 @@ export class UserService extends AbstractRelationalService {
 			.catch(err => this.log.error(`Find user by email: ${email} failed`, err));
 	}
 
+	private _setUserList(result: any) {
+		result.data = result.data.map(this._setUserRules).map((item: User) => Reflect.deleteProperty(item, 'password'));
+		return result;
+	}
+
 	private async _setUserRules(user: any) {
 		const { id } = user;
 
 		user.profile = await this.profileService.read({ id });
-		user.rules = await this._findRulesByUser(id);
-		return user;
+		user.permissions = await this._findRulesByUser(id);
+
+		return new User(user);
 	}
+
 	private async _findRulesByUser(userId: number) {
 		const rulesIds = await this.userRuleService.findRulesByUserId(userId);
 
 		return Array.isArray(rulesIds)
 			? rulesIds.map(async (item: { ruleId: number }) => {
 					const { ruleId: id } = item;
-					return await this.ruleService.read({ id });
+					const raw = await this.ruleService.read({ id });
+					return new Rule(raw);
 			  })
 			: [];
-	}
-
-	private async _userValidate(user: User) {
-		const userDB = await this.findByEmail(user.email);
-
-		try {
-			existsOrError(user.name, 'Field Name is required.');
-			existsOrError(user.email, 'Field E-mail is required.');
-			existsOrError(user.password, 'Field Password is required.');
-			existsOrError(user.confirmPassword, 'Field Confirm Password');
-			equalsOrError(user.password, user.confirmPassword, 'passwords do not match.');
-			notExistisOrError(userDB, `User ${user.email}, already registered`);
-		} catch (msg) {
-			return { code: httpStatus.BAD_REQUEST, msg };
-		}
 	}
 }

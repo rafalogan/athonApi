@@ -1,6 +1,6 @@
-import { ITimestampsfileds } from 'src/entities/types/timestamps';
+import { Timestampsfileds } from 'src/entities';
 
-export interface IRule extends ITimestampsfileds {
+export interface RuleEntity extends Timestampsfileds {
 	id: number;
 	name: string;
 	description: string;
