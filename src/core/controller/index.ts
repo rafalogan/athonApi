@@ -1,4 +1,4 @@
-export * from 'src/core/controller/abistract.controler';
+export * from 'src/core/controller/abistract.controller';
 export * from 'src/core/controller/cache.connection.controller';
 export * from 'src/core/controller/log.controller';
 export * from 'src/core/controller/logger.controller';
