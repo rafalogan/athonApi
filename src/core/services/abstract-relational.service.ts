@@ -82,7 +82,7 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.catch(err => this.log.error(`Find register failed in ${this.table}`, err));
 	}
 
-	private async _findAll(options?: RelationalReadOptions) {
+	protected async _findAll(options?: any): Promise<any> {
 		const page = options?.page ?? 1;
 		const limit = options?.limit ?? 10;
 		const columns = options?.fields ?? this.fields;
@@ -103,7 +103,7 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 		return Number(result?.count);
 	}
 
-	private _checkCache(options?: RelationalReadOptions) {
+	private _checkCache(options?: any) {
 		const id = Number(options?.id);
 		const columns = options?.fields ?? this.fields;
 

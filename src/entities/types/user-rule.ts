@@ -1,6 +1,4 @@
-import { ITimestampsfileds } from 'src/entities/types/timestamps';
-
-export interface IUserRule extends ITimestampsfileds {
+export interface UserRuleEntity extends Timestampsfileds {
 	userId: number;
 	ruleId: number;
 }
