@@ -41,6 +41,24 @@ export class UserRuleService extends AbstractRelationalService {
 		return options.id ? await this._findRuleByIds(options.id, options.fields) : await this._findAll(options);
 	}
 
+	async delete(id: string): Promise<any> {
+		const [userId, ruleId] = id.split('-').map(Number);
+		const element = await this.read({ id });
+
+		try {
+			existsOrError(element, 'User Ruler not found.');
+		} catch (message) {
+			return { code: httpStatus.BAD_REQUEST, message };
+		}
+
+		return this.instance(this.table)
+			.where({ rule_id: ruleId })
+			.andWhere({ user_id: userId })
+			.del()
+			.then(result => ({ deleted: !!result, result, element }))
+			.catch(err => this.log.error('Deleted User Rule failed', err));
+	}
+
 	findRulesByUserId(id: number) {
 		return this.instance(this.table)
 			.select('rule_id as ruleId')

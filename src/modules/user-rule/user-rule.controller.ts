@@ -36,5 +36,12 @@ export class UserRuleController extends AbstractController {
 			.catch(err => this.response.onError(res, 'unexpected error', err));
 	}
 
-	remove(req: Request, res: Response) {}
+	remove(req: Request, res: Response) {
+		this.userRuleService
+			.delete(req.params.id)
+			.then(result =>
+				result.code ? this.response.onError(res, result.message, undefined, result.code) : this.response.onSuccess(res, result)
+			)
+			.catch(err => this.response.onError(res, 'unexpected error', err));
+	}
 }
