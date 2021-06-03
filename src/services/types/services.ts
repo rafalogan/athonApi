@@ -1,7 +1,14 @@
-import { IAbstractRelationalServiceOptions, INRServiceOptions } from 'src/core/services';
-import { ISecurity } from 'src/environment';
+import { RelationalServiceOptions } from 'src/core/types';
+import { SecurityOptions } from 'src/environment';
 
-export interface IServicesOptions extends IAbstractRelationalServiceOptions, INRServiceOptions {
+export interface IServicesOptions extends RelationalServiceOptions {
 	salt: number;
-	security: ISecurity;
+	security: SecurityOptions;
+}
+
+export interface RulesReadOptions {
+	id?: string;
+	page?: number;
+	limit?: number;
+	fields?: string[];
 }

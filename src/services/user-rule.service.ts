@@ -8,6 +8,13 @@ export class UserRuleService extends AbstractRelationalService {
 		super({ ...options, serviceName: UserRuleService.name, table: 'user_rules', fields });
 	}
 
+	validateFields(raw) {}
+
+
+	read(options: ): Promise<any> {
+		return super.read(options);
+	}
+
 	findRulesByUserId(id: number) {
 		return this.instance(this.table)
 			.select('rule_id as ruleId')
