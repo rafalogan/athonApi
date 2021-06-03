@@ -3,14 +3,21 @@ import httpStatus from 'http-status';
 import { AbstractRelationalService } from 'src/core/services';
 import { RelationalServiceOptions } from 'src/core/types';
 import { RulesReadOptions } from 'src/services/types/services';
-import { existsOrError, notExistisOrError } from 'src/util';
-import { UserRule, UserRuleEntity } from 'src/entities';
+import { clearTimestamp, existsOrError, notExistisOrError } from 'src/util';
+import { UserRule, UserRuleEntity, UserRulesEntity } from 'src/entities';
 
 const fields = ['user_id as userId', 'rule_id as ruleId', 'created_at as createdAt', 'updated_at as updatedAt'];
 
 export class UserRuleService extends AbstractRelationalService {
 	constructor(options: RelationalServiceOptions) {
 		super({ ...options, serviceName: UserRuleService.name, table: 'user_rules', fields });
+	}
+
+	createDataList(raw: UserRulesEntity) {
+		const { pagination } = raw;
+		const data = raw.data.map(item => new UserRule(item)).map(clearTimestamp);
+
+		return { data, pagination };
 	}
 
 	async validateFields(raw: UserRuleEntity) {

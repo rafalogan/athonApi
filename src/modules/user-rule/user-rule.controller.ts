@@ -1,3 +1,4 @@
+import httpStatus from 'http-status';
 import { Request, Response } from 'express';
 
 import { AbstractController, ResponseController } from 'src/core/controller';
@@ -19,4 +20,21 @@ export class UserRuleController extends AbstractController {
 			.then(result => this.response.onSuccess(res, result))
 			.catch(err => this.response.onError(res, 'unexpected error', err));
 	}
+
+	edit(req: Request, res: Response) {
+		this.response.onError(res, 'Not Found', undefined, httpStatus.BAD_REQUEST);
+	}
+
+	list(req: Request, res: Response) {
+		const id = req.params.id;
+		const page = Number(req.query.page);
+		const limit = Number(req.query.limit);
+
+		this.userRuleService
+			.read({ id, page, limit })
+			.then(raw => this.response.onSuccess(res, raw.data ? this.userRuleService.createDataList(raw) : new UserRule(raw)))
+			.catch(err => this.response.onError(res, 'unexpected error', err));
+	}
+
+	remove(req: Request, res: Response) {}
 }

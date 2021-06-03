@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 
 import { convertDataValues, existsOrError, ResponseException } from 'src/util';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
-import { RelationalContext, RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
+import { RelationalContext, RelationalServiceOptions } from 'src/core/types';
 import { Pagination } from 'src/core/domains';
 
 export abstract class AbstractRelationalService extends AbstractCacheService implements RelationalContext {

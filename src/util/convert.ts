@@ -30,3 +30,10 @@ export const convertDataValues = (data: any) => {
 };
 
 export const hashString = (field: string, salt: number) => bcrypt.hashSync(field, salt);
+
+export const clearTimestamp = (data: any) => {
+	Reflect.deleteProperty(data, 'createdAt');
+	Reflect.deleteProperty(data, 'updatedAt');
+
+	return data;
+};
