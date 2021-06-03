@@ -4,7 +4,7 @@ export interface PaginationOptions {
 	count: number;
 }
 
-export interface Pagination {
+export interface PaginationDomain {
 	count: number;
 	page: number;
 	pages: number;

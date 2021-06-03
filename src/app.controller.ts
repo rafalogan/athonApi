@@ -10,6 +10,7 @@ import ServicesModule from 'src/services/services.module';
 import UserModule from 'src/modules/user/user.module';
 import RuleModule from 'src/modules/rule/rule.module';
 import ProfileModule from 'src/modules/profile/profile.module';
+import ProfileRuleModule from 'src/modules/profile-rule/profile-rule.module';
 
 export class AppController {
 	private _express: Application;
@@ -58,10 +59,12 @@ export class AppController {
 		const userModule = new UserModule(userService, responseController, this.express, authService);
 		const ruleModule = new RuleModule(ruleService, responseController, this.express, authService);
 		const porfileModule = new ProfileModule(profileService, responseController, this.express, authService);
+		const profileRuleModule = new ProfileRuleModule(profileRuleService, responseController, this.express, authService);
 
 		authModule.init();
 		userModule.init();
 		ruleModule.init();
 		porfileModule.init();
+		profileRuleModule.init();
 	}
 }

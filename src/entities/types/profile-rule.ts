@@ -1,6 +1,12 @@
-import { ITimestampsfileds } from 'src/entities/types/timestamps';
+import { Timestampsfileds } from 'src/entities';
+import { Pagination } from 'src/core/domains';
 
-export interface IProfileRule extends ITimestampsfileds {
+export interface ProfileRuleEntity extends Timestampsfileds {
 	profileId: number;
 	ruleId: number;
+}
+
+export interface ProfileRuleListEntity {
+	data: ProfileRuleEntity[];
+	pagination: Pagination;
 }

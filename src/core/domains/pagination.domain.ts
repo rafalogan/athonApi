@@ -1,6 +1,6 @@
-import { Pagination, PaginationOptions } from 'src/core/types';
+import { PaginationDomain, PaginationOptions } from 'src/core/types';
 
-export class PaginationDomain implements Pagination {
+export class Pagination implements PaginationDomain {
 	count: number;
 	page: number;
 	pages: number;
