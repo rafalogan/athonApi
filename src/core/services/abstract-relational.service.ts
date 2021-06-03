@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-import { existsOrError, ResponseException } from 'src/util';
+import { convertDataValues, existsOrError, ResponseException } from 'src/util';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
 import { RelationalContext, RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 import { Pagination } from 'src/core/domains';
@@ -25,9 +25,10 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 
 	create(item: any): Promise<any> {
 		item.createdAt = new Date();
+		const data = convertDataValues(item);
 
 		return this.instance(this.table)
-			.insert(item)
+			.insert(data)
 			.then((result: any) => result)
 			.catch(err => this.log.error(`Insert Failed in Table: ${this.table}`, err));
 	}
@@ -41,9 +42,10 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 
 	update(values: any, id: number): Promise<any> {
 		values.updatedAt = new Date();
+		const data = convertDataValues(values);
 
 		return this.instance(this.table)
-			.update(values)
+			.update(data)
 			.where({ id })
 			.then(async result => {
 				await this._clearCache(id);

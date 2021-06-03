@@ -18,4 +18,15 @@ export const camelToSnake = (field: string): string => {
 		.toLowerCase();
 };
 
+export const convertDataValues = (data: any) => {
+	const keys = Object.keys(data);
+	const values = Object.values(data);
+	const convertKeysToSnake = keys.map(camelToSnake);
+	const result: any = {};
+
+	convertKeysToSnake.forEach((key, i) => (result[key] = values[i]));
+
+	return result;
+};
+
 export const hashString = (field: string, salt: number) => bcrypt.hashSync(field, salt);
