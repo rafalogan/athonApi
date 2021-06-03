@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import { AbstractRelationalService } from 'src/core/services';
 import { RelationalServiceOptions } from 'src/core/types';
 import { ProfileRule, ProfileRuleEntity, ProfileRuleListEntity } from 'src/entities';
-import { ProfileRuleReadOptions } from 'src/services/types/profile-service';
+import { RulesReadOptions } from 'src/services';
 import { Pagination } from 'src/core/domains';
 import { existsOrError, notExistisOrError } from 'src/util';
 
@@ -36,7 +36,7 @@ export class ProfileRuleService extends AbstractRelationalService {
 		}
 	}
 
-	async read(options: ProfileRuleReadOptions) {
+	async read(options: RulesReadOptions) {
 		if (this.enableCache) return await this._findBycache(options);
 
 		return options.id ? this._findRuleById(options.id, options.fields) : this._findAllProfileRules(options);
@@ -81,7 +81,7 @@ export class ProfileRuleService extends AbstractRelationalService {
 			.catch(err => this.log.error('Find rule is failed', err));
 	}
 
-	private async _findAllProfileRules(options: ProfileRuleReadOptions): Promise<any> {
+	private async _findAllProfileRules(options: RulesReadOptions): Promise<any> {
 		const cols = options.fields ?? this.fields;
 		const page = options.page ?? 1;
 		const limit = options.limit ?? 10;
@@ -97,7 +97,7 @@ export class ProfileRuleService extends AbstractRelationalService {
 			.catch(err => this.log.error('Find rules is failed', err));
 	}
 
-	private async _findBycache(options: ProfileRuleReadOptions) {
+	private async _findBycache(options: RulesReadOptions) {
 		return options.id
 			? await this._findCacheById(options.id, options.fields)
 			: this.findCahce({ serviceName: this.serviceName, id: 'list' }, await this._findAllProfileRules(options), this.cacheTime);
