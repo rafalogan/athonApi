@@ -1,14 +1,16 @@
-import { IUserRule } from 'src/entities/types/user-rule';
+import { UserRuleEntity } from 'src/entities';
 
-export class UserRule implements IUserRule {
+export class UserRule implements UserRuleEntity {
 	userId: number;
 	ruleId: number;
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(props: IUserRule) {
-		this.userId = props.userId;
-		this.ruleId = props.ruleId;
+	constructor(props: UserRuleEntity, id?: string) {
+		const [userId, ruleId] = id ? id.split('-') : '';
+
+		this.userId = Number(userId ?? props.userId);
+		this.ruleId = Number(ruleId ?? props.ruleId);
 		this.createdAt = props.createdAt;
 		this.updatedAt = props.updatedAt;
 	}
