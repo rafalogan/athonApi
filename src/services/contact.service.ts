@@ -2,8 +2,8 @@ import httpStatus from 'http-status';
 
 import { RelationalServiceOptions } from 'src/core/types';
 import { AbstractRelationalService } from 'src/core/services';
-import { Contact, ContactEntity } from 'src/entities';
-import { convertDataValues, existsOrError } from 'src/util';
+import { Contact, ContactEntity, ContactListEntity } from 'src/entities';
+import { clearTimestamp, convertDataValues, existsOrError } from 'src/util';
 
 const fields = ['id', 'name', 'email', 'subject', 'phone', 'message', 'created_at as createdAt'];
 
@@ -23,6 +23,13 @@ export class ContactService extends AbstractRelationalService {
 		} catch (message) {
 			return { code: httpStatus.BAD_REQUEST, message };
 		}
+	}
+
+	listContacts(raw: ContactListEntity) {
+		const { pagination } = raw;
+		const data = raw.data.map(item => new Contact(item)).map(clearTimestamp);
+
+		return { data, pagination };
 	}
 
 	async update(values: Contact, id: number) {

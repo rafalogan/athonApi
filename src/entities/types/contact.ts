@@ -1,4 +1,5 @@
 import { CreatedAtField } from 'src/entities';
+import { Pagination } from 'src/core/domains';
 
 export interface ContactEntity extends CreatedAtField {
 	id: number;
@@ -7,4 +8,9 @@ export interface ContactEntity extends CreatedAtField {
 	subject: string;
 	phone: string;
 	message: string;
+}
+
+export interface ContactListEntity {
+	data: ContactEntity[];
+	pagination: Pagination;
 }

@@ -11,12 +11,12 @@ export class ContactController extends AbstractController {
 	save(req: Request, res: Response) {
 		const data = this.contactService.validateFields(req.body);
 
-		if (!(data instanceof Contact)) return this.response.onError(res, data.message, undefined, data.code);
+		if (!(data instanceof Contact)) return this.response.onError(res, data.message, { status: data.code });
 
 		this.contactService
 			.create(data)
 			.then(result => this.response.onSuccess(res, result))
-			.catch(err => this.response.onError(res, 'unexpected error', err));
+			.catch(err => this.response.onError(res, 'unexpected error', { err }));
 	}
 
 	edit(req: Request, res: Response) {
@@ -25,10 +25,29 @@ export class ContactController extends AbstractController {
 		this.contactService
 			.update(contact, contact.id)
 			.then(result => this.response.onSuccess(res, result))
-			.catch(err => this.response.onError(res, 'unexpected error', err));
+			.catch(err => this.response.onError(res, 'unexpected error', { err }));
 	}
 
-	list(req: Request, res: Response) {}
+	list(req: Request, res: Response) {
+		const id = Number(req.params.id);
+		const page = Number(req.query.page);
+		const limit = Number(req.query.limit);
 
-	remove(req: Request, res: Response) {}
+		this.contactService
+			.read({ id, page, limit })
+			.then(item => this.response.onSuccess(res, item.data ? this.contactService.listContacts(item) : new Contact(item)))
+			.catch(err => this.response.onError(res, 'unexpected error', { err }));
+	}
+
+	async remove(req: Request, res: Response) {
+		const id = Number(req.params.id);
+
+		try {
+			const deleted = await this.contactService.delete(id);
+
+			return deleted.status ? this.response.onError(res, deleted.message, deleted) : this.response.onSuccess(res, deleted);
+		} catch (err) {
+			this.response.onError(res, 'unexpected error', { err });
+		}
+	}
 }

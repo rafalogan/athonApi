@@ -1,3 +1,4 @@
+import httpStatus from 'http-status';
 import { Knex } from 'knex';
 
 import { convertDataValues, existsOrError, ResponseException } from 'src/util';
@@ -58,8 +59,10 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 		const element = await this._findOneById(id);
 		try {
 			existsOrError(element, `The register nº ${id} not find in table: ${this.table}`);
-		} catch (msg) {
-			return new ResponseException(msg);
+		} catch (message) {
+			const err = new ResponseException(message);
+
+			return { status: httpStatus.BAD_REQUEST, message, err };
 		}
 
 		return this.instance(this.table)
