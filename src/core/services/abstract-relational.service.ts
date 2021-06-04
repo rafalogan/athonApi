@@ -48,7 +48,7 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.update(data)
 			.where({ id })
 			.then(async result => {
-				await this._clearCache(id);
+				await this.clearCache(id);
 				return result;
 			})
 			.catch(err => this.log.error(`Update on register nº ${id} in table: ${this.table}`, err));
@@ -66,13 +66,23 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.where({ id })
 			.del()
 			.then(async result => {
-				await this._clearCache(id);
+				await this.clearCache(id);
 				return {
 					deleted: result > 0,
 					element,
 				};
 			})
 			.catch(err => this.log.error(`Not possible to delete nº ${id} in table: ${this.table}`, err));
+	}
+
+	protected async countById() {
+		const result = await this.instance(this.table).count({ count: 'id' }).first();
+		return Number(result?.count);
+	}
+
+	protected async clearCache(id: any = 'list') {
+		if (id !== 'list') await this.deleteCahce({ serviceName: this.serviceName, id });
+		return this.deleteCahce({ serviceName: this.serviceName, id: 'list' });
 	}
 
 	private _findOneById(id: number, columns: string[] = []) {
@@ -100,11 +110,6 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.catch(err => this.log.error(`Find register fail in table: ${this.table}`, err));
 	}
 
-	protected async countById() {
-		const result = await this.instance(this.table).count({ count: 'id' }).first();
-		return Number(result?.count);
-	}
-
 	private _checkCache(options?: any) {
 		const id = Number(options?.id);
 		const columns = options?.fields ?? this.fields;
@@ -112,10 +117,5 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 		return id
 			? this.findCahce({ serviceName: this.serviceName, id }, () => this._findOneById(id, columns), this.cacheTime)
 			: this.findCahce({ serviceName: this.serviceName, id: 'list' }, () => this._findAll(options), this.cacheTime);
-	}
-
-	private async _clearCache(id: any = 'list') {
-		if (id !== 'list') await this.deleteCahce({ serviceName: this.serviceName, id });
-		return this.deleteCahce({ serviceName: this.serviceName, id: 'list' });
 	}
 }

@@ -1,6 +1,6 @@
-import { ICreatedAt } from 'src/entities/types/timestamps';
+import { CreatedAtField } from 'src/entities';
 
-export interface IContact extends ICreatedAt {
+export interface ContactEntity extends CreatedAtField {
 	id: number;
 	name: string;
 	email: string;
