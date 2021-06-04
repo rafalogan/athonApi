@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 
-import { AbistractController, ResponseController } from 'src/core/controller';
+import { AbstractController, ResponseController } from 'src/core/controller';
 import { ProfileService } from 'src/services';
 import { Profile } from 'src/entities';
 
-export class ProfileController extends AbistractController {
+export class ProfileController extends AbstractController {
 	constructor(private profileService: ProfileService, private response: ResponseController) {
 		super();
 	}

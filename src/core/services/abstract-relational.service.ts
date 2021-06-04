@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
 
-import { existsOrError, ResponseException } from 'src/util';
+import { convertDataValues, existsOrError, ResponseException } from 'src/util';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
-import { PaginationDomain } from 'src/core/domains';
-import { RelationalContext, RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
+import { RelationalContext, RelationalServiceOptions } from 'src/core/types';
+import { Pagination } from 'src/core/domains';
 
 export abstract class AbstractRelationalService extends AbstractCacheService implements RelationalContext {
 	protected instance: Knex;
@@ -12,7 +12,7 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 	protected enableCache: boolean;
 	protected cacheTime?: number;
 
-	private readonly serviceName: string;
+	protected readonly serviceName: string;
 
 	protected constructor(options: RelationalServiceOptions) {
 		super(options);
@@ -25,25 +25,27 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 
 	create(item: any): Promise<any> {
 		item.createdAt = new Date();
+		const data = convertDataValues(item);
 
 		return this.instance(this.table)
-			.insert(item)
+			.insert(data)
 			.then((result: any) => result)
 			.catch(err => this.log.error(`Insert Failed in Table: ${this.table}`, err));
 	}
 
-	read(options?: RelationalReadOptions): Promise<any> {
+	read(options: any): Promise<any> {
 		const columns = options?.fields ?? this.fields;
 
 		if (this.enableCache) return this._checkCache(options);
-		return options?.id ? this._findOneById(options.id, columns) : this._findAll(options);
+		return options?.id ? this._findOneById(Number(options.id), columns) : this._findAll(options);
 	}
 
 	update(values: any, id: number): Promise<any> {
 		values.updatedAt = new Date();
+		const data = convertDataValues(values);
 
 		return this.instance(this.table)
-			.update(values)
+			.update(data)
 			.where({ id })
 			.then(async result => {
 				await this._clearCache(id);
@@ -82,12 +84,12 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.catch(err => this.log.error(`Find register failed in ${this.table}`, err));
 	}
 
-	private async _findAll(options?: RelationalReadOptions) {
+	protected async _findAll(options?: any): Promise<any> {
 		const page = options?.page ?? 1;
 		const limit = options?.limit ?? 10;
 		const columns = options?.fields ?? this.fields;
-		const count = await this._countById();
-		const pagination = new PaginationDomain({ page, count, limit });
+		const count = await this.countById();
+		const pagination = new Pagination({ page, count, limit });
 
 		return this.instance(this.table)
 			.select(...columns)
@@ -98,13 +100,13 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.catch(err => this.log.error(`Find register fail in table: ${this.table}`, err));
 	}
 
-	private async _countById() {
+	protected async countById() {
 		const result = await this.instance(this.table).count({ count: 'id' }).first();
 		return Number(result?.count);
 	}
 
-	private _checkCache(options?: RelationalReadOptions) {
-		const id = options?.id;
+	private _checkCache(options?: any) {
+		const id = Number(options?.id);
 		const columns = options?.fields ?? this.fields;
 
 		return id

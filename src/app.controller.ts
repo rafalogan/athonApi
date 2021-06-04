@@ -10,6 +10,8 @@ import ServicesModule from 'src/services/services.module';
 import UserModule from 'src/modules/user/user.module';
 import RuleModule from 'src/modules/rule/rule.module';
 import ProfileModule from 'src/modules/profile/profile.module';
+import ProfileRuleModule from 'src/modules/profile-rule/profile-rule.module';
+import UserRuleModule from 'src/modules/user-rule/user-rule.module';
 
 export class AppController {
 	private _express: Application;
@@ -52,16 +54,20 @@ export class AppController {
 
 	private _initModules() {
 		const { responseController, logController } = this.coreModule;
-		const { authService, userService, ruleService, profileRuleService, profileService } = this.servicesModule;
+		const { authService, userService, ruleService, profileRuleService, profileService, userRuleService } = this.servicesModule;
 
 		const authModule = new AuthModule({ authService, responseController, logController }, this.express);
 		const userModule = new UserModule(userService, responseController, this.express, authService);
 		const ruleModule = new RuleModule(ruleService, responseController, this.express, authService);
 		const porfileModule = new ProfileModule(profileService, responseController, this.express, authService);
+		const profileRuleModule = new ProfileRuleModule(profileRuleService, responseController, this.express, authService);
+		const userRuleModule = new UserRuleModule(userRuleService, responseController, this.express, authService);
 
 		authModule.init();
 		userModule.init();
 		ruleModule.init();
 		porfileModule.init();
+		profileRuleModule.init();
+		userRuleModule.init();
 	}
 }

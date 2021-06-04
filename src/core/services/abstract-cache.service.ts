@@ -6,6 +6,7 @@ import md5 from 'md5';
 import { existsOrError } from 'src/util';
 import { LogController } from 'src/core/controller';
 import { CacheServiceOptions, KeyOptions } from 'src/core/types';
+import { Pagination } from 'src/core/domains';
 
 export abstract class AbstractCacheService {
 	private _getAsync: (key: any) => Promise<any>;
@@ -36,7 +37,7 @@ export abstract class AbstractCacheService {
 		return data;
 	}
 
-	async findCahce(args: KeyOptions, fn: () => Promise<any>, time?: number) {
+	async findCahce(args: KeyOptions, fn: () => Promise<any>, time?: number | undefined) {
 		const key = this._generateKey(args);
 
 		if (!this.clientActive) return await fn();

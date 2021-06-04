@@ -1,14 +1,16 @@
-import { IProfileRule } from 'src/entities/types/profile-rule';
+import { ProfileRuleEntity } from 'src/entities/types/profile-rule';
 
-export class ProfileRule implements IProfileRule {
+export class ProfileRule implements ProfileRuleEntity {
 	profileId: number;
 	ruleId: number;
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(props: IProfileRule) {
-		this.profileId = props.profileId;
-		this.ruleId = props.ruleId;
+	constructor(props: ProfileRuleEntity, id?: string) {
+		const [profileId, ruleId] = id ? id.split('-').map(Number) : '';
+
+		this.profileId = Number(profileId ?? props.profileId);
+		this.ruleId = Number(ruleId ?? props.ruleId);
 		this.createdAt = props.createdAt;
 		this.updatedAt = props.updatedAt;
 	}
