@@ -1,6 +1,6 @@
-import { IContact } from 'src/entities/types/contact';
+import { ContactEntity } from 'src/entities/types/contact';
 
-export class Contact implements IContact {
+export class Contact implements ContactEntity {
 	id: number;
 	name: string;
 	email: string;
@@ -9,8 +9,8 @@ export class Contact implements IContact {
 	subject: string;
 	createdAt?: Date;
 
-	constructor(props: IContact, id?: number) {
-		this.id = Number(id || props.id);
+	constructor(props: ContactEntity, id?: number) {
+		this.id = Number(id ?? props.id);
 		this.name = props.name;
 		this.email = props.email;
 		this.phone = props.phone;

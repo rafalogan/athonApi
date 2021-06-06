@@ -1,4 +1,4 @@
-import { AuthService, ProfileRuleService, ProfileService, RuleService, UserRuleService, UserService } from 'src/services';
+import { AuthService, ContactService, ProfileRuleService, ProfileService, RuleService, UserRuleService, UserService } from 'src/services';
 import { CacheConnectionController, LogController, RelationalConnectionController } from 'src/core/controller';
 import { ProfileEnv } from 'src/environment';
 import { CacheServiceOptions, RelationalServiceOptions } from 'src/core/types';
@@ -10,6 +10,7 @@ export default class ServicesModule {
 	userRuleService: UserRuleService;
 	ruleService: RuleService;
 	authService: AuthService;
+	contactService: ContactService;
 
 	constructor(
 		private relationalConnectionController: RelationalConnectionController,
@@ -23,6 +24,7 @@ export default class ServicesModule {
 		this.profileService = this._instanceProfileService();
 		this.userService = this._instanceUserService();
 		this.authService = this._istanceAutService();
+		this.contactService = new ContactService(this._setRelationalServiceOptions());
 	}
 
 	private _istanceAutService() {
