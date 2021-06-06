@@ -1,6 +1,6 @@
-import { INewsletter } from 'src/entities/types/newsletter';
+import { NewsletterEntity } from 'src/entities/types/newsletter';
 
-export class Newsletter implements INewsletter {
+export class Newsletter implements NewsletterEntity {
 	id: number;
 	name: string;
 	email: string;
@@ -8,7 +8,7 @@ export class Newsletter implements INewsletter {
 	createAt?: Date;
 	updateAt?: Date;
 
-	constructor(props: INewsletter, id?: number) {
+	constructor(props: NewsletterEntity, id?: number) {
 		this.id = Number(id || props.id);
 		this.name = props.name;
 		this.email = props.email;
