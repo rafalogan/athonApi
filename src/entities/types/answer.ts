@@ -1,4 +1,4 @@
-import { Timestampsfileds } from 'src/entities';
+import { Contact, Timestampsfileds } from 'src/entities';
 import { Pagination } from 'src/core/domains';
 
 export interface AnswerEntity extends Timestampsfileds {
@@ -7,6 +7,7 @@ export interface AnswerEntity extends Timestampsfileds {
 	content: string;
 	contactId: number;
 	userId: number;
+	contact?: Contact | void;
 }
 
 export interface AnswerListEntity {
