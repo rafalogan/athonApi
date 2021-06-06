@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.integer('contact_id').unsigned().references('id').inTable('contacts').notNullable();
 		table.integer('user_id').unsigned().references('id').inTable('users').notNullable();
 		table.timestamp('created_at').notNullable();
-		table.timestamp('updated_at').notNullable();
+		table.timestamp('updated_at');
 	});
 }
 
