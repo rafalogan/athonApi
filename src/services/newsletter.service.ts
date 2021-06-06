@@ -1,8 +1,10 @@
-import { AbstractRelationalService, ICServiceOptions, IRServiceOptions } from 'src/core/services';
-import { IEnvServiceOptions } from 'src/services/types/enviroment-service';
+import { RelationalServiceOptions } from 'src/core/types';
+import { AbstractRelationalService } from 'src/core/services';
+
+const fields = ['id', 'name', 'active', 'created_at as createdAt', 'updated_at as updatedAt'];
 
 export class NewsletterService extends AbstractRelationalService {
-	constructor(newsletterServiceOptions: IRServiceOptions, cacheServiceOptions: ICServiceOptions, envServiceOptions: IEnvServiceOptions) {
-		super(newsletterServiceOptions, cacheServiceOptions, envServiceOptions);
+	constructor(options: RelationalServiceOptions) {
+		super({ ...options, serviceName: NewsletterService.name, table: 'newsletter', fields });
 	}
 }
