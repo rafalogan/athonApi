@@ -12,6 +12,7 @@ import RuleModule from 'src/modules/rule/rule.module';
 import ProfileModule from 'src/modules/profile/profile.module';
 import ProfileRuleModule from 'src/modules/profile-rule/profile-rule.module';
 import UserRuleModule from 'src/modules/user-rule/user-rule.module';
+import ContactModule from 'src/modules/contact/contact.module';
 
 export class AppController {
 	private _express: Application;
@@ -54,7 +55,8 @@ export class AppController {
 
 	private _initModules() {
 		const { responseController, logController } = this.coreModule;
-		const { authService, userService, ruleService, profileRuleService, profileService, userRuleService } = this.servicesModule;
+		const { authService, userService, ruleService, profileRuleService, profileService, userRuleService, contactService } =
+			this.servicesModule;
 
 		const authModule = new AuthModule({ authService, responseController, logController }, this.express);
 		const userModule = new UserModule(userService, responseController, this.express, authService);
@@ -62,6 +64,7 @@ export class AppController {
 		const porfileModule = new ProfileModule(profileService, responseController, this.express, authService);
 		const profileRuleModule = new ProfileRuleModule(profileRuleService, responseController, this.express, authService);
 		const userRuleModule = new UserRuleModule(userRuleService, responseController, this.express, authService);
+		const contactModule = new ContactModule(contactService, responseController, this.express, authService);
 
 		authModule.init();
 		userModule.init();
@@ -69,5 +72,6 @@ export class AppController {
 		porfileModule.init();
 		profileRuleModule.init();
 		userRuleModule.init();
+		contactModule.init();
 	}
 }
