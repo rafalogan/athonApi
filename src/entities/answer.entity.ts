@@ -1,16 +1,17 @@
-import { IAnswer } from 'src/entities/types/answer';
+import { AnswerEntity, Contact } from 'src/entities';
 
-export class Answer implements IAnswer {
+export class Answer implements AnswerEntity {
 	id: number;
 	subject: string;
 	content: string;
 	contactId: number;
 	userId: number;
+	contact?: Contact | void;
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(props: IAnswer, id?: number) {
-		this.id = Number(id || props.id);
+	constructor(props: AnswerEntity, id?: number) {
+		this.id = Number(id ?? props.id);
 		this.subject = props.subject;
 		this.content = props.content;
 		this.contactId = Number(props.contactId);
