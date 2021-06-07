@@ -31,7 +31,7 @@ export class NewsletterService extends AbstractRelationalService {
 
 	findSubscribeByEmail(email: string) {
 		return this.instance(this.table)
-			.select()
+			.select(...this.fields)
 			.where({ email })
 			.then((data: any) => data)
 			.catch(err => this.log.error(`Find Subscribe by Email: ${email}`, err));
