@@ -30,6 +30,4 @@ const MediasSchema = new Schema(
 	}
 );
 
-const MediasModel = model<IMediaModel>('Medias', MediasSchema);
-
-export default MediasModel;
+export const MediasModel = model<IMediaModel>('Medias', MediasSchema);

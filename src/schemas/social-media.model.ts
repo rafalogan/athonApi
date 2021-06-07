@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose';
-
-import { ISocialMediaModel } from 'src/core/domains/types/social-media';
+import { ISocialMediaModel } from 'src/entities';
 
 const SocialMediaSchema = new Schema(
 	{
@@ -27,6 +26,4 @@ const SocialMediaSchema = new Schema(
 	}
 );
 
-const SocialMediaModel = model<ISocialMediaModel>('SocialMedia', SocialMediaSchema);
-
-export default SocialMediaModel;
+export const SocialMediaModel = model<ISocialMediaModel>('SocialMedia', SocialMediaSchema);
