@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import { AbstractController, ResponseController } from 'src/core/controller';
 import { NewsletterService } from 'src/services';
 import { Newsletter } from 'src/entities';
+import { existsOrError } from 'src/util';
+import httpStatus from 'http-status';
 
 export class NewsletterController extends AbstractController {
 	constructor(private newsletterService: NewsletterService, private response: ResponseController) {
@@ -37,6 +39,25 @@ export class NewsletterController extends AbstractController {
 		this.newsletterService
 			.read({ id, page, limit })
 			.then(entry => this.response.onSuccess(res, entry.data ? this.newsletterService.renderList(entry) : new Newsletter(entry)))
+			.catch(err => this.response.onError(res, 'unexpected error', { err }));
+	}
+
+	async unsubscribe(req: Request, res: Response) {
+		const { email } = req.body;
+		const fromDB = await this.newsletterService.findSubscribeByEmail(email);
+		const subscription = new Newsletter(fromDB);
+
+		try {
+			existsOrError(subscription, `Dont exists Subiscription to this email: ${email}`);
+		} catch (message) {
+			return this.response.onError(res, message, { status: httpStatus.BAD_REQUEST });
+		}
+
+		subscription.active = false;
+
+		this.newsletterService
+			.update(subscription, subscription.id)
+			.then(result => this.response.onSuccess(res, result))
 			.catch(err => this.response.onError(res, 'unexpected error', { err }));
 	}
 

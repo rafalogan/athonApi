@@ -28,4 +28,12 @@ export class NewsletterService extends AbstractRelationalService {
 
 		return { data, pagination };
 	}
+
+	findSubscribeByEmail(email: string) {
+		return this.instance(this.table)
+			.select()
+			.where({ email })
+			.then((data: any) => data)
+			.catch(err => this.log.error(`Find Subscribe by Email: ${email}`, err));
+	}
 }
