@@ -14,6 +14,7 @@ import ProfileRuleModule from 'src/modules/profile-rule/profile-rule.module';
 import UserRuleModule from 'src/modules/user-rule/user-rule.module';
 import ContactModule from 'src/modules/contact/contact.module';
 import AnswerModule from 'src/modules/answer/answer.module';
+import NewsletterModule from 'src/modules/newsletter/newsletter.module';
 
 export class AppController {
 	private _express: Application;
@@ -56,8 +57,17 @@ export class AppController {
 
 	private _initModules() {
 		const { responseController, logController } = this.coreModule;
-		const { authService, userService, ruleService, profileRuleService, profileService, userRuleService, contactService, answerService } =
-			this.servicesModule;
+		const {
+			authService,
+			userService,
+			ruleService,
+			profileRuleService,
+			profileService,
+			userRuleService,
+			contactService,
+			answerService,
+			newsletterService,
+		} = this.servicesModule;
 
 		new AuthModule({ authService, responseController, logController }, this.express).init();
 		new UserModule(userService, responseController, this.express, authService).init();
@@ -67,5 +77,6 @@ export class AppController {
 		new UserRuleModule(userRuleService, responseController, this.express, authService).init();
 		new ContactModule(contactService, responseController, this.express, authService).init();
 		new AnswerModule(answerService, responseController, this.express, authService).init();
+		new NewsletterModule(newsletterService, responseController, this.express, authService).init();
 	}
 }
