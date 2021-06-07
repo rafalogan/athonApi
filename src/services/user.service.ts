@@ -53,7 +53,7 @@ export class UserService extends AbstractRelationalService {
 		return this.instance(this.table)
 			.select()
 			.where({ email })
-			.then((user: any) => this._setUserRules(user))
+			.then((user: any) => user)
 			.catch(err => this.log.error(`Find user by email: ${email} failed`, err));
 	}
 

@@ -69,11 +69,8 @@ export abstract class AbstractRelationalService extends AbstractCacheService imp
 			.where({ id })
 			.del()
 			.then(async result => {
-				await this.clearCache(id);
-				return {
-					deleted: result > 0,
-					element,
-				};
+				if (this.enableCache) await this.clearCache(id);
+				return { deleted: result > 0, element };
 			})
 			.catch(err => this.log.error(`Not possible to delete nº ${id} in table: ${this.table}`, err));
 	}

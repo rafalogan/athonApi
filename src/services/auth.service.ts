@@ -42,7 +42,8 @@ export class AuthService {
 
 	async verifyCredentials(credentials: Credential) {
 		try {
-			const user = await this.userService.findByEmail(credentials.email);
+			const findDB = await this.userService.findByEmail(credentials.email);
+			const user = new User(findDB);
 			existsOrError(user, 'User not found');
 
 			if (isMatch(credentials, user) && user) {
@@ -57,6 +58,11 @@ export class AuthService {
 
 	async signupOpApp(user: User) {
 		return this.userService.create(user);
+	}
+
+	getPayload(req: Request) {
+		const token = this._extractToken(req);
+		return token ? this._decodeToken(token) : undefined;
 	}
 
 	tokemIsValid(req: Request) {

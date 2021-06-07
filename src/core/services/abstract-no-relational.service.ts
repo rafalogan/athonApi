@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 
-import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
-import { existsOrError } from 'src/util/validate';
 import { INoRelationaContext, NoRelationalReadOptions, NoRelationalServiceOptions } from 'src/core/types';
-import { PaginationDomain } from 'src/core/domains';
+import { existsOrError, ResponseException } from 'src/util';
+import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
+import { Pagination } from 'src/core/domains';
+import httpStatus from 'http-status';
 
 export abstract class AbstractNoRelationalService<D extends mongoose.Document> extends AbstractCacheService implements INoRelationaContext {
 	protected schema: string;
@@ -30,10 +31,10 @@ export abstract class AbstractNoRelationalService<D extends mongoose.Document> e
 	}
 
 	read(options: NoRelationalReadOptions): Promise<any> {
-		const { id } = options;
+		const { _id } = options;
 
 		if (this.enableCache) return this._checkCache(options);
-		return id ? this._findById(id) : this._findAll(options);
+		return _id ? this._findById(_id) : this._findAll(options);
 	}
 
 	update(valies: any, _id: any): Promise<any> {
@@ -46,13 +47,14 @@ export abstract class AbstractNoRelationalService<D extends mongoose.Document> e
 			.catch(err => this.log.error(`Update registe "${_id}" failed`, err));
 	}
 
-	async delete(_id: any): Promise<any> {
+	async delete(_id: any) {
 		const element = await this._findById(_id);
 
 		try {
 			existsOrError(element, `Registe "${_id}" doesn't exist`);
-		} catch (msg) {
-			return msg;
+		} catch (message) {
+			const err = new ResponseException(message);
+			return { status: httpStatus.BAD_REQUEST, message, err };
 		}
 
 		this.instanceModel
@@ -86,22 +88,22 @@ export abstract class AbstractNoRelationalService<D extends mongoose.Document> e
 					.limit(limit)
 					.then(data => ({
 						data,
-						pagination: new PaginationDomain({ page, limit, count }),
+						pagination: new Pagination({ page, limit, count }),
 					}))
 					.catch(err => this.log.error(`Find All registers fail on ${this.schema}`, err))
 			);
 	}
 
 	private _checkCache(options: NoRelationalReadOptions) {
-		const id = options.id;
+		const { _id } = options;
 
-		return id
-			? this.findCahce({ serviceName: this.serviceName, id }, () => this._findById(id), this.cacheTime)
+		return _id
+			? this.findCahce({ serviceName: this.serviceName, id: _id }, () => this._findById(_id), this.cacheTime)
 			: this.findCahce({ serviceName: this.serviceName, id: 'list' }, () => this._findAll(options), this.cacheTime);
 	}
 
-	private async _clearCache(id: any = 'list') {
-		if (id !== 'list') await this.deleteCahce({ serviceName: this.serviceName, id });
+	private async _clearCache(_id: any = 'list') {
+		if (_id !== 'list') await this.deleteCahce({ serviceName: this.serviceName, id: _id });
 		return this.deleteCahce({ serviceName: this.serviceName, id: 'list' });
 	}
 }
