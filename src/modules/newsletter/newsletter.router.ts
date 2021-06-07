@@ -11,7 +11,7 @@ export class NewsletterRouter extends AbstractRoutes {
 
 	exec() {
 		this.app.route('/newsletter/signin').post(this.newsletterController.save.bind(this.newsletterController));
-		this.app.route('/newsletter/cancel/:id').post(this.newsletterController.edit.bind(this.newsletterController));
+		this.app.route('/newsletter/unsubscribe').post(this.newsletterController.unsubscribe.bind(this.newsletterController));
 
 		this.app
 			.route('/newsletter')
