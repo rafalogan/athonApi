@@ -2,6 +2,7 @@ import {
 	AnswerService,
 	AuthService,
 	ContactService,
+	NewsletterService,
 	ProfileRuleService,
 	ProfileService,
 	RuleService,
@@ -21,6 +22,7 @@ export default class ServicesModule {
 	authService: AuthService;
 	contactService: ContactService;
 	answerService: AnswerService;
+	newsletterService: NewsletterService;
 
 	constructor(
 		private relationalConnectionController: RelationalConnectionController,
@@ -36,6 +38,7 @@ export default class ServicesModule {
 		this.authService = this._instanceAuthService();
 		this.contactService = new ContactService(this._setRelationalServiceOptions());
 		this.answerService = this._instanceAnswerService();
+		this.newsletterService = new NewsletterService(this._setRelationalServiceOptions());
 	}
 
 	private _instanceAnswerService() {
