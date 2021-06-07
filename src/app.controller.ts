@@ -21,7 +21,6 @@ export class AppController {
 
 	constructor(private coreModule: CoreModule, private profileEnv: ProfileEnv, private servicesModule: ServicesModule) {
 		this._express = express();
-
 		this.exec();
 	}
 
