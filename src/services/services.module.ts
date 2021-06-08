@@ -1,6 +1,7 @@
 import {
 	AnswerService,
 	AuthService,
+	CategoryService,
 	ContactService,
 	NewsletterService,
 	ProfileRuleService,
@@ -11,7 +12,7 @@ import {
 } from 'src/services';
 import { CacheConnectionController, LogController, RelationalConnectionController } from 'src/core/controller';
 import { ProfileEnv } from 'src/environment';
-import { CacheServiceOptions, RelationalServiceOptions } from 'src/core/types';
+import { CacheServiceOptions, NoRelationalServiceOptions, RelationalServiceOptions } from 'src/core/types';
 
 export default class ServicesModule {
 	profileRuleService: ProfileRuleService;
@@ -23,6 +24,7 @@ export default class ServicesModule {
 	contactService: ContactService;
 	answerService: AnswerService;
 	newsletterService: NewsletterService;
+	categoryService: CategoryService;
 
 	constructor(
 		private relationalConnectionController: RelationalConnectionController,
@@ -39,6 +41,7 @@ export default class ServicesModule {
 		this.contactService = new ContactService(this._setRelationalServiceOptions());
 		this.answerService = this._instanceAnswerService();
 		this.newsletterService = new NewsletterService(this._setRelationalServiceOptions());
+		this.categoryService = new CategoryService(this.authService, this._setNoRelationalServiceOptions());
 	}
 
 	private _instanceAnswerService() {
@@ -99,5 +102,13 @@ export default class ServicesModule {
 			cacheTime,
 			...cacheOptions,
 		};
+	}
+
+	private _setNoRelationalServiceOptions(): NoRelationalServiceOptions {
+		const cacheOptions = this._setCacheServiceOptions();
+		const {
+			cache: { enableCache, cacheTime },
+		} = this.profileEnv;
+		return { schema: '', enableCache, cacheTime, serviceName: '', ...cacheOptions };
 	}
 }
