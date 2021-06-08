@@ -8,7 +8,7 @@ export interface INoRelationaContext {
 }
 
 export interface NoRelationalReadOptions {
-	id?: any;
+	_id?: any;
 	page?: number;
 	limit?: number;
 }

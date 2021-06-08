@@ -9,12 +9,13 @@ export class Category extends Document implements CategoryEntity {
 	status: boolean;
 	parentId: Schema.Types.ObjectId;
 	userId: number;
+	subCategories?: Category[];
 	createdAt?: Date;
 	updatedAt?: Date;
 
 	constructor(props: CategoryEntity, id?: Schema.Types.ObjectId) {
 		super();
-		this._id = id || props._id;
+		this._id = id ?? props._id;
 		this.name = props.name;
 		this.description = props.description;
 		this.url = props.url;

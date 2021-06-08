@@ -19,7 +19,7 @@ export interface RelationalServiceOptions extends CacheServiceOptions {
 
 export interface NoRelationalServiceOptions extends CacheServiceOptions {
 	schema: string;
-	instanceModel: mongoose.Model<any>;
+	instanceModel?: mongoose.Model<any>;
 	enableCache: boolean;
 	cacheTime?: number;
 	serviceName: string;
