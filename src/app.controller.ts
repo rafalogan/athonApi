@@ -15,6 +15,7 @@ import UserRuleModule from 'src/modules/user-rule/user-rule.module';
 import ContactModule from 'src/modules/contact/contact.module';
 import AnswerModule from 'src/modules/answer/answer.module';
 import NewsletterModule from 'src/modules/newsletter/newsletter.module';
+import CategoryModule from 'src/modules/category/category.module';
 
 export class AppController {
 	private _express: Application;
@@ -66,6 +67,7 @@ export class AppController {
 			contactService,
 			answerService,
 			newsletterService,
+			categoryService,
 		} = this.servicesModule;
 
 		new AuthModule({ authService, responseController, logController }, this.express).init();
@@ -77,5 +79,6 @@ export class AppController {
 		new ContactModule(contactService, responseController, this.express, authService).init();
 		new AnswerModule(answerService, responseController, this.express, authService).init();
 		new NewsletterModule(newsletterService, responseController, this.express, authService).init();
+		new CategoryModule(categoryService, responseController, this.express, authService).init();
 	}
 }
