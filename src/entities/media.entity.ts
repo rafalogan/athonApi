@@ -1,19 +1,19 @@
 import { Schema } from 'mongoose';
 
-import { IMedia } from 'src/entities/types/media';
+import { MediaEntity } from 'src/entities/types/media';
 
-export class Media implements IMedia {
+export class Media implements MediaEntity {
 	_id: Schema.Types.ObjectId;
 	file: string;
 	title: string;
-	description: string;
+	description?: string;
 	type: string;
 	userId: number;
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(props: IMedia, id?: Schema.Types.ObjectId) {
-		this._id = id || props._id;
+	constructor(props: MediaEntity, id?: any) {
+		this._id = id ?? props._id;
 		this.file = props.file;
 		this.title = props.title;
 		this.description = props.description;

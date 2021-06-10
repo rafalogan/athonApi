@@ -3,14 +3,13 @@ import { Request } from 'express';
 
 import { NoRelationalServiceOptions } from 'src/core/types';
 import { CategoriesListEntity, Category, CategoryEntity, ICategoryModel } from 'src/entities';
-import { CategoriesModel } from 'src/schemas';
 import { AbstractNoRelationalService } from 'src/core/services';
 import { existsOrError, ResponseException } from 'src/util';
 import { AuthService } from 'src/services/auth.service';
 
 export class CategoryService extends AbstractNoRelationalService<ICategoryModel> {
 	constructor(private authService: AuthService, options: NoRelationalServiceOptions) {
-		super({ ...options, serviceName: CategoryService.name, schema: 'Categories', instanceModel: CategoriesModel });
+		super({ ...options, serviceName: CategoryService.name });
 	}
 
 	setFields(req: Request) {
