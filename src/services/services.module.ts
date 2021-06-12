@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+
 import {
 	AnswerService,
 	AuthService,
@@ -79,18 +81,26 @@ export default class ServicesModule {
 	}
 
 	private _instanceCategoryService() {
-		const options = this._setNoRelationalServiceOptions();
+		const options = this._setCacheServiceOptions();
+
 		return new CategoryService(this.authService, {
 			...options,
+			...this._setCacheEnvOptions(),
 			schema: 'Categories',
 			instanceModel: CategoriesModel,
+			serviceName: '',
 		});
 	}
 
 	private _instanceMediaService() {
-		const options = this._setNoRelationalServiceOptions();
-
-		return new MediaService({ ...options, instanceModel: MediasModel, schema: 'Medias' });
+		const options = this._setCacheServiceOptions();
+		return new MediaService(this.authService, {
+			...options,
+			...this._setCacheEnvOptions(),
+			instanceModel: MediasModel,
+			schema: 'Medias',
+			serviceName: '',
+		});
 	}
 
 	private _setCacheServiceOptions(): CacheServiceOptions {
@@ -123,11 +133,11 @@ export default class ServicesModule {
 		};
 	}
 
-	private _setNoRelationalServiceOptions(): NoRelationalServiceOptions {
-		const cacheOptions = this._setCacheServiceOptions();
+	private _setCacheEnvOptions() {
 		const {
 			cache: { enableCache, cacheTime },
 		} = this.profileEnv;
-		return { schema: '', enableCache, cacheTime, serviceName: '', ...cacheOptions };
+
+		return { enableCache, cacheTime };
 	}
 }
