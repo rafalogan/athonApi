@@ -1,8 +1,11 @@
+import { Model } from 'mongoose';
+
 import {
 	AnswerService,
 	AuthService,
 	CategoryService,
 	ContactService,
+	MediaService,
 	NewsletterService,
 	ProfileRuleService,
 	ProfileService,
@@ -12,7 +15,8 @@ import {
 } from 'src/services';
 import { CacheConnectionController, LogController, RelationalConnectionController } from 'src/core/controller';
 import { ProfileEnv } from 'src/environment';
-import { CacheServiceOptions, NoRelationalServiceOptions, RelationalServiceOptions } from 'src/core/types';
+import { CacheServiceOptions, RelationalServiceOptions } from 'src/core/types';
+import { CategoriesModel, MediasModel } from 'src/schemas';
 
 export default class ServicesModule {
 	profileRuleService: ProfileRuleService;
@@ -25,6 +29,7 @@ export default class ServicesModule {
 	answerService: AnswerService;
 	newsletterService: NewsletterService;
 	categoryService: CategoryService;
+	mediaService: MediaService;
 
 	constructor(
 		private relationalConnectionController: RelationalConnectionController,
@@ -41,7 +46,8 @@ export default class ServicesModule {
 		this.contactService = new ContactService(this._setRelationalServiceOptions());
 		this.answerService = this._instanceAnswerService();
 		this.newsletterService = new NewsletterService(this._setRelationalServiceOptions());
-		this.categoryService = new CategoryService(this.authService, this._setNoRelationalServiceOptions());
+		this.categoryService = this._instanceCategoryService();
+		this.mediaService = this._instanceMediaService();
 	}
 
 	private _instanceAnswerService() {
@@ -74,6 +80,30 @@ export default class ServicesModule {
 		return new ProfileService({ ...relatinalOptions, profileRuleService: this.profileRuleService, ruleService: this.ruleService });
 	}
 
+	private _instanceCategoryService() {
+		const options = this._setCacheServiceOptions();
+
+		return new CategoryService(this.authService, {
+			...options,
+			...this._setCacheEnvOptions(),
+			schema: 'Categories',
+			instanceModel: CategoriesModel,
+			serviceName: '',
+		});
+	}
+
+	private _instanceMediaService() {
+		const options = this._setCacheServiceOptions();
+
+		return new MediaService(this.authService, {
+			...options,
+			...this._setCacheEnvOptions(),
+			schema: 'Medias',
+			instanceModel: MediasModel,
+			serviceName: '',
+		});
+	}
+
 	private _setCacheServiceOptions(): CacheServiceOptions {
 		const client = this.cacheConnectionController.connection;
 		const status = this.cacheConnectionController.connectonUp;
@@ -104,11 +134,11 @@ export default class ServicesModule {
 		};
 	}
 
-	private _setNoRelationalServiceOptions(): NoRelationalServiceOptions {
-		const cacheOptions = this._setCacheServiceOptions();
+	private _setCacheEnvOptions() {
 		const {
 			cache: { enableCache, cacheTime },
 		} = this.profileEnv;
-		return { schema: '', enableCache, cacheTime, serviceName: '', ...cacheOptions };
+
+		return { enableCache, cacheTime };
 	}
 }

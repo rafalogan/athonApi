@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 import { IArticleModel } from 'src/entities';
-import { SocialMediaModel } from 'src/schemas/social-media.model';
+import { MediasSchema } from 'src/schemas/medias.model';
 
 const ArticlesSchema = new Schema(
 	{
@@ -24,7 +24,7 @@ const ArticlesSchema = new Schema(
 			required: true,
 		},
 		medias: {
-			type: [SocialMediaModel],
+			type: [MediasSchema],
 			required: false,
 			select: false,
 			default: [],

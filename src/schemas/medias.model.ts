@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { IMediaModel } from 'src/entities';
 
-const MediasSchema = new Schema(
+export const MediasSchema = new Schema(
 	{
 		file: {
 			type: String,
@@ -16,7 +16,7 @@ const MediasSchema = new Schema(
 			maxlength: 1000,
 			required: false,
 		},
-		type: {
+		mediaType: {
 			type: String,
 			required: true,
 		},
@@ -25,9 +25,7 @@ const MediasSchema = new Schema(
 			required: true,
 		},
 	},
-	{
-		timestamps: true,
-	}
+	{ timestamps: true }
 );
 
 export const MediasModel = model<IMediaModel>('Medias', MediasSchema);
