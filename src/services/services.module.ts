@@ -15,7 +15,7 @@ import {
 } from 'src/services';
 import { CacheConnectionController, LogController, RelationalConnectionController } from 'src/core/controller';
 import { ProfileEnv } from 'src/environment';
-import { CacheServiceOptions, NoRelationalServiceOptions, RelationalServiceOptions } from 'src/core/types';
+import { CacheServiceOptions, RelationalServiceOptions } from 'src/core/types';
 import { CategoriesModel, MediasModel } from 'src/schemas';
 
 export default class ServicesModule {
@@ -94,11 +94,12 @@ export default class ServicesModule {
 
 	private _instanceMediaService() {
 		const options = this._setCacheServiceOptions();
+
 		return new MediaService(this.authService, {
 			...options,
 			...this._setCacheEnvOptions(),
-			instanceModel: MediasModel,
 			schema: 'Medias',
+			instanceModel: MediasModel,
 			serviceName: '',
 		});
 	}
