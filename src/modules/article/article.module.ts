@@ -5,7 +5,7 @@ import { ArticleController } from 'src/modules/article/article.controller';
 import { ArticleRouter } from 'src/modules/article/article.router';
 
 export default class ArticleModule {
-	private articleController: ArticleController;
+	private readonly articleController: ArticleController;
 	private articleRouter: ArticleRouter;
 
 	constructor(articleService: ArticleService, responseController: ResponseController, app: Application, auth: AuthService) {
