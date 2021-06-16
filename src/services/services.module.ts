@@ -10,13 +10,14 @@ import {
 	ProfileRuleService,
 	ProfileService,
 	RuleService,
+	SocialMediaService,
 	UserRuleService,
 	UserService,
 } from 'src/services';
 import { CacheConnectionController, LogController, RelationalConnectionController } from 'src/core/controller';
 import { ProfileEnv } from 'src/environment';
 import { CacheServiceOptions, RelationalServiceOptions } from 'src/core/types';
-import { CategoriesModel, MediasModel } from 'src/schemas';
+import { CategoriesModel, MediasModel, SocialMediaModel } from 'src/schemas';
 
 export default class ServicesModule {
 	profileRuleService: ProfileRuleService;
@@ -30,6 +31,7 @@ export default class ServicesModule {
 	newsletterService: NewsletterService;
 	categoryService: CategoryService;
 	mediaService: MediaService;
+	socialMediaService: SocialMediaService;
 
 	constructor(
 		private relationalConnectionController: RelationalConnectionController,
@@ -48,6 +50,7 @@ export default class ServicesModule {
 		this.newsletterService = new NewsletterService(this._setRelationalServiceOptions());
 		this.categoryService = this._instanceCategoryService();
 		this.mediaService = this._instanceMediaService();
+		this.socialMediaService = this._istanceSocialMediaService();
 	}
 
 	private _instanceAnswerService() {
@@ -101,6 +104,16 @@ export default class ServicesModule {
 			schema: 'Medias',
 			instanceModel: MediasModel,
 			serviceName: '',
+		});
+	}
+
+	private _istanceSocialMediaService() {
+		return new SocialMediaService(this.authService, {
+			...this._setCacheServiceOptions(),
+			...this._setCacheEnvOptions(),
+			serviceName: '',
+			instanceModel: SocialMediaModel,
+			schema: 'Socialmedias',
 		});
 	}
 
