@@ -1,17 +1,22 @@
-import { Schema, Document } from 'mongoose';
+import { Document } from 'mongoose';
 
-import { ITimestampsfileds } from 'src/entities/types/timestamps';
-import { IMedia } from 'src/entities/types/media';
+import { MediaEntity, Timestampsfileds } from 'src/entities';
+import { Pagination } from 'src/core/domains';
 
-export interface IArticle extends ITimestampsfileds {
-	_id: Schema.Types.ObjectId;
+export interface ArticleEntity extends Timestampsfileds {
+	_id: any;
 	title: string;
 	subtitle: string;
 	description: string;
 	content: string;
-	medias: IMedia[];
+	medias: MediaEntity[];
 	userId: number;
-	categoryId: Schema.Types.ObjectId;
+	categoryId: any;
+}
+
+export interface ArticleListEntity {
+	data: ArticleEntity[];
+	pagination: Pagination;
 }
 
 export interface IArticleModel extends Document {
@@ -19,7 +24,7 @@ export interface IArticleModel extends Document {
 	subtitle: string;
 	description: string;
 	content: string;
-	medias: IMedia[];
+	medias: MediaEntity[];
 	userId: number;
-	categoryId: Schema.Types.ObjectId;
+	categoryId: any;
 }

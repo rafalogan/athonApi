@@ -1,30 +1,29 @@
 import { Schema } from 'mongoose';
 
-import { IArticle } from 'src/entities/types/article';
-import { IMedia } from 'src/entities/types/media';
+import { ArticleEntity, MediaEntity } from 'src/entities';
 
-export class Article implements IArticle {
+export class Article implements ArticleEntity {
 	_id: Schema.Types.ObjectId;
 	title: string;
 	subtitle: string;
 	description: string;
 	content: string;
-	medias: IMedia[];
+	medias: MediaEntity[];
 	userId: number;
 	categoryId: Schema.Types.ObjectId;
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(props: IArticle, id: Schema.Types.ObjectId) {
-		this._id = id || props._id;
-		this.title = props.title;
-		this.subtitle = props.subtitle;
-		this.description = props.description;
-		this.content = props.content;
-		this.medias = props.medias;
-		this.userId = props.userId;
-		this.categoryId = props.categoryId;
-		this.createdAt = props.createdAt;
-		this.updatedAt = props.updatedAt;
+	constructor(params: ArticleEntity, id?: any) {
+		this._id = id ?? params._id;
+		this.title = params.title;
+		this.subtitle = params.subtitle;
+		this.description = params.description;
+		this.content = params.content;
+		this.medias = params.medias;
+		this.userId = params.userId;
+		this.categoryId = params.categoryId;
+		this.createdAt = params.createdAt;
+		this.updatedAt = params.updatedAt;
 	}
 }
