@@ -3,7 +3,7 @@ import { Schema } from 'mongoose';
 import { ArticleEntity, MediaEntity } from 'src/entities';
 
 export class Article implements ArticleEntity {
-	_id: Schema.Types.ObjectId;
+	_id?: Schema.Types.ObjectId;
 	title: string;
 	subtitle: string;
 	description: string;

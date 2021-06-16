@@ -41,6 +41,15 @@ export class ArticleController extends AbstractController {
 			.catch(err => this.responseController.onError(res, 'unexpected error', { err }));
 	}
 
+	listByCategory(req: Request, res: Response) {
+		const categoryID = req.params.id;
+
+		this.articleService
+			.articlesByCategoryId(categoryID)
+			.then(data => this.responseController.onSuccess(res, data))
+			.catch(err => this.responseController.onError(res, 'unexpected error', { err }));
+	}
+
 	async remove(req: Request, res: Response) {
 		try {
 			const _id = req.params.id;
