@@ -4,7 +4,7 @@ import { MediaEntity, Timestampsfileds } from 'src/entities';
 import { Pagination } from 'src/core/domains';
 
 export interface ArticleEntity extends Timestampsfileds {
-	_id: any;
+	_id?: any;
 	title: string;
 	subtitle: string;
 	description: string;
