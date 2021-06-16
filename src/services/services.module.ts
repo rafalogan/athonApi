@@ -1,7 +1,6 @@
-import { Model } from 'mongoose';
-
 import {
 	AnswerService,
+	ArticleService,
 	AuthService,
 	CategoryService,
 	ContactService,
@@ -17,7 +16,7 @@ import {
 import { CacheConnectionController, LogController, RelationalConnectionController } from 'src/core/controller';
 import { ProfileEnv } from 'src/environment';
 import { CacheServiceOptions, RelationalServiceOptions } from 'src/core/types';
-import { CategoriesModel, MediasModel, SocialMediaModel } from 'src/schemas';
+import { ArticlesModel, CategoriesModel, MediasModel, SocialMediaModel } from 'src/schemas';
 
 export default class ServicesModule {
 	profileRuleService: ProfileRuleService;
@@ -32,6 +31,7 @@ export default class ServicesModule {
 	categoryService: CategoryService;
 	mediaService: MediaService;
 	socialMediaService: SocialMediaService;
+	articleService: ArticleService;
 
 	constructor(
 		private relationalConnectionController: RelationalConnectionController,
@@ -50,7 +50,8 @@ export default class ServicesModule {
 		this.newsletterService = new NewsletterService(this._setRelationalServiceOptions());
 		this.categoryService = this._instanceCategoryService();
 		this.mediaService = this._instanceMediaService();
-		this.socialMediaService = this._istanceSocialMediaService();
+		this.socialMediaService = this._instanceSocialMediaService();
+		this.articleService = this._instanceArticleService();
 	}
 
 	private _instanceAnswerService() {
@@ -107,13 +108,23 @@ export default class ServicesModule {
 		});
 	}
 
-	private _istanceSocialMediaService() {
+	private _instanceSocialMediaService() {
 		return new SocialMediaService(this.authService, {
 			...this._setCacheServiceOptions(),
 			...this._setCacheEnvOptions(),
 			serviceName: '',
 			instanceModel: SocialMediaModel,
 			schema: 'Socialmedias',
+		});
+	}
+
+	private _instanceArticleService() {
+		return new ArticleService(this.authService, {
+			...this._setCacheServiceOptions(),
+			...this._setCacheEnvOptions(),
+			serviceName: '',
+			instanceModel: ArticlesModel,
+			schema: 'Articles',
 		});
 	}
 
