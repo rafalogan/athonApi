@@ -1,21 +1,21 @@
-import { Schema } from 'mongoose';
+import { SocialmediaEntity } from 'src/entities/types/social-media';
 
-import { ISocialMedia } from 'src/entities/types/social-media';
-
-export class SocialMedia implements ISocialMedia {
-	_id: Schema.Types.ObjectId;
+export class SocialMedia implements SocialmediaEntity {
+	_id?: any;
+	label: string;
 	url: string;
 	visible: boolean;
 	userId: number;
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(props: ISocialMedia, id: Schema.Types.ObjectId) {
-		this._id = id || props._id;
-		this.url = props.url;
-		this.visible = props.visible;
-		this.userId = props.userId;
-		this.createdAt = props.createdAt;
-		this.updatedAt = props.updatedAt;
+	constructor(params: SocialmediaEntity, id?: any) {
+		this._id = id ?? params._id;
+		this.label = params.label;
+		this.url = params.url;
+		this.visible = params.visible;
+		this.userId = params.userId;
+		this.createdAt = params.createdAt;
+		this.updatedAt = params.updatedAt;
 	}
 }

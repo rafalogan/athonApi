@@ -3,7 +3,7 @@ import { ISocialMediaModel } from 'src/entities';
 
 const SocialMediaSchema = new Schema(
 	{
-		name: {
+		label: {
 			type: String,
 			required: true,
 		},
@@ -26,4 +26,4 @@ const SocialMediaSchema = new Schema(
 	}
 );
 
-export const SocialMediaModel = model<ISocialMediaModel>('SocialMedia', SocialMediaSchema);
+export const SocialMediaModel = model<ISocialMediaModel>('Socialmedias', SocialMediaSchema);

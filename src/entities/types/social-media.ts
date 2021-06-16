@@ -1,12 +1,19 @@
-import { Schema, Document } from 'mongoose';
+import { Document } from 'mongoose';
 
-import { ITimestampsfileds } from 'src/entities/types/timestamps';
+import { Timestampsfileds } from 'src/entities';
+import { Pagination } from 'src/core/domains';
 
-export interface ISocialMedia extends ITimestampsfileds {
-	_id: Schema.Types.ObjectId;
+export interface SocialmediaEntity extends Timestampsfileds {
+	_id?: any;
+	label: string;
 	url: string;
 	visible: boolean;
 	userId: number;
+}
+
+export interface SocialmediaListEntity {
+	data: SocialmediaEntity[];
+	pagination: Pagination;
 }
 
 export interface ISocialMediaModel extends Document {

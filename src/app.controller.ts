@@ -17,6 +17,7 @@ import AnswerModule from 'src/modules/answer/answer.module';
 import NewsletterModule from 'src/modules/newsletter/newsletter.module';
 import CategoryModule from 'src/modules/category/category.module';
 import MediaModule from 'src/modules/media/media.module';
+import SocialmediaModule from 'src/modules/socialmedia/socialmedia.module';
 
 export class AppController {
 	private _express: Application;
@@ -70,6 +71,7 @@ export class AppController {
 			newsletterService,
 			categoryService,
 			mediaService,
+			socialMediaService,
 		} = this.servicesModule;
 
 		new AuthModule({ authService, responseController, logController }, this.express).init();
@@ -83,5 +85,6 @@ export class AppController {
 		new NewsletterModule(newsletterService, responseController, this.express, authService).init();
 		new CategoryModule(categoryService, responseController, this.express, authService).init();
 		new MediaModule(mediaService, responseController, this.express, authService).init();
+		new SocialmediaModule(socialMediaService, responseController, this.express, authService).init();
 	}
 }
