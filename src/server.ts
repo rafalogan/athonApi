@@ -37,4 +37,10 @@ const test: any = {
 
 console.log('convert object', convertDataValues(test));
 
-(async () => appModule.createServer())();
+(async () => {
+	const NRConnection = await coreModule.noRelationalConnectionController.connect();
+	const RConnection = await coreModule.relationalConnectionController.isConnected();
+
+	if (NRConnection && RConnection) return coreModule.relationalConnectionController.latest()
+		.then(())
+})();

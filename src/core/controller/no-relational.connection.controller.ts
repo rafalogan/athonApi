@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
-import { INoRelationalDatabase } from 'src/environment/types/no-relational-database';
 import { LogController } from 'src/core/controller/log.controller';
+import { NoRelationalDBConfigOptions } from 'src/environment';
 
 export class NoRelationalConnectionController {
 	private connectionString: string;
 	connection: Promise<mongoose.Mongoose | void>;
 
-	constructor(private profile: INoRelationalDatabase, private log: LogController) {
+	constructor(private profile: NoRelationalDBConfigOptions, private log: LogController) {
 		this.connectionString = this._createConnectionString();
 		this.connection = this.connect();
 	}
