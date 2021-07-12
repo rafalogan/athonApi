@@ -1,55 +1,36 @@
-import http from 'http';
-import https from 'https';
-import { Application } from 'express';
-
-import { LogController } from 'src/core/controller';
-import { HttpsEnv } from 'src/environment';
+import { AppController } from 'src/app.controller';
+import { ServerController } from 'src/server.controller';
+import ServicesModule from 'src/services/services.module';
+import CoreModule from 'src/core/core.module';
+import { HttpsEnv, ProfileEnv } from 'src/environment';
 
 export default class AppModule {
-	baseURL: string;
-	server?: http.Server | https.Server;
+	private appController: AppController;
+	private serverController: ServerController;
 
-	constructor(
-		private log: LogController,
-		private express: Application,
-		private httpsOptions: HttpsEnv,
-		private port: number,
-		private host: string,
-		private enableHTTPS: boolean
-	) {
-		this.baseURL = this._setBaseURL();
+	constructor(private profileEnv: ProfileEnv, private coreModule: CoreModule, servicesModule: ServicesModule, httpsEnv: HttpsEnv) {
+		this.appController = new AppController(this.coreModule, this.profileEnv, servicesModule);
+		this.serverController = this._insttaceServer(httpsEnv);
 	}
 
-	createServer() {
-		this.enableHTTPS ? this._createHttpsServer() : this._createHttpServer();
+	init() {
+		return this.coreModule.relationalConnectionController
+			.isConnected()
+			.then(async () => await this.coreModule.relationalConnectionController.latest())
+			.then(() => this.coreModule.noRelationalConnectionController.connect())
+			.then(() => this.coreModule.cacheConnectionController.connection)
+			.then(() => this.serverController.createServer());
 	}
 
-	private _createHttpServer() {
-		http
-			.createServer(this.express)
-			.listen(this.port)
-			.on('listening', this._onServerUp.bind(this))
-			.on('error', this._onServerError.bind(this));
-	}
+	private _insttaceServer(httpsOptions: HttpsEnv) {
+		const {
+			port,
+			host,
+			security: { enableHTTPS },
+		} = this.profileEnv;
+		const { logController } = this.coreModule;
+		const express = this.appController.express;
 
-	private _createHttpsServer() {
-		https
-			.createServer(this.httpsOptions, this.express)
-			.listen(this.port)
-			.on('listening', this._onServerUp.bind(this))
-			.on('error', this._onServerError.bind(this));
-	}
-
-	private _onServerUp() {
-		this.log.http(`SERVER ONLINE: ${this.baseURL}`);
-	}
-
-	private _setBaseURL() {
-		const prefix = this.enableHTTPS ? 'https' : 'http';
-		return `${prefix}://${this.host}:${this.port}`;
-	}
-
-	private _onServerError(error: NodeJS.ErrnoException) {
-		this.log.error(`ERROR: On Server Inti: ${__filename}`, error);
+		return new ServerController(logController, httpsOptions, express, port, host, enableHTTPS);
 	}
 }

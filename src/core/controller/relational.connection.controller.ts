@@ -4,7 +4,6 @@ import MigratorConfig = Knex.MigratorConfig;
 
 import { KnexConfig } from 'src/config';
 import { LogController } from 'src/core/controller/log.controller';
-import { error } from 'winston';
 
 export class RelationalConnectionController {
 	connection: Knex;

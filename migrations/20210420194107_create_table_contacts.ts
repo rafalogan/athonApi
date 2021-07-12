@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.string('subject').notNullable();
 		table.string('phone');
 		table.text('message', 'longtext').notNullable();
-		table.timestamp('created_at').notNullable().defaultTo(Date.now());
+		table.timestamp('created_at').notNullable();
 	});
 }
 
