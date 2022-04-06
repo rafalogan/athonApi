@@ -1,10 +1,10 @@
-import { execDotenv, onLog, onWarn } from 'src/util';
+import { ServerOptions } from 'https';
+
+import { execDotenv } from 'src/util';
 import { Environment } from 'src/config/environment.config';
 import { AppConfig } from 'src/config/app.config';
 import { LoggerConfig } from 'src/config/logger.config';
 import { ServerController } from 'src/server.controller';
-
-import { ServerOptions } from 'https';
 import { HttpsOptions } from 'src/config/https-options.config';
 
 execDotenv();

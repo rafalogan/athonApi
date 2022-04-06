@@ -1,12 +1,12 @@
 require('ts-node/register');
 require('tsconfig-paths/register');
 
-import { execDotenv } from 'src/util/validate';
-import { ProfileEnv } from 'src/environment';
-import { KnexConfig } from 'src/config';
+import type { Knex } from 'knex';
 
-execDotenv();
+import { env } from 'src/server';
+import { KnexFileConfig } from 'src/config/knexfile.config';
 
-const profile = new ProfileEnv();
+const { databaseEnv } = env;
+const config: Knex.Config = new KnexFileConfig(databaseEnv);
 
-module.exports = new KnexConfig(profile.relationalDatabase, profile.timezone);
+module.exports = config;
