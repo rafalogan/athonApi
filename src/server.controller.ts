@@ -1,55 +1,37 @@
 import http from 'http';
-import https from 'https';
+import https, { ServerOptions } from 'https';
 import { Application } from 'express';
-
-import { LogController } from 'src/core/controller';
-import { HttpsEnv } from 'src/environment';
+import { Environment } from 'src/config/environment.config';
+import { onError, onHttp, onLog } from 'src/util';
 
 export class ServerController {
-	baseURL: string;
-	server?: http.Server | https.Server;
+	constructor(private express: Application, private env: Environment, private httpsOptions: ServerOptions) {}
 
-	constructor(
-		private log: LogController,
-		private httpsOptions: HttpsEnv,
-		private express: Application,
-		private port: number,
-		private host: string,
-		private enableHTTPS: boolean
-	) {
-		this.baseURL = this._setBaseURL();
+	exec() {
+		return this.env.security.enableHTTPS ? this.createHttpsServer() : this.createHttpServer();
 	}
 
-	createServer() {
-		this.enableHTTPS ? this._createHttpsServer() : this._createHttpServer();
-	}
-
-	private _createHttpServer() {
+	private createHttpServer() {
 		http
 			.createServer(this.express)
-			.listen(this.port)
-			.on('listening', this._onServerUp.bind(this))
-			.on('error', this._onServerError.bind(this));
+			.listen(this.env.port)
+			.on('listening', this.onServerUp.bind(this))
+			.on('error', this.onServerError.bind(this));
 	}
 
-	private _createHttpsServer() {
+	private createHttpsServer() {
 		https
 			.createServer(this.httpsOptions, this.express)
-			.listen(this.port)
-			.on('listening', this._onServerUp.bind(this))
-			.on('error', this._onServerError.bind(this));
+			.listen(this.env.port)
+			.on('listening', this.onServerUp.bind(this))
+			.on('error', this.onServerError.bind(this));
 	}
 
-	private _onServerUp() {
-		this.log.http(`SERVER ONLINE: ${this.baseURL}`);
+	private onServerUp() {
+		return onHttp('Server is up and running on:', this.env.baseUrl);
 	}
 
-	private _setBaseURL() {
-		const prefix = this.enableHTTPS ? 'https' : 'http';
-		return `${prefix}://${this.host}:${this.port}`;
-	}
-
-	private _onServerError(error: NodeJS.ErrnoException) {
-		this.log.error(`ERROR: On Server Inti: ${__filename}`, error);
+	private onServerError(error: NodeJS.ErrnoException) {
+		return onError(`ERROR: On Server Inti: ${__filename}`, error);
 	}
 }

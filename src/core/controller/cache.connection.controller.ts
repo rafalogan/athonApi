@@ -1,7 +1,5 @@
 import redis, { ClientOpts, RedisClient } from 'redis';
 
-import { LogController } from 'src/core/controller/log.controller';
-
 export class CacheConnectionController {
 	connection: RedisClient;
 	connectonUp = false;

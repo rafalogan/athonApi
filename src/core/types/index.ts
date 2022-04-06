@@ -6,4 +6,4 @@ export * from 'src/core/types/pagination';
 export * from 'src/core/types/relational-context';
 export * from 'src/core/types/credentials';
 export * from 'src/core/types/payload';
-export * from 'src/core/types/response';
+export * from 'src/repositories/types/response';

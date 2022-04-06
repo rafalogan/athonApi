@@ -1,26 +1,29 @@
 import httpStatus from 'http-status';
 import { Response } from 'express';
 
-import { LogController } from 'src/core/controller/log.controller';
 import { ErrorResponseParams } from 'src/core/types';
+import { onError, onWarn } from 'src/util';
 
 export class ResponseController {
 	private status = httpStatus;
 
-	constructor(private log: LogController) {}
+	constructor() {}
 
 	onSuccess(res: Response, data: any) {
 		return res.status(this.status.OK).json(data);
 	}
 
 	onError(res: Response, message: string, options?: ErrorResponseParams) {
-		const status = this._setStatus(options?.status);
+		const status = options && options.status ? options.status : this.status.INTERNAL_SERVER_ERROR;
 
-		status >= 400 && status < 500 ? this.log.warn(message, options?.err) : this.log.error(message, options?.err);
-		return res.status(status).send(message);
+		this.setLog(status, message, options?.err);
+		return res.status(status).send({
+			status,
+			message,
+		});
 	}
 
-	private _setStatus(status?: number) {
-		return status ?? this.status.INTERNAL_SERVER_ERROR;
+	private setLog(status: number, message: string, error?: Error) {
+		return status >= 400 && status < 500 ? onWarn(message, error) : onError(message, error);
 	}
 }

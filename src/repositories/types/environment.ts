@@ -1,0 +1,44 @@
+import { RedisClientOptions } from 'redis';
+import { ServerOptions } from 'https';
+
+export interface IEnvironment {
+	nodeEnv: string;
+	port: number;
+	host: string;
+	salt: number;
+	databaseEnv: IDatabaseEnvironment;
+	cacheEnv?: ICacheEnvironment;
+	security: ISecurityEnvironment;
+}
+
+export interface IDatabaseEnvironment {
+	client: string;
+	connection: string | IConnectionConfigs;
+}
+
+export interface ISecurityEnvironment extends ServerOptions {
+	enableHTTPS: boolean;
+	certFile: string;
+	keyFile: string;
+	authSecret: string;
+}
+
+export interface IConnectionConfigs {
+	host?: string;
+	database?: string;
+	user?: string;
+	password?: string;
+	port?: number;
+	filename?: string;
+	urlConnection?: string;
+	instanceName?: string;
+	debug?: boolean;
+	requestTimeout?: number;
+}
+
+export interface ICacheEnvironment extends RedisClientOptions {
+	host: string;
+	port: number;
+	password: string;
+	db: number;
+}

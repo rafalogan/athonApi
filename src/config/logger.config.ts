@@ -1,17 +1,89 @@
-import { Logger, createLogger, LoggerOptions } from 'winston';
+import winston, { Logger, createLogger, format, transports, LoggerOptions, config, addColors } from 'winston';
+import { Format } from 'logform';
+import * as Transport from 'winston-transport';
+import { AbstractConfigSetLevels } from 'winston/lib/winston/config';
+import { FileTransportOptions } from 'winston/lib/winston/transports';
 
 export class LoggerConfig {
+	private readonly levels: AbstractConfigSetLevels;
+
+	private readonly filesConfig: FileTransportOptions;
+
+	private readonly colors: config.AbstractConfigSetColors;
+
+	private readonly timestamp: Format;
+	private readonly colorize: Format;
+	private readonly print: Format;
+	private readonly format: Format;
+
+	private readonly transports: Transport[];
+	private readonly options: LoggerOptions;
+
 	private readonly _logger: Logger;
 
-	constructor(private options: LoggerOptions) {
-		this._logger = this.create();
+	constructor(private nodeEnv: string) {
+		this.levels = {
+			error: 0,
+			warn: 1,
+			info: 2,
+			http: 3,
+			verbose: 4,
+			debug: 5,
+			silly: 6,
+		};
+
+		this.filesConfig = {
+			handleExceptions: true,
+			maxsize: 52428800,
+			maxFiles: 5,
+		};
+
+		this.colors = this.setColors();
+
+		this.timestamp = format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' });
+		this.colorize = format.colorize({ all: true });
+		this.print = format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`);
+		this.format = format.combine(this.timestamp, this.colorize, this.print);
+
+		this.transports = this.setTransports();
+		this.options = this.setOptions();
+
+		addColors(this.colors);
+		this._logger = createLogger(this.options);
 		// this._logger.stream({ write: (message: string) => this.logger.info(message.trim()) });
 	}
 
 	get logger() {
 		return this._logger;
 	}
-	private create() {
-		return createLogger(this.options);
+
+	private setTransports() {
+		return this.nodeEnv === 'production' || this.nodeEnv === 'homologation'
+			? [
+					new transports.File({ filename: 'logs/all.log', ...this.filesConfig }),
+					new transports.File({ filename: 'logs/error.log', level: 'error', ...this.filesConfig }),
+					new transports.Console({ level: 'debug', format: this.format }),
+			  ]
+			: [new transports.Console({ level: 'debug', format: this.format })];
+	}
+
+	private setOptions(): LoggerOptions {
+		return {
+			level: this.nodeEnv === 'development' ? 'debug' : 'info',
+			levels: this.levels,
+			format: this.format,
+			transports: this.transports,
+			exitOnError: false,
+		};
+	}
+
+	private setColors(): config.AbstractConfigSetColors {
+		return {
+			error: 'red',
+			warn: 'yellow',
+			info: this.nodeEnv === 'development' ? 'cyan' : 'green',
+			http: 'magenta',
+			debug: 'white',
+		};
 	}
 }

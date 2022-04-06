@@ -18,12 +18,12 @@
 		"rootDirs": [
 			"src",
 			"test",
-			"migrations"
+			"database/migrations"
 		],
 		"outDir": "dist",
 		"paths": {
 			"migrations": [
-				"./migrations/*"
+				"./database/migrations/*"
 			],
 			"src/*": [
 				"./src/*"
@@ -61,7 +61,7 @@
 		"skipLibCheck": true
 	},
 	"include": [
-      "migrations/**/*",
+		"database/migrations/**/*",
       "src/**/*",
       "test/**/*",
       "knexfile.ts",

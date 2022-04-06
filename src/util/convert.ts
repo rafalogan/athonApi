@@ -37,3 +37,5 @@ export const clearTimestamp = (data: any) => {
 
 	return data;
 };
+
+export const stringfy = (...data: any[]) => data.map(item => item.toString()).join(' ');

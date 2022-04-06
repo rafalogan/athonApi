@@ -1,1 +1,2 @@
-export * from 'src/core/routes/abstract.routes';
+export * from './abstract.routes';
+export * from './notfound.route';

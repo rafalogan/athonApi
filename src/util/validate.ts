@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt';
 import { CredentialsDomain } from 'src/core/types';
 import { User } from 'src/entities';
 
+const isValid = !process.env.NODE_ENV || process.env.NODE_ENV !== 'production';
+
 export const existsOrError = (value: any, message: string) => {
 	if (isEmpty(value)) throw message;
 	if (!value) throw message;
@@ -26,12 +28,6 @@ export const equalsOrError = (valueA: any, valueB: any, message: string) => {
 	if (valueA !== valueB) throw message;
 };
 
-export const execDotenv = () => {
-	const isEnvValid = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
-
-	if (isEnvValid) return dotenv.config({ path: process.env.NODE_ENV === 'test' ? './.emv.testing' : './.env' });
-
-	return;
-};
+export const execDotenv = () => (isValid ? dotenv.config({ path: process.env.NODE_ENV === 'test' ? './.emv.testing' : './.env' }) : null);
 
 export const isMatch = (credentials: CredentialsDomain, user: User) => bcrypt.compareSync(credentials.password, user.password);

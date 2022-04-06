@@ -125,14 +125,14 @@ _this command need to type a private phrase_
 Next step generate ``file.csr`` use this command
 
 ```shell
-openssl req -new -key server.key -out server.csr
+openssl req -new -key server.key -out old_server.csr
 ```
 _Answer all questions this step will request your private phrase_
 
 Last step generate ``file.crt`` use this command;
 
 ```shell
-openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+openssl x509 -req -days 365 -in old_server.csr -signkey server.key -out server.crt
 ```
 _To generate this file it is necessary to have generated the two previous files_
 

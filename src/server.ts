@@ -1,25 +1,18 @@
-import './util/module-alias';
+import { execDotenv, onLog, onWarn } from 'src/util';
+import { Environment } from 'src/config/environment.config';
+import { AppConfig } from 'src/config/app.config';
+import { LoggerConfig } from 'src/config/logger.config';
+import { ServerController } from 'src/server.controller';
 
-import { HttpsEnv, ProfileEnv } from 'src/environment';
-import CoreModule from 'src/core/core.module';
-import AppModule from 'src/app.module';
-
-import { execDotenv } from 'src/util';
-import { KnexConfig } from 'src/config';
-import ServicesModule from 'src/services/services.module';
+import { ServerOptions } from 'https';
+import { HttpsOptions } from 'src/config/https-options.config';
 
 execDotenv();
 
-const profile = new ProfileEnv();
-const { security, port, host, relationalDatabase } = profile;
+export const env = new Environment();
 
-const knexFile = new KnexConfig(relationalDatabase, profile.timezone);
-const httpsOptions = new HttpsEnv(security.cert, security.key, security.passphrase);
-const coreModule = new CoreModule({ profileEnv: profile, file: knexFile });
+export const logger = new LoggerConfig(env.nodeEnv).logger;
+const app = new AppConfig(env.nodeEnv, logger).express;
+const httpsOptions: ServerOptions = new HttpsOptions(env.security);
 
-const { logController, relationalConnectionController, cacheConnectionController } = coreModule;
-const servicesModule = new ServicesModule(relationalConnectionController, cacheConnectionController, logController, profile);
-
-const appModule = new AppModule(profile, coreModule, servicesModule, httpsOptions);
-
-(async () => appModule.init())();
+export const server = new ServerController(app, env, httpsOptions);
