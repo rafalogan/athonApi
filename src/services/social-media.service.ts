@@ -1,15 +1,12 @@
 import { NoRelationalServiceOptions } from 'src/core/types';
-import { ISocialMediaModel, SocialMedia, SocialmediaEntity, SocialmediaListEntity } from 'src/entities';
-import { AbstractNoRelationalService } from 'src/core/services';
+import { ISocialMediaModel, SocialMedia, SocialmediaEntity } from 'src/repositories/entities';
 import { clearTimestamp, existsOrError, ResponseException } from 'src/util';
 import httpStatus from 'http-status';
 import { Request } from 'express';
 import { AuthService } from 'src/services/auth.service';
 
-export class SocialMediaService extends AbstractNoRelationalService<ISocialMediaModel> {
-	constructor(private authService: AuthService, options: NoRelationalServiceOptions) {
-		super({ ...options, serviceName: SocialMediaService.name });
-	}
+export class SocialMediaService {
+	constructor(private authService: AuthService, options: any) {}
 
 	socialmediaFilter(req: Request) {
 		try {

@@ -1,1 +1,0 @@
-describe('#RuleService Test Suite', () => {});

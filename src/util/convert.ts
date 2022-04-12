@@ -39,3 +39,4 @@ export const clearTimestamp = (data: any) => {
 };
 
 export const stringfy = (...data: any[]) => data.map(item => item.toString()).join(' ');
+export const convertToJson = (data: string) => JSON.parse(data);

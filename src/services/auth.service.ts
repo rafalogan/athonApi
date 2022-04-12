@@ -6,7 +6,7 @@ import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 
 import { LogController } from 'src/core/controller';
 import { AuthServiceOptions, UserService } from 'src/services/';
-import { User } from 'src/entities';
+import { User } from 'src/repositories/entities';
 import { Credential, Payload } from 'src/core/domains';
 import { existsOrError, isMatch } from 'src/util';
 

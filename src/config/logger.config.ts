@@ -41,7 +41,7 @@ export class LoggerConfig {
 		this.colors = this.setColors();
 
 		this.timestamp = format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' });
-		this.colorize = format.colorize({ all: true });
+		this.colorize = format.colorize({ level: true });
 		this.print = format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`);
 		this.format = format.combine(this.timestamp, this.colorize, this.print);
 
@@ -82,8 +82,8 @@ export class LoggerConfig {
 			error: 'red',
 			warn: 'yellow',
 			info: this.nodeEnv === 'development' ? 'cyan' : 'green',
-			http: 'magenta',
-			debug: 'white',
+			http: this.nodeEnv === 'development' ? 'green' : 'cyan',
+			debug: ['black', 'bgWhite'],
 		};
 	}
 }

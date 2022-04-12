@@ -13,22 +13,12 @@ services:
       - ./database/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
-  mongodb:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "root"
-      MONGO_INITDB_ROOT_PASSWORD: "root"
-      MONGO_INITDB_DATABASE: "athonDB"
-    volumes:
-      - ./database/mongodb:/data/db
-    ports:
-      - 27017:27017
   redis:
     image: redis
     restart: always
     volumes:
       - ./database/redis:/usr/local/etc/redis/
+      - ./database/redis/data:/var/lib/postgresql/data
     ports:
       - 6379:6379
   adminer:
@@ -38,10 +28,3 @@ services:
       - 9090:8080
     depends_on:
       - postgres
-  mongoclient:
-    image: mongoclient/mongoclient
-    restart: always
-    ports:
-      - 9091:3000
-    depends_on:
-      - mongodb

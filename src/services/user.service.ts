@@ -2,13 +2,13 @@ import httpStatus from 'http-status';
 
 import { ProfileService, RuleService, UserRuleService, UserServiceOptions } from 'src/services';
 import { equalsOrError, existsOrError, hashString, notExistisOrError } from 'src/util';
-import { ListUsers, Rule, User, UserEntity } from 'src/entities';
-import { AbstractRelationalService } from 'src/core/services';
+import { ListUsers, Rule, User, UserEntity } from 'src/repositories/entities';
+import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions } from 'src/core/types';
 
 const fields = ['id', 'name', 'email', 'password', 'profile_id as profileId', 'deleted_at as deletedAt'];
 
-export class UserService extends AbstractRelationalService {
+export class UserService extends AbstractDatabaseService {
 	private profileService: ProfileService;
 	private userRuleService: UserRuleService;
 	private ruleService: RuleService;

@@ -1,109 +1,89 @@
 import { promisify } from 'util';
 import isEmpty from 'is-empty';
-import { RedisClient } from 'redis';
+import { RedisClientType } from 'redis';
 import md5 from 'md5';
 
-import { existsOrError } from 'src/util';
-import { LogController } from 'src/core/controller';
-import { CacheServiceOptions, KeyOptions } from 'src/core/types';
-import { Pagination } from 'src/core/domains';
+import { convertToJson, existsOrError, onError, onInfo, onLog, onWarn, stringfy } from 'src/util';
+import { CacheServiceOptions } from 'src/core/types';
 
 export abstract class AbstractCacheService {
-	private _getAsync: (key: any) => Promise<any>;
-	private _setAsync: (key: any, parseData: string, ex: string, parseTime: number) => Promise<any>;
-	private _delAsync: (key: any) => Promise<any>;
-	private client: RedisClient;
-	private clientActive: boolean;
+	private readonly getAsync: (key: any) => Promise<any>;
+	private setAsync: (key: any, parseData: string, ex: string, parseTime: number) => Promise<any>;
+	private delAsync: (key: any) => Promise<any>;
 
-	protected isValidEnv: boolean;
-	protected log: LogController;
+	protected client: RedisClientType;
+	protected clientActive: boolean;
 
-	constructor(options: CacheServiceOptions) {
-		this.client = options.client;
-		this.clientActive = options.status;
-		this.log = options.log;
-		this.isValidEnv = options.env !== 'production';
+	private readonly isValidEnv: boolean;
+	protected cacheTime: number;
 
-		this._getAsync = promisify(this.client.get).bind(this.client);
-		this._setAsync = promisify(this.client.set).bind(this.client);
-		this._delAsync = promisify(this.client.del).bind(this.client);
+	protected constructor(conn: RedisClientType, options?: CacheServiceOptions) {
+		this.client = conn;
+		this.clientActive = options?.active ?? false;
+		this.isValidEnv = options?.nodeEnv !== 'production';
+		this.cacheTime = options?.cacheTime ?? 5;
+
+		this.getAsync = promisify(this.client.get).bind(this.client);
+		this.setAsync = promisify(this.client.set).bind(this.client);
+		this.delAsync = promisify(this.client.del).bind(this.client);
 	}
 
-	private async _create(key: any, fn: () => Promise<any>, time?: number) {
-		this._responseLog(`CACHEKEY: ${key}, creating...`, 'info');
-		const data = await fn();
-
-		if (data) await this._setCache(key, data, time);
-		return data;
-	}
-
-	async findCahce(args: KeyOptions, fn: () => Promise<any>, time?: number | undefined) {
-		const key = this._generateKey(args);
+	async findCache(args: string[], fn: () => Promise<any>, time?: number | undefined) {
+		const key = this.generateKey(args);
 
 		if (!this.clientActive) return await fn();
 
 		try {
-			this._responseLog(`Search cache ${key}, waiting...`, 'info');
-			const data = await this._getAsync(key);
+			onInfo(`Search cache ${key}, waiting...`);
+			const data = await this.getAsync(key);
 
-			if (!data || isEmpty(data)) return await this._create(key, fn, time);
-			return JSON.parse(data);
+			if (!data || isEmpty(data)) return this.createCache(key as string, fn, time);
+			return convertToJson(data);
 		} catch (err) {
-			this._responseLog(`Find cache ${key} is failed`, 'error', err);
+			onError(`Find cache ${key} is failed`, __filename, err);
 		}
 	}
 
-	async deleteCahce(args: KeyOptions) {
-		if (!this.clientActive) return this._responseLog('Cache server disable', 'info');
+	async deleteCache(args: string[]) {
+		if (!this.clientActive) return onInfo('Cache server disable');
 
-		const key = this._generateKey(args);
-		const data = await this._getAsync(key);
+		const key = this.generateKey(args);
+		const data = await this.getAsync(key);
 
 		try {
 			existsOrError(data, `Cache key ${key} is not exists.`);
 		} catch (msg) {
-			return this._responseLog(msg, 'warn');
+			return onWarn(msg);
 		}
 
-		return this._delAsync(key)
-			.then(() => this._responseLog(`Cache key ${key} is deleted with success.`, 'info'))
-			.catch(err => this._responseLog(`Delete cache ${key} failed`, 'error', err));
+		return this.delAsync(key)
+			.then(() => onInfo(`Cache key ${key} is deleted with success.`))
+			.catch(err => onError(`Delete cache ${key} failed`, 'error', err));
 	}
 
-	private _generateKey(ags: KeyOptions) {
+	private generateKey(ags: string[]) {
 		try {
 			existsOrError(ags, 'To generate the data key, the arguments must be filled in correctly');
-			const argsToString = `GET:Content:${ags.serviceName}:${ags.id}`;
-
-			return md5(argsToString);
+			return md5(ags.join('-'));
 		} catch (msg) {
-			return this.log.error(msg);
+			return onError(msg);
 		}
 	}
 
-	private _setCache(key: any, data: any, time?: number) {
+	private setCache(key: string, data: any, time?: number) {
 		const convertTime = this.isValidEnv ? 10 : 60;
-		const cacheTime = time ? time * convertTime : 5 * convertTime;
-		const dataToString = JSON.stringify(data);
+		const cacheTime = time ? time * convertTime : this.cacheTime * convertTime;
+		const dataToString = stringfy(data);
 
-		return this._setAsync(key, dataToString, 'EX', cacheTime)
-			.then(() => this._responseLog(`Cache ${key}, created with success!`, 'info'))
-			.catch(err => this._responseLog(`Create cache failed`, 'error', err));
+		return this.setAsync(key, dataToString, 'EX', cacheTime)
+			.then(() => onLog(`Cache ${key}, created with success!`, 'info'))
+			.catch(err => onError(`Create cache failed`, __filename, err));
 	}
 
-	private _responseLog(msg: string, type: string, params?: any) {
-		switch (type) {
-			case 'info':
-				if (this.isValidEnv) this.log.info(msg, params);
-				break;
-			case 'error':
-				this.log.error(msg, params);
-				break;
-			case 'warn':
-				this.log.warn(msg, params);
-				break;
-			default:
-				break;
-		}
+	private async createCache(key: string, fn: () => Promise<any>, time?: number) {
+		const data = await fn();
+
+		if (data) await this.setCache(key, data, time);
+		return data;
 	}
 }

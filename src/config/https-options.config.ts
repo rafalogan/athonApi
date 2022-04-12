@@ -8,7 +8,7 @@ export class HttpsOptions implements ServerOptions {
 	public cert?: string | Buffer | Array<string | Buffer>;
 
 	constructor(ssl: ISecurityEnvironment) {
-		this.key = ssl.enableHTTPS ? readFileSync(ssl.keyFile).toString() : '';
-		this.cert = ssl.enableHTTPS ? readFileSync(ssl.certFile).toString() : '';
+		this.key = ssl.enableHTTPS ? readFileSync(ssl.keyFile) : '';
+		this.cert = ssl.enableHTTPS ? readFileSync(ssl.certFile) : '';
 	}
 }

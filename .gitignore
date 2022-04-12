@@ -6,6 +6,12 @@
 .DS_Store
 .env
 .env.testing
+.env.test
+.env.development
+.env.staging
+.env.production
+.env.docker
+.env.local
 
 # FOLDERS
 # TYPESCRIPT COPILETD CODE

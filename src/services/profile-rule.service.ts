@@ -1,15 +1,15 @@
 import httpStatus from 'http-status';
 
-import { AbstractRelationalService } from 'src/core/services';
+import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalServiceOptions } from 'src/core/types';
-import { ProfileRule, ProfileRuleEntity, ProfileRuleListEntity } from 'src/entities';
+import { ProfileRule, ProfileRuleEntity, ProfileRuleListEntity } from 'src/repositories/entities';
 import { RulesReadOptions } from 'src/services';
 import { Pagination } from 'src/core/domains';
 import { existsOrError, notExistisOrError } from 'src/util';
 
 const fields = ['profile_id as profileId', 'rule_id as ruleId', 'created_at as createdAt', 'updated_at as updatedAt'];
 
-export class ProfileRuleService extends AbstractRelationalService {
+export class ProfileRuleService extends AbstractDatabaseService {
 	constructor(options: RelationalServiceOptions) {
 		super({ ...options, serviceName: ProfileRuleService.name, table: 'profiles_rules', fields });
 	}

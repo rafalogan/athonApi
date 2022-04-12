@@ -1,13 +1,13 @@
 import httpStatus from 'http-status';
 
-import { AbstractRelationalService } from 'src/core/services';
+import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
-import { ListRoules, Rule } from 'src/entities';
+import { ListRoules, Rule } from 'src/repositories/entities';
 import { existsOrError, notExistisOrError } from 'src/util';
 
 const fields = ['id', 'name', 'description', 'created_at as createdAt', 'updated_at as updatedAt'];
 
-export class RuleService extends AbstractRelationalService {
+export class RuleService extends AbstractDatabaseService {
 	constructor(options: RelationalServiceOptions) {
 		super({ ...options, serviceName: RuleService.name, table: 'rules', fields });
 	}

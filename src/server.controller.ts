@@ -2,7 +2,7 @@ import http from 'http';
 import https, { ServerOptions } from 'https';
 import { Application } from 'express';
 import { Environment } from 'src/config/environment.config';
-import { onError, onHttp, onLog } from 'src/util';
+import { onError, onHttp, onLog, terminalColors } from 'src/util';
 
 export class ServerController {
 	constructor(private express: Application, private env: Environment, private httpsOptions: ServerOptions) {}
@@ -28,7 +28,7 @@ export class ServerController {
 	}
 
 	private onServerUp() {
-		return onHttp('Server is up and running on:', this.env.baseUrl);
+		return onHttp('Server is up and running on:', `${terminalColors.green}${this.env.baseUrl}${terminalColors.reset}`);
 	}
 
 	private onServerError(error: NodeJS.ErrnoException) {

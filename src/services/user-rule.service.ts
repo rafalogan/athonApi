@@ -1,14 +1,14 @@
 import httpStatus from 'http-status';
 
-import { AbstractRelationalService } from 'src/core/services';
+import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalServiceOptions } from 'src/core/types';
 import { RulesReadOptions } from 'src/services/types/services';
 import { clearTimestamp, existsOrError, notExistisOrError } from 'src/util';
-import { UserRule, UserRuleEntity, UserRulesEntity } from 'src/entities';
+import { UserRule, UserRuleEntity, UserRulesEntity } from 'src/repositories/entities';
 
 const fields = ['user_id as userId', 'rule_id as ruleId', 'created_at as createdAt', 'updated_at as updatedAt'];
 
-export class UserRuleService extends AbstractRelationalService {
+export class UserRuleService extends AbstractDatabaseService {
 	constructor(options: RelationalServiceOptions) {
 		super({ ...options, serviceName: UserRuleService.name, table: 'user_rules', fields });
 	}

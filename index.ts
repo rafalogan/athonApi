@@ -1,4 +1,4 @@
 import './src/util/module-alias';
-import { server } from './src/server';
+import { appModule } from './src/server';
 
-(async () => server.exec())();
+(async () => appModule.init())();

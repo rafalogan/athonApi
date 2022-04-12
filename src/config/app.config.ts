@@ -4,16 +4,17 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { Logger } from 'winston';
 
-import { notfoundRoute } from 'src/core/routes';
+import { ApiModule } from 'src/api/api.module';
+import { ServicesModule } from 'src/services';
+import { DEFAULT_CORSOPTIONS } from 'src/util';
 
 export class AppConfig {
 	private readonly _express: Application;
 
-	constructor(private nodeEnv: string, private logger: Logger) {
+	constructor(private nodeEnv: string, private logger: Logger, private services: ServicesModule) {
 		this._express = express();
 
 		this.configExpress();
-		this.initRoutes();
 	}
 
 	get express(): Application {
@@ -21,10 +22,11 @@ export class AppConfig {
 	}
 
 	private configExpress(): void {
-		this.express.use(cors());
+		this.express.use(cors(DEFAULT_CORSOPTIONS));
 		this.express.use(this.morganConfig());
 		this.express.use(bodyParser.urlencoded({ extended: false }));
 		this.express.use(bodyParser.json());
+		this.initApi();
 	}
 
 	private morganConfig() {
@@ -36,7 +38,7 @@ export class AppConfig {
 		return morgan(format, { stream });
 	}
 
-	private initRoutes(): void {
-		this.express.use(notfoundRoute);
+	private initApi(): void {
+		return new ApiModule(this.express, this.services).exec();
 	}
 }

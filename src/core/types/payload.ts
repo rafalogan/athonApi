@@ -1,4 +1,4 @@
-import { Profile, Rule } from 'src/entities';
+import { Profile, Rule } from 'src/repositories/entities';
 
 export interface PayloadDomain {
 	id: number;

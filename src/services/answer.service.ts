@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
 
-import { AbstractRelationalService } from 'src/core/services';
+import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalServiceOptions } from 'src/core/types';
-import { Answer, AnswerEntity, AnswerListEntity, Contact } from 'src/entities';
+import { Answer, AnswerEntity, AnswerListEntity, Contact } from 'src/repositories/entities';
 import { clearTimestamp, existsOrError, ResponseException } from 'src/util';
 import { ContactService } from 'src/services';
 
@@ -16,7 +16,7 @@ const fields = [
 	'updated_at as updatedAt',
 ];
 
-export class AnswerService extends AbstractRelationalService {
+export class AnswerService extends AbstractDatabaseService {
 	constructor(private contactService: ContactService, options: RelationalServiceOptions) {
 		super({ ...options, serviceName: AnswerService.name, table: 'answers', fields });
 	}

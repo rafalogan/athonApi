@@ -37,8 +37,8 @@ export interface IConnectionConfigs {
 }
 
 export interface ICacheEnvironment extends RedisClientOptions {
+	enableCache: boolean;
+	cacheTime: number;
 	host: string;
 	port: number;
-	password: string;
-	db: number;
 }

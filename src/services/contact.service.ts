@@ -1,13 +1,13 @@
 import httpStatus from 'http-status';
 
 import { RelationalServiceOptions } from 'src/core/types';
-import { AbstractRelationalService } from 'src/core/services';
-import { Contact, ContactEntity, ContactListEntity } from 'src/entities';
+import { AbstractDatabaseService } from 'src/core/services';
+import { Contact, ContactEntity, ContactListEntity } from 'src/repositories/entities';
 import { clearTimestamp, convertDataValues, existsOrError } from 'src/util';
 
 const fields = ['id', 'name', 'email', 'subject', 'phone', 'message', 'created_at as createdAt'];
 
-export class ContactService extends AbstractRelationalService {
+export class ContactService extends AbstractDatabaseService {
 	constructor(options: RelationalServiceOptions) {
 		super({ ...options, serviceName: ContactService.name, table: 'contacts', fields });
 	}

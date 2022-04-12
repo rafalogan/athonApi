@@ -1,1 +1,0 @@
-describe('#UserService test suite', () => {});

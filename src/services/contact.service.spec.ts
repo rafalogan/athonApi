@@ -1,1 +1,0 @@
-describe('#ContactService suit test', () => {});

@@ -6,7 +6,7 @@ export class Environment implements IEnvironment {
 	host: string;
 	salt: number;
 	databaseEnv: IDatabaseEnvironment;
-	cacheEnv?: ICacheEnvironment;
+	cacheEnv: ICacheEnvironment;
 	security: ISecurityEnvironment;
 
 	baseUrl: string;
@@ -55,10 +55,10 @@ export class Environment implements IEnvironment {
 		if (dataCache) return dataCache;
 
 		return {
+			enableCache: process.env.CACHE_CONFIG === 'true',
+			cacheTime: Number(process.env.CACHE_TIME) || 10,
 			host: process.env.REDISHOST || 'localhost',
 			port: Number(process.env.CACHE_PORT) || 6379,
-			password: process.env.CACHE_PASSWORD || '',
-			db: Number(process.env.CACHE_DB) || 0,
 		};
 	}
 }

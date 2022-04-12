@@ -8,7 +8,7 @@ export class KnexFileConfig implements IKnexFile {
 	pool: IKnexPoolConfig;
 
 	constructor(databaseEnv: IDatabaseEnvironment, migrationConfig?: IKnexMigrationConfig, poolConfig?: IKnexPoolConfig) {
-		this.client = databaseEnv.client;
+		this.client = databaseEnv.client || 'pg';
 		this.connection = this.setConexionConfigs(databaseEnv);
 		this.pool = this.setPoolConfigs(poolConfig);
 		this.migrations = this.setMigrationConfig(migrationConfig);
@@ -17,8 +17,8 @@ export class KnexFileConfig implements IKnexFile {
 	setPoolConfigs(poolConfig?: IKnexPoolConfig) {
 		return {
 			...poolConfig,
-			min: poolConfig?.min || 1,
-			max: poolConfig?.max || 10,
+			min: poolConfig?.min || 2,
+			max: poolConfig?.max || 20,
 		};
 	}
 

@@ -2,15 +2,13 @@ import httpStatus from 'http-status';
 import { Request } from 'express';
 
 import { NoRelationalServiceOptions } from 'src/core/types';
-import { CategoriesListEntity, Category, CategoryEntity, ICategoryModel } from 'src/entities';
+import { CategoriesListEntity, Category, CategoryEntity, ICategoryModel } from 'src/repositories/entities';
 import { AbstractNoRelationalService } from 'src/core/services';
 import { existsOrError, ResponseException } from 'src/util';
 import { AuthService } from 'src/services/auth.service';
 
-export class CategoryService extends AbstractNoRelationalService<ICategoryModel> {
-	constructor(private authService: AuthService, options: NoRelationalServiceOptions) {
-		super({ ...options, serviceName: CategoryService.name });
-	}
+export class CategoryService {
+	constructor(private authService: AuthService, options: NoRelationalServiceOptions) {}
 
 	setFields(req: Request) {
 		try {

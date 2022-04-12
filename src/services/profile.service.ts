@@ -1,10 +1,10 @@
 import { ProfileServiceOptions, ProfileRuleService, RuleService } from 'src/services';
-import { AbstractRelationalService } from 'src/core/services';
+import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions } from 'src/core/types';
 
 const fields = ['id', 'title', 'description', 'created_at as createdAt', 'updated_at as updatedAt'];
 
-export class ProfileService extends AbstractRelationalService {
+export class ProfileService extends AbstractDatabaseService {
 	private profileRulesService: ProfileRuleService;
 	private ruleService: RuleService;
 

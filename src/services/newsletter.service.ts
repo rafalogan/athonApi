@@ -1,12 +1,12 @@
 import { RelationalServiceOptions } from 'src/core/types';
-import { AbstractRelationalService } from 'src/core/services';
-import { Newsletter, NewsletterEntity, NewsletterListEntities } from 'src/entities';
+import { AbstractDatabaseService } from 'src/core/services';
+import { Newsletter, NewsletterEntity, NewsletterListEntities } from 'src/repositories/entities';
 import { clearTimestamp, existsOrError, ResponseException } from 'src/util';
 import httpStatus from 'http-status';
 
 const fields = ['id', 'name', 'active', 'created_at as createdAt', 'updated_at as updatedAt'];
 
-export class NewsletterService extends AbstractRelationalService {
+export class NewsletterService extends AbstractDatabaseService {
 	constructor(options: RelationalServiceOptions) {
 		super({ ...options, serviceName: NewsletterService.name, table: 'newsletter', fields });
 	}
