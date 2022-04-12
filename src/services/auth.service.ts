@@ -13,12 +13,10 @@ import { existsOrError, isMatch } from 'src/util';
 export class AuthService {
 	private readonly params: StrategyOptions;
 	private userService: UserService;
-	private log: LogController;
 	private readonly authSecret: string;
 
 	constructor(options: AuthServiceOptions) {
 		this.userService = options.userService;
-		this.log = options.log;
 		this.authSecret = options.security.authSecret;
 		this.params = this._setStategyOtions();
 	}
