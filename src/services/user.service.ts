@@ -1,25 +1,27 @@
+import { Knex } from 'knex';
+import { RedisClientType } from 'redis';
 import httpStatus from 'http-status';
 
 import { ProfileService, RuleService, UserRuleService, UserServiceOptions } from 'src/services';
-import { equalsOrError, existsOrError, hashString, notExistisOrError } from 'src/util';
-import { ListUsers, Rule, User, UserEntity } from 'src/repositories/entities';
+import { User } from 'src/repositories/entities';
 import { AbstractDatabaseService } from 'src/core/services';
-import { RelationalReadOptions } from 'src/core/types';
+import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
+import { UserEntity } from 'src/repositories/types';
+import { equalsOrError, existsOrError, hashString, notExistisOrError, onError } from 'src/util';
 
 const fields = ['id', 'name', 'email', 'password', 'profile_id as profileId', 'deleted_at as deletedAt'];
 
 export class UserService extends AbstractDatabaseService {
-	private profileService: ProfileService;
-	private userRuleService: UserRuleService;
-	private ruleService: RuleService;
-	private salt: number;
-
-	constructor(userServiceOptions: UserServiceOptions) {
-		super({ ...userServiceOptions, table: 'users', serviceName: UserRuleService.name, fields });
-		this.profileService = userServiceOptions.profileService;
-		this.userRuleService = userServiceOptions.userRuleService;
-		this.ruleService = userServiceOptions.ruleService;
-		this.salt = userServiceOptions.salt;
+	constructor(
+		private profileService: ProfileService,
+		private userRuleService: UserRuleService,
+		private ruleService: RuleService,
+		private salt: number,
+		conn: Knex,
+		cache: RedisClientType,
+		options: RelationalServiceOptions
+	) {
+		super(conn, cache, 'user', { ...options, fields });
 	}
 
 	async userValidate(user: User) {
@@ -33,8 +35,8 @@ export class UserService extends AbstractDatabaseService {
 			equalsOrError(user.password, user.confirmPassword, 'passwords do not match.');
 			notExistisOrError(userDB, `User ${user.email}, already registered`);
 			return;
-		} catch (msg) {
-			return { code: httpStatus.BAD_REQUEST, msg };
+		} catch (err) {
+			return err;
 		}
 	}
 
@@ -45,8 +47,8 @@ export class UserService extends AbstractDatabaseService {
 		return super.create(item);
 	}
 
-	async read(options?: RelationalReadOptions): Promise<User | ListUsers> {
-		return super.read(options).then(result => (result.data ? this._setUserList(result) : this._setUserRules(result)));
+	async read(options?: RelationalReadOptions) {
+		return super.read(options).then(result => (result.data ? this.setUserList(result) : this._setUserRules(result)));
 	}
 
 	findByEmail(email: string) {
@@ -54,15 +56,23 @@ export class UserService extends AbstractDatabaseService {
 			.select()
 			.where({ email })
 			.then((user: any) => user)
-			.catch(err => this.log.error(`Find user by email: ${email} failed`, err));
+			.catch(err => err);
 	}
 
-	private _setUserList(result: any) {
-		result.data = result.data.map(this._setUserRules).map((item: User) => Reflect.deleteProperty(item, 'password'));
+	private setUserList(result: any) {
+		result.data = result.data
+			.map(this._setUserRules)
+			.map((item: UserEntity) => new User(item))
+			.map((item: User) => {
+				Reflect.deleteProperty(item, 'password');
+				Reflect.deleteProperty(item, 'profileId');
+				Reflect.deleteProperty(item, 'permissions');
+				return item;
+			});
 		return result;
 	}
 
-	private async _setUserRules(user: any) {
+	private async setUserRules(user: any) {
 		const { id } = user;
 
 		user.profile = await this.profileService.read({ id });

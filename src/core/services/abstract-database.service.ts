@@ -104,7 +104,7 @@ export abstract class AbstractDatabaseService extends AbstractCacheService imple
 			.catch(err => onError(`Find register fail in table: ${this.table}`, err));
 	}
 
-	private checkCache(options?: ReadTableOptions) {
+	protected checkCache(options?: ReadTableOptions) {
 		const id = Number(options?.id);
 
 		return id

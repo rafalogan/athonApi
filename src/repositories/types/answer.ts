@@ -1,13 +1,12 @@
-import { Contact, Timestampsfileds } from 'src/repositories/entities';
+import { TimestampsFields } from 'src/repositories/types/timestamps';
 import { Pagination } from 'src/core/domains';
 
-export interface AnswerEntity extends Timestampsfileds {
-	id: number;
+export interface AnswerEntity extends TimestampsFields {
+	id?: number;
 	subject: string;
 	content: string;
 	contactId: number;
 	userId: number;
-	contact?: Contact | void;
 }
 
 export interface AnswerListEntity {

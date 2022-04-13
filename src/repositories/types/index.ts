@@ -2,6 +2,7 @@ export * from './environment';
 export * from './logger';
 export * from './response';
 export * from './knex';
+export * from './auth';
 
 // interfaces based on table structure
 export * from './answer';

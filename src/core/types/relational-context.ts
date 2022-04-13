@@ -6,7 +6,8 @@ export interface RelationalContext {
 }
 
 export interface RelationalReadOptions {
-	id?: number;
+	id?: number | string;
+	where?: string;
 	page?: number;
 	limit?: number;
 	fields?: string[];

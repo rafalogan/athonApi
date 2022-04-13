@@ -19,16 +19,16 @@ export class User implements UserEntity {
 		this.password = props.password;
 		this.confirmPassword = props?.confirmPassword;
 		this.profileId = Number(props.profileId);
-		this.profile = this._setProfile(props?.profile);
-		this.permissions = this._setRules(props?.permissions);
+		this.profile = this.setProfile(props?.profile);
+		this.permissions = this.setRules(props?.permissions);
 		this.deleteAt = props?.deleteAt;
 	}
 
-	private _setProfile(profile: ProfileEntity | undefined): Profile | undefined {
+	private setProfile(profile: ProfileEntity | undefined): Profile | undefined {
 		return profile ? new Profile(profile) : undefined;
 	}
 
-	private _setRules(rules: Rule[] | RuleEntity[] | undefined): Rule[] | [] {
+	private setRules(rules: Rule[] | RuleEntity[] | undefined): Rule[] | [] {
 		return rules ? rules.map(item => new Rule(item)) : [];
 	}
 }

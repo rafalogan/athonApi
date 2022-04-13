@@ -1,8 +1,9 @@
-import { Profile, Rule, RuleEntity, User } from 'src/repositories/entities';
-import { PaginationDomain } from 'src/core/domains';
+import { Profile, Rule, User } from 'src/repositories/entities';
+import { RuleEntity } from 'src/repositories/types/rule';
+import { PaginationDomain } from 'src/core/types';
 
 export interface UserEntity {
-	id: number;
+	id?: number;
 	name: string;
 	email: string;
 	password: string;

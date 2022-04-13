@@ -9,8 +9,8 @@ import { HttpsOptions } from 'src/config/https-options.config';
 import { AppModule } from 'src/app.module';
 import { CacheConnectionController, ConnectionController } from 'src/core/controller';
 import { KnexFileConfig } from 'src/config/knexfile.config';
-import { ControllersModule } from 'src/controllers/controllers.module';
 import { ServicesModule } from 'src/services';
+import { AuthConfig } from 'src/config/auth.config';
 
 execDotenv();
 
@@ -22,6 +22,7 @@ const knexfile = new KnexFileConfig(env.databaseEnv);
 const dbConnection = new ConnectionController(knexfile);
 const cacheConnection = new CacheConnectionController(env.cacheEnv);
 const services = new ServicesModule(dbConnection, cacheConnection, env);
+const autCongig = new AuthConfig(env.security.authSecret, services.userService);
 
 const app = new AppConfig(env.nodeEnv, logger, services).express;
 export const server = new ServerController(app, env, httpsOptions);
