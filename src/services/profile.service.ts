@@ -3,7 +3,9 @@ import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
-import { ProfileEntity } from 'src/repositories/types';
+import { ProfileEntity, ProfilesList } from 'src/repositories/types';
+import { clearTimestamp } from 'src/util';
+import { Pagination } from 'src/core/domains';
 
 const fields = ['id', 'title', 'description', 'created_at as createdAt', 'updated_at as updatedAt'];
 
@@ -19,14 +21,10 @@ export class ProfileService extends AbstractDatabaseService {
 	}
 
 	async read(options?: RelationalReadOptions): Promise<any> {
-		return super.read(options).then(result => {
-			if (result.data) {
-				result.data = result.data.map(this.setProfilePermissions);
-				return result;
-			}
-			return this._setProfilePermissions(result);
-		});
+		return super.read(options).then((result: ProfileEntity | ProfilesList) => ('data' in result) ? this.setProfiles(result)
 	}
+
+
 
 	private async setProfilePermissions(profile: ProfileEntity) {
 		const id = Number(profile.id);
@@ -36,13 +34,17 @@ export class ProfileService extends AbstractDatabaseService {
 	}
 
 	private async findRulesByProfile(profileId: number) {
-		const rulesId = await this.profileRulesService.findRulesByProfileId(profileId);
+		const rulesId = await this.profileRulesService.read({profileId})
 
 		return Array.isArray(rulesId)
-			? rulesId.map(async rule => {
-					const { ruleId: id } = rule;
-					return await this.ruleService.read({ id });
-			  })
+			? rulesId.map(async rule => this.ruleService.read({ id: rule.ruleId }))
 			: [];
+	}
+
+	private setProfiles(profiles: ProfilesList) {
+		const data  = profiles.data.map(profile => clearTimestamp(profile));
+		const pagination = new Pagination(profiles.pagination);
+
+		return { data, pagination };
 	}
 }

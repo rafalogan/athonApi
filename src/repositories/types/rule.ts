@@ -1,14 +1,16 @@
-import { Timestampsfileds } from 'src/repositories/types/timestamps';
+import { TimestampsFields } from 'src/repositories/types/timestamps';
+
 import { Rule } from 'src/repositories/entities';
 import { PaginationDomain } from 'src/core/types';
+import { Pagination } from 'src/core/domains';
 
-export interface RuleEntity extends Timestampsfileds {
-	id: number;
+export interface RuleEntity extends TimestampsFields {
+	id?: number;
 	name: string;
 	description: string;
 }
 
-export interface ListRoules {
-	data: Rule[];
-	pagination: PaginationDomain;
+export interface RulesEntity {
+	data: Rule[] | RuleEntity[];
+	pagination: PaginationDomain | Pagination;
 }

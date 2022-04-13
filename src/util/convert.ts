@@ -46,3 +46,5 @@ export const clearTimestampFileds = (data: any) => {
 
 	return data;
 };
+
+export const setfieldtoDate = (field?: string | Date | number) => (field ? new Date(field) : undefined);
