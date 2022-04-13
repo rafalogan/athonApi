@@ -1,5 +1,3 @@
-import httpStatus from 'http-status';
-
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
 
