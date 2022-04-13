@@ -1,9 +1,10 @@
-import { ProfileServiceOptions, ProfileRuleService, RuleService } from 'src/services';
-import { AbstractDatabaseService } from 'src/core/services';
-import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
-import { ProfileEntity, ProfilesList } from 'src/repositories/types';
+
+import { ProfileRuleService, RuleService } from 'src/services';
+import { AbstractDatabaseService } from 'src/core/services';
+import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
+import { ProfileEntity, ProfileRuleEntity, ProfilesList, RuleEntity } from 'src/repositories/types';
 import { clearTimestamp } from 'src/util';
 import { Pagination } from 'src/core/domains';
 
@@ -20,29 +21,34 @@ export class ProfileService extends AbstractDatabaseService {
 		super(conn, cache, 'profiles', { ...options, fields });
 	}
 
-	async read(options?: RelationalReadOptions): Promise<any> {
-		return super.read(options).then((result: ProfileEntity | ProfilesList) => ('data' in result) ? this.setProfiles(result)
+	async read(options?: RelationalReadOptions): Promise<ProfilesList | ProfileEntity> {
+		return super
+			.read(options)
+			.then(async (result: ProfileEntity | ProfilesList) =>
+				'data' in result ? this.setProfiles(result as ProfilesList) : this.setProfile(result as ProfileEntity)
+			)
+			.catch(error => error);
 	}
 
-
-
-	private async setProfilePermissions(profile: ProfileEntity) {
+	private async setProfile(profile: ProfileEntity): Promise<ProfileEntity> {
 		const id = Number(profile.id);
+		const permissions = await this.findRulesByProfile(id);
 
-		profile.permissions = await this.findRulesByProfile(id);
-		return profile;
+		return { ...profile, permissions };
 	}
 
-	private async findRulesByProfile(profileId: number) {
-		const rulesId = await this.profileRulesService.read({profileId})
+	private async findRulesByProfile(profileId: number): Promise<RuleEntity[]> {
+		const rulesId = await this.profileRulesService.read({ profileId });
 
-		return Array.isArray(rulesId)
-			? rulesId.map(async rule => this.ruleService.read({ id: rule.ruleId }))
-			: [];
+		return rulesId.map((rule: ProfileRuleEntity) => this.setRules(rule.ruleId)).map((item: RuleEntity) => clearTimestamp(item)) || [];
 	}
 
-	private setProfiles(profiles: ProfilesList) {
-		const data  = profiles.data.map(profile => clearTimestamp(profile));
+	private async setRules(id: number): Promise<RuleEntity> {
+		return this.ruleService.read({ id }).then(rule => rule as RuleEntity);
+	}
+
+	private setProfiles(profiles: ProfilesList): ProfilesList {
+		const data = profiles.data.map(profile => clearTimestamp(profile));
 		const pagination = new Pagination(profiles.pagination);
 
 		return { data, pagination };

@@ -14,7 +14,7 @@ export class RuleService extends AbstractDatabaseService {
 		super(conn, cache, 'rules', { ...options, fields });
 	}
 
-	read(options?: RelationalReadOptions) {
+	read(options?: RelationalReadOptions): Promise<RulesEntity | RuleEntity> {
 		return super
 			.read(options)
 			.then((result: RuleEntity | RulesEntity) => ('data' in result ? this.setRules(result) : result))
@@ -36,7 +36,7 @@ export class RuleService extends AbstractDatabaseService {
 		}
 	}
 
-	private setRules(result: RulesEntity) {
+	private setRules(result: RulesEntity): RulesEntity {
 		const data = result.data.map((item: RuleEntity) => clearTimestampFileds(item));
 		const pagination = new Pagination(result.pagination);
 		return { data, pagination };
