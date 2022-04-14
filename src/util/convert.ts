@@ -31,20 +31,21 @@ export const convertDataValues = (data: any) => {
 
 export const hashString = (field: string, salt: number) => bcrypt.hashSync(field, salt);
 
-export const clearTimestamp = (data: any) => {
-	Reflect.deleteProperty(data, 'createdAt');
-	Reflect.deleteProperty(data, 'updatedAt');
+export const stringify = (...data: any[]) => data.map(item => item.toString()).join(' ');
 
-	return data;
-};
-
-export const stringfy = (...data: any[]) => data.map(item => item.toString()).join(' ');
 export const convertToJson = (data: string) => JSON.parse(data);
-export const clearTimestampFileds = (data: any) => {
+
+export const clearTimestampFields = (data: any) => {
 	Reflect.deleteProperty(data, 'createdAt');
 	Reflect.deleteProperty(data, 'updatedAt');
 
 	return data;
 };
 
-export const setfieldtoDate = (field?: string | Date | number) => (field ? new Date(field) : undefined);
+export const setFieldToDate = (field?: string | Date | number) => (field ? new Date(field) : undefined);
+
+export const deleteField = (data: any, field: string) => {
+	Reflect.deleteProperty(data, field);
+
+	return data;
+};

@@ -3,7 +3,7 @@ import isEmpty from 'is-empty';
 import { RedisClientType } from 'redis';
 import md5 from 'md5';
 
-import { convertToJson, existsOrError, onError, onInfo, onLog, onWarn, stringfy } from 'src/util';
+import { convertToJson, existsOrError, onError, onInfo, onLog, onWarn, stringify } from 'src/util';
 import { CacheServiceOptions } from 'src/core/types';
 
 export abstract class AbstractCacheService {
@@ -73,7 +73,7 @@ export abstract class AbstractCacheService {
 	private setCache(key: string, data: any, time?: number) {
 		const convertTime = this.isValidEnv ? 10 : 60;
 		const cacheTime = time ? time * convertTime : this.cacheTime * convertTime;
-		const dataToString = stringfy(data);
+		const dataToString = stringify(data);
 
 		return this.setAsync(key, dataToString, 'EX', cacheTime)
 			.then(() => onLog(`Cache ${key}, created with success!`, 'info'))

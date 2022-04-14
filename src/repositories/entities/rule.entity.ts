@@ -1,5 +1,5 @@
 import { RuleEntity } from 'src/repositories/types/rule';
-import { setfieldtoDate } from 'src/util';
+import { setFieldToDate } from 'src/util';
 
 export class Rule implements RuleEntity {
 	id: number;
@@ -12,7 +12,7 @@ export class Rule implements RuleEntity {
 		this.id = Number(id ? id : props.id);
 		this.name = props.name;
 		this.description = props.description;
-		this.createdAt = setfieldtoDate(props.createdAt);
-		this.updatedAt = setfieldtoDate(props.updatedAt);
+		this.createdAt = setFieldToDate(props.createdAt);
+		this.updatedAt = setFieldToDate(props.updatedAt);
 	}
 }

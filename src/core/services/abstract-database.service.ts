@@ -5,6 +5,8 @@ import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
 import { ReadTableOptions, RelationalContext, RelationalServiceOptions } from 'src/core/types';
 import { Pagination } from 'src/repositories/models';
 import { RedisClientType } from 'redis';
+import { QueryResult } from 'pg';
+import QueryBuilder = Knex.QueryBuilder;
 
 export abstract class AbstractDatabaseService extends AbstractCacheService implements RelationalContext {
 	protected instance: Knex;
@@ -25,7 +27,7 @@ export abstract class AbstractDatabaseService extends AbstractCacheService imple
 		return this.instance(this.table)
 			.insert(data)
 			.then((result: any) => ({ create: result.rowCount > 0, data, result }))
-			.catch(err => onError(`Insert Failed in Table: ${this.table}`, err));
+			.catch(err => err);
 	}
 
 	read(options?: ReadTableOptions) {

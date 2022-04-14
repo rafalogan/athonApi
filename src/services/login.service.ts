@@ -6,27 +6,33 @@ import { User } from 'src/repositories/entities';
 import { Credential, Payload } from 'src/repositories/models';
 import { existsOrError, isMatch } from 'src/util';
 import { UserService } from 'src/services/user.service';
+import { ResponseCreateUser, SignupSuccessResponse, ValidateTokenResponse } from 'src/repositories/types';
 
 export class LoginService {
 	constructor(private userService: UserService, private authSecret: string) {}
 
 	async verifyCredentials(credentials: Credential) {
-		try {
-			const findDB = await this.userService.findByEmail(credentials.email);
-			const user = new User(findDB);
-			existsOrError(user, 'User not found');
+		const findDB = await this.userService.findByEmail(credentials.email);
+		const user = new User(findDB);
+		existsOrError(user, 'User not found');
 
-			if (isMatch(credentials, user)) {
-				const payload = new Payload(user);
-				return { ...payload, token: jwt.encode(payload, this.authSecret) };
-			}
-		} catch (err) {
-			return err;
+		if (isMatch(credentials, user)) {
+			const payload = new Payload(user);
+			return { ...payload, token: jwt.encode(payload, this.authSecret) };
 		}
 	}
 
-	async signupOpApp(user: User) {
-		return this.userService.create(user);
+	async signupOnApp(user: User) {
+		try {
+			await this.userService.userValidate(user);
+		} catch (err) {
+			return err;
+		}
+
+		return this.userService
+			.create(user)
+			.then(result => this.setSinguup(result))
+			.catch(err => err);
 	}
 
 	getPayload(req: Request) {
@@ -34,20 +40,16 @@ export class LoginService {
 		return token ? this.decodeToken(token) : undefined;
 	}
 
-	tokenIsValid(req: Request) {
-		try {
-			const token = this.extractToken(req);
-			const payload = token ? this.decodeToken(token) : undefined;
-			const valid = payload?.exp ? new Date(payload.exp * 1000) > new Date() : false;
-			const code = valid ? httpStatus.OK : httpStatus.UNAUTHORIZED;
+	async tokenIsValid(req: Request): Promise<ValidateTokenResponse> {
+		const token = this.extractToken(req);
+		const payload = token ? this.decodeToken(token) : undefined;
+		const valid = payload?.exp ? new Date(payload.exp * 1000) > new Date() : false;
+		const status = valid ? httpStatus.OK : httpStatus.UNAUTHORIZED;
 
-			existsOrError(token, 'Token is not valid or not found.');
-			existsOrError(payload, 'Payload is not found.');
+		existsOrError(token, 'Token is not valid or not found.');
+		existsOrError(payload, 'Payload is not found.');
 
-			return valid ? { valid, code, message: 'Token is valid' } : { valid, code, message: 'token expired' };
-		} catch (error) {
-			return error;
-		}
+		return valid ? { valid, status, message: 'Token is valid', token } : { valid, status, message: 'token expired', token };
 	}
 
 	private extractToken(req: Request) {
@@ -61,5 +63,13 @@ export class LoginService {
 		const dataRaw = jwt.decode(token, this.authSecret);
 
 		return new Payload(dataRaw);
+	}
+
+	private setSinguup(result: ResponseCreateUser): SignupSuccessResponse {
+		return {
+			...result,
+			status: httpStatus.CREATED,
+			message: 'User created successfully',
+		};
 	}
 }

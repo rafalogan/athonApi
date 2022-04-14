@@ -1,5 +1,5 @@
 import { logger } from 'src/server';
-import { stringfy } from 'src/util/convert';
+import { stringify } from 'src/util/convert';
 
 const noProd = process.env.NODE_ENV !== 'production';
 const isDebug = process.env.DEBUG === 'true';
@@ -28,18 +28,30 @@ export const terminalColors = {
 
 export const onLog = (...args: any[]) => {
 	if (noProd)
-		return console.log(`${terminalColors.cyan}[Log:]`, `${terminalColors.green} ${args[0]}${terminalColors.reset}`, ...args.slice(1));
+		return console.log(
+			`${terminalColors.cyanBg + terminalColors.black}[Log:]${terminalColors.reset}`,
+			`${terminalColors.cyan} ${args[0]}${terminalColors.reset}`,
+			...args.slice(1)
+		);
 	if (isDebug) return logger.log('log', `${args[0]}`, ...args.slice(1));
 };
 
 export const onError = (...args: any[]) =>
 	noProd
-		? console.error(`${terminalColors.red}[Error:]`, `${terminalColors.magenta}${args[0]}${terminalColors.reset}`, ...args.slice(1))
+		? console.error(
+				`${terminalColors.redBg + terminalColors.black}[Error:]${terminalColors.reset}`,
+				`${terminalColors.red}${args[0]}${terminalColors.reset}`,
+				...args.slice(1)
+		  )
 		: logger.error(`${args[0]}`, ...args.slice(1));
 
 export const onWarn = (...args: any[]) =>
 	noProd
-		? console.warn(`${terminalColors.yellow}[Warn:]`, `${args[0]}${terminalColors.reset}`, ...args.slice(1))
+		? console.warn(
+				`${terminalColors.yellowBg + terminalColors.black}[Warn:]${terminalColors.reset}`,
+				`${terminalColors.yellow}${args[0]}${terminalColors.reset}`,
+				...args.slice(1)
+		  )
 		: logger.warn(`${args[0]}`, ...args.slice(1));
 
 export const onInfo = (...args: any[]) => logger.info(`${args[0]}`, ...args.slice(1));
@@ -49,4 +61,4 @@ export const onDebug = (...args: any[]) => {
 	if (noProd) return console.log(`${terminalColors.whiteBg + terminalColors.black}[Debug:]${terminalColors.reset}`, ...args);
 };
 
-export const onHttp = (...args: any[]) => logger.http(stringfy(...args));
+export const onHttp = (...args: any[]) => logger.http(stringify(...args));

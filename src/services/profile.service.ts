@@ -5,8 +5,8 @@ import { ProfileRuleService, RuleService } from 'src/services';
 import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 import { ProfileEntity, ProfileRuleEntity, ProfilesList, RuleEntity } from 'src/repositories/types';
-import { clearTimestamp } from 'src/util';
 import { Pagination } from 'src/repositories/models';
+import { clearTimestampFields } from 'src/util';
 
 const fields = ['id', 'title', 'description', 'created_at as createdAt', 'updated_at as updatedAt'];
 
@@ -47,7 +47,7 @@ export class ProfileService extends AbstractDatabaseService {
 	private async findRulesByProfile(profileId: number): Promise<RuleEntity[]> {
 		const rulesId = await this.profileRulesService.read({ profileId });
 
-		return rulesId.map((rule: ProfileRuleEntity) => this.setRules(rule.ruleId)).map((item: RuleEntity) => clearTimestamp(item)) || [];
+		return rulesId.map((rule: ProfileRuleEntity) => this.setRules(rule.ruleId)).map((item: RuleEntity) => clearTimestampFields(item)) || [];
 	}
 
 	private async setRules(id: number): Promise<RuleEntity> {
@@ -55,7 +55,7 @@ export class ProfileService extends AbstractDatabaseService {
 	}
 
 	private setProfiles(profiles: ProfilesList): ProfilesList {
-		const data = profiles.data.map(profile => clearTimestamp(profile));
+		const data = profiles.data.map(profile => clearTimestampFields(profile));
 		const pagination = new Pagination(profiles.pagination);
 
 		return { data, pagination };

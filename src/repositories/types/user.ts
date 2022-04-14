@@ -1,6 +1,6 @@
 import { Profile, Rule, User } from 'src/repositories/entities';
 import { RuleEntity } from 'src/repositories/types/rule';
-import { PaginationDomain } from 'src/core/types';
+import { PaginationDomain, ResponseRegisterItem } from 'src/core/types';
 import { Pagination } from 'src/repositories/models';
 import { ProfileEntity } from 'src/repositories/types/profile';
 
@@ -19,4 +19,8 @@ export interface UserEntity {
 export interface UsersEntity {
 	data: User[] | UserEntity[];
 	pagination: PaginationDomain | Pagination;
+}
+
+export interface ResponseCreateUser extends ResponseRegisterItem {
+	data: UserEntity | User;
 }

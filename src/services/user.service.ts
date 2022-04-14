@@ -5,8 +5,8 @@ import { ProfileService, RuleService, UserRuleService } from 'src/services';
 import { User } from 'src/repositories/entities';
 import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
-import { RuleEntity, UserEntity, UserRuleEntity, UsersEntity } from 'src/repositories/types';
-import { clearTimestamp, equalsOrError, existsOrError, hashString, notExistisOrError, onError } from 'src/util';
+import { ResponseCreateUser, RuleEntity, UserEntity, UserRuleEntity, UsersEntity } from 'src/repositories/types';
+import { clearTimestampFields, deleteField, equalsOrError, existsOrError, hashString, notExistisOrError, onError } from 'src/util';
 import { Pagination } from 'src/repositories/models';
 
 const fields = ['id', 'name', 'email', 'password', 'profile_id as profileId', 'deleted_at as deletedAt'];
@@ -40,11 +40,17 @@ export class UserService extends AbstractDatabaseService {
 		}
 	}
 
-	async create(item: User): Promise<any> {
+	async create(item: User) {
 		item.password = hashString(item.password, this.salt);
-		Reflect.deleteProperty(item, 'confirmPassword');
+		deleteField(item, 'confirmPassword');
 
-		return super.create(item);
+		return super
+			.create(item)
+			.then((result: ResponseCreateUser) => {
+				result.data = deleteField(result.data, 'password');
+				return result;
+			})
+			.catch(err => err);
 	}
 
 	read(options?: RelationalReadOptions): Promise<UsersEntity | UserEntity> {
@@ -66,7 +72,7 @@ export class UserService extends AbstractDatabaseService {
 	}
 
 	private setUsers(result: UsersEntity): UsersEntity {
-		const data = result.data.map(item => clearTimestamp(item)) as UserEntity[];
+		const data = result.data.map(item => clearTimestampFields(item)) as UserEntity[];
 		const pagination = new Pagination(result.pagination);
 		return { data, pagination };
 	}
