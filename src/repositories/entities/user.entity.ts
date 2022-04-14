@@ -1,4 +1,6 @@
-import { Profile, ProfileEntity, Rule, RuleEntity, UserEntity } from 'src/repositories/entities/index';
+import { Rule } from 'src/repositories/entities/rule.entity';
+import { ProfileEntity, RuleEntity, UserEntity } from 'src/repositories/types';
+import { Profile } from 'src/repositories/entities/profile.entity';
 
 export class User implements UserEntity {
 	id: number;
@@ -24,11 +26,11 @@ export class User implements UserEntity {
 		this.deleteAt = props?.deleteAt;
 	}
 
-	private setProfile(profile: ProfileEntity | undefined): Profile | undefined {
+	private setProfile(profile?: ProfileEntity | Profile): Profile | undefined {
 		return profile ? new Profile(profile) : undefined;
 	}
 
-	private setRules(rules: Rule[] | RuleEntity[] | undefined): Rule[] | [] {
+	private setRules(rules?: Rule[] | RuleEntity[]): Rule[] | [] {
 		return rules ? rules.map(item => new Rule(item)) : [];
 	}
 }

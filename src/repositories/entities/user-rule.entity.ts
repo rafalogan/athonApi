@@ -1,4 +1,4 @@
-import { UserRuleEntity } from 'src/repositories/entities/index';
+import { UserRuleEntity } from 'src/repositories/types';
 
 export class UserRule implements UserRuleEntity {
 	userId: number;
