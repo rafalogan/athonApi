@@ -1,6 +1,6 @@
 import { RuleController } from 'src/api/rule/rule.controller';
 import { RuleRouter } from 'src/api/rule/rule.router';
-import { AuthService, RuleService } from 'src/services';
+import { LoginService, RuleService } from 'src/services';
 import { ResponseController } from 'src/core/controller';
 import { Application } from 'express';
 
@@ -8,7 +8,7 @@ export default class RuleModule {
 	private readonly ruleController: RuleController;
 	private ruleRouter: RuleRouter;
 
-	constructor(ruleService: RuleService, responseController: ResponseController, app: Application, auth: AuthService) {
+	constructor(ruleService: RuleService, responseController: ResponseController, app: Application, auth: LoginService) {
 		this.ruleController = new RuleController(ruleService, responseController);
 		this.ruleRouter = this._instanceRouleRouter(app, auth);
 	}
@@ -17,7 +17,7 @@ export default class RuleModule {
 		return this.ruleRouter.exec();
 	}
 
-	private _instanceRouleRouter(app: Application, auth: AuthService) {
+	private _instanceRouleRouter(app: Application, auth: LoginService) {
 		return new RuleRouter(this.ruleController, app, auth);
 	}
 }

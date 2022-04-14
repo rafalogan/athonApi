@@ -3,7 +3,7 @@ import { Knex } from 'knex';
 import { convertDataValues, existsOrError, onError } from 'src/util';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
 import { ReadTableOptions, RelationalContext, RelationalServiceOptions } from 'src/core/types';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 import { RedisClientType } from 'redis';
 
 export abstract class AbstractDatabaseService extends AbstractCacheService implements RelationalContext {

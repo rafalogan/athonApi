@@ -1,4 +1,4 @@
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 import { TimestampsFields } from 'src/repositories/types/timestamps';
 import { UserRule } from 'src/repositories/entities';
 import { PaginationDomain } from 'src/core/types';

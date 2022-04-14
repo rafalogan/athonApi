@@ -1,5 +1,5 @@
 import { TimestampsFields } from 'src/repositories/types/timestamps';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 import { Rule } from 'src/repositories/entities';
 import { RuleEntity } from 'src/repositories/types/rule';
 import { PaginationDomain } from 'src/core/types';

@@ -1,11 +1,11 @@
 import { Application } from 'express';
 
 import { AbstractRoutes } from 'src/core/routes';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 import { AnswerController } from 'src/api/answer/answer.controller';
 
 export class AnswerRouter extends AbstractRoutes {
-	constructor(private answerController: AnswerController, app: Application, auth: AuthService) {
+	constructor(private answerController: AnswerController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

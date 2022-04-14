@@ -1,4 +1,4 @@
-import { AuthService, ProfileRuleService } from 'src/services';
+import { LoginService, ProfileRuleService } from 'src/services';
 import { ResponseController } from 'src/core/controller';
 import { Application } from 'express';
 import { ProfileRuleController } from 'src/api/profile-rule/profile-rule.controller';
@@ -12,7 +12,7 @@ export default class ProfileRuleModule {
 		private profileRuleService: ProfileRuleService,
 		private responseController: ResponseController,
 		app: Application,
-		auth: AuthService
+		auth: LoginService
 	) {
 		this.profileRuleController = new ProfileRuleController(this.profileRuleService, this.responseController);
 		this.profileRuleRouter = new ProfileRuleRouter(this.profileRuleController, app, auth);

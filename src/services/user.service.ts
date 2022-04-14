@@ -7,7 +7,7 @@ import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 import { RuleEntity, UserEntity, UserRuleEntity, UsersEntity } from 'src/repositories/types';
 import { clearTimestamp, equalsOrError, existsOrError, hashString, notExistisOrError, onError } from 'src/util';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 const fields = ['id', 'name', 'email', 'password', 'profile_id as profileId', 'deleted_at as deletedAt'];
 

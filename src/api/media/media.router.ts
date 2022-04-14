@@ -1,11 +1,11 @@
 import { Application } from 'express';
 
 import { AbstractRoutes } from 'src/core/routes';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 import { MediaController } from 'src/api/media/media.controller';
 
 export class MediaRouter extends AbstractRoutes {
-	constructor(private mediaController: MediaController, app: Application, auth: AuthService) {
+	constructor(private mediaController: MediaController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

@@ -1,7 +1,7 @@
 import { Schema, Document } from 'mongoose';
 
 import { Category, Timestampsfileds } from 'src/repositories/entities';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 export interface CategoryEntity extends Timestampsfileds {
 	_id: Schema.Types.ObjectId;

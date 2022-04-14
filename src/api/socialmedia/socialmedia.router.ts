@@ -2,10 +2,10 @@ import { Application } from 'express';
 
 import { AbstractRoutes } from 'src/core/routes';
 import { SocialmediaController } from 'src/api/socialmedia/socialmedia.controller';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 
 export class SocialmediaRouter extends AbstractRoutes {
-	constructor(private socialmediaController: SocialmediaController, app: Application, auth: AuthService) {
+	constructor(private socialmediaController: SocialmediaController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

@@ -3,12 +3,12 @@ import { Request } from 'express';
 
 import { NoRelationalServiceOptions } from 'src/core/types';
 import { Article, ArticleEntity, ArticleListEntity, IArticleModel } from 'src/repositories/entities';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 import { AbstractNoRelationalService } from 'src/core/services';
 import { clearTimestamp, existsOrError, ResponseException } from 'src/util';
 
 export class ArticleService {
-	constructor(private authService: AuthService, options: NoRelationalServiceOptions) {}
+	constructor(private authService: LoginService, options: NoRelationalServiceOptions) {}
 
 	articleFilter(req: Request) {
 		try {

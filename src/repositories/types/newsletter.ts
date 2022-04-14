@@ -1,5 +1,5 @@
 import { Timestampsfileds } from 'src/repositories/entities';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 export interface NewsletterEntity extends Timestampsfileds {
 	id: number;

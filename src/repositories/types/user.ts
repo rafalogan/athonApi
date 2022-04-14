@@ -1,7 +1,7 @@
 import { Profile, Rule, User } from 'src/repositories/entities';
 import { RuleEntity } from 'src/repositories/types/rule';
 import { PaginationDomain } from 'src/core/types';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 import { ProfileEntity } from 'src/repositories/types/profile';
 
 export interface UserEntity {

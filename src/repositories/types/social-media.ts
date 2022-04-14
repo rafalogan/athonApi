@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
 
 import { Timestampsfileds } from 'src/repositories/entities';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 export interface SocialmediaEntity extends Timestampsfileds {
 	_id?: any;

@@ -5,10 +5,10 @@ import { NoRelationalServiceOptions } from 'src/core/types';
 import { CategoriesListEntity, Category, CategoryEntity, ICategoryModel } from 'src/repositories/entities';
 import { AbstractNoRelationalService } from 'src/core/services';
 import { existsOrError, ResponseException } from 'src/util';
-import { AuthService } from 'src/services/auth.service';
+import { LoginService } from 'src/services/login.service';
 
 export class CategoryService {
-	constructor(private authService: AuthService, options: NoRelationalServiceOptions) {}
+	constructor(private authService: LoginService, options: NoRelationalServiceOptions) {}
 
 	setFields(req: Request) {
 		try {

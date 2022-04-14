@@ -1,10 +1,10 @@
 import { AbstractRoutes } from 'src/core/routes';
 import { Application } from 'express';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 import { UserRuleController } from 'src/api/user-rule/user-rule.controller';
 
 export class UserRuleRouter extends AbstractRoutes {
-	constructor(private userRuleController: UserRuleController, app: Application, auth: AuthService) {
+	constructor(private userRuleController: UserRuleController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

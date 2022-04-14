@@ -4,7 +4,7 @@ import { RedisClientType } from 'redis';
 import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalServiceOptions } from 'src/core/types';
 import { ProfileRule } from 'src/repositories/entities';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 import { existsOrError, notExistisOrError, onError } from 'src/util';
 import { ProfileRuleEntity, ReadRulesOptions } from 'src/repositories/types';
 

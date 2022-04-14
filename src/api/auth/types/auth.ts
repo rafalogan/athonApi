@@ -1,8 +1,8 @@
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 import { LogController, ResponseController } from 'src/core/controller';
 
 export interface AuthControllerOptions {
-	authService: AuthService;
+	authService: LoginService;
 	responseController: ResponseController;
 	logController: LogController;
 }

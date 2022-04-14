@@ -1,11 +1,11 @@
 import { Application } from 'express';
 
 import { AbstractRoutes } from 'src/core/routes';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 import { NewsletterController } from 'src/api/newsletter/newsletter.controller';
 
 export class NewsletterRouter extends AbstractRoutes {
-	constructor(private newsletterController: NewsletterController, app: Application, auth: AuthService) {
+	constructor(private newsletterController: NewsletterController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

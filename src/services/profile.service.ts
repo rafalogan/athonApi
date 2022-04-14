@@ -6,7 +6,7 @@ import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 import { ProfileEntity, ProfileRuleEntity, ProfilesList, RuleEntity } from 'src/repositories/types';
 import { clearTimestamp } from 'src/util';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 const fields = ['id', 'title', 'description', 'created_at as createdAt', 'updated_at as updatedAt'];
 

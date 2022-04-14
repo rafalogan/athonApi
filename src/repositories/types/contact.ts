@@ -1,5 +1,5 @@
 import { CreatedAtField } from 'src/repositories/entities';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 export interface ContactEntity extends CreatedAtField {
 	id: number;

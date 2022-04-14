@@ -2,10 +2,10 @@ import { Application } from 'express';
 
 import { AbstractRoutes } from 'src/core/routes';
 import { ProfileRuleController } from 'src/api/profile-rule/profile-rule.controller';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 
 export class ProfileRuleRouter extends AbstractRoutes {
-	constructor(private profileRuleController: ProfileRuleController, app: Application, auth: AuthService) {
+	constructor(private profileRuleController: ProfileRuleController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

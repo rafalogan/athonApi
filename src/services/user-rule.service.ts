@@ -6,7 +6,7 @@ import { RulesReadOptions } from 'src/services/types/services';
 import { clearTimestamp, existsOrError, notExistisOrError, onError } from 'src/util';
 import { UserRuleEntity } from 'src/repositories/types';
 import { UserRule } from 'src/repositories/entities';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 import { AbstractDatabaseService } from 'src/core/services';
 
 const fields = ['user_id as userId', 'rule_id as ruleId', 'created_at as createdAt', 'updated_at as updatedAt'];

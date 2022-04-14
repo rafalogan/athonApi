@@ -1,11 +1,11 @@
 import { Application } from 'express';
 
 import { UserController } from 'src/api/user/user.controller';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 import { AbstractRoutes } from 'src/core/routes';
 
 export class UserRouter extends AbstractRoutes {
-	constructor(private userController: UserController, app: Application, auth: AuthService) {
+	constructor(private userController: UserController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

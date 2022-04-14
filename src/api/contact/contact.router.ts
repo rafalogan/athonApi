@@ -1,11 +1,11 @@
 import { Application } from 'express';
 
 import { AbstractRoutes } from 'src/core/routes';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 import { ContactController } from 'src/api/contact/contact.controller';
 
 export class ContactRouter extends AbstractRoutes {
-	constructor(private contactController: ContactController, app: Application, auth: AuthService) {
+	constructor(private contactController: ContactController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

@@ -1,10 +1,10 @@
 import { AbstractRoutes } from 'src/core/routes';
 import { ProfileController } from 'src/api/profile/profile.controller';
 import { Application } from 'express';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 
 export class ProfileRouter extends AbstractRoutes {
-	constructor(private profileController: ProfileController, app: Application, auth: AuthService) {
+	constructor(private profileController: ProfileController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

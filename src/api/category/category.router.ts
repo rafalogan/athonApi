@@ -1,10 +1,10 @@
 import { AbstractRoutes } from 'src/core/routes';
 import { Application } from 'express';
 import { CategoryController } from 'src/api/category/category.controller';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 
 export class CategoryRouter extends AbstractRoutes {
-	constructor(private categoryController: CategoryController, app: Application, auth: AuthService) {
+	constructor(private categoryController: CategoryController, app: Application, auth: LoginService) {
 		super(app, auth);
 	}
 

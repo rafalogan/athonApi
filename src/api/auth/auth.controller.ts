@@ -3,12 +3,12 @@ import { Request, Response } from 'express';
 
 import { LogController, ResponseController } from 'src/core/controller';
 import { User } from 'src/repositories/entities';
-import { AuthService } from 'src/services';
+import { LoginService } from 'src/services';
 import { AuthControllerOptions } from 'src/api/auth/types/auth';
-import { Credential } from 'src/core/domains/credential.domain';
+import { Credential } from 'src/repositories/models/credential.domain';
 
 export class AuthController {
-	private authService: AuthService;
+	private authService: LoginService;
 	private response: ResponseController;
 	private log: LogController;
 
@@ -45,7 +45,7 @@ export class AuthController {
 	}
 
 	validateToken(req: Request, res: Response) {
-		const result = this.authService.tokemIsValid(req);
+		const result = this.authService.tokenIsValid(req);
 		const { code, message } = result;
 
 		code === 200 ? this.response.onSuccess(res, result) : this.response.onError(res, message, undefined, code);

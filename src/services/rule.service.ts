@@ -5,7 +5,7 @@ import { clearTimestampFileds, existsOrError, notExistisOrError } from 'src/util
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
 import { RuleEntity, RulesEntity } from 'src/repositories/types';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 const fields = ['id', 'name', 'description', 'created_at as createdAt', 'updated_at as updatedAt'];
 

@@ -16,15 +16,15 @@ export class Payload implements PayloadDomain {
 		this.email = data.email;
 		this.profile = data.profile;
 		this.permissions = data.permissions;
-		this.iat = !(data instanceof User) && data.iat ? data.iat : this._now();
-		this.exp = !(data instanceof User) && data.exp ? data.exp : this._expires();
+		this.iat = !(data instanceof User) && data.iat ? data.iat : this.now();
+		this.exp = !(data instanceof User) && data.exp ? data.exp : this.expires();
 	}
 
-	private _now() {
+	private now() {
 		return Math.floor(Date.now() / 1000);
 	}
 
-	private _expires() {
+	private expires() {
 		return this.iat + 60 * 60 * 24;
 	}
 }

@@ -3,10 +3,10 @@ import { ISocialMediaModel, SocialMedia, SocialmediaEntity } from 'src/repositor
 import { clearTimestamp, existsOrError, ResponseException } from 'src/util';
 import httpStatus from 'http-status';
 import { Request } from 'express';
-import { AuthService } from 'src/services/auth.service';
+import { LoginService } from 'src/services/login.service';
 
 export class SocialMediaService {
-	constructor(private authService: AuthService, options: any) {}
+	constructor(private authService: LoginService, options: any) {}
 
 	socialmediaFilter(req: Request) {
 		try {

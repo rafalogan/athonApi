@@ -1,7 +1,7 @@
 import { Schema, Document } from 'mongoose';
 
 import { Timestampsfileds } from 'src/repositories/entities';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 export interface MediaEntity extends Timestampsfileds {
 	_id: Schema.Types.ObjectId;

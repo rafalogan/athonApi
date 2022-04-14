@@ -1,12 +1,12 @@
 import { Application } from 'express';
 
-import { AuthService } from 'src/services';
+import { AuthConfig } from 'src/config/auth.config';
 
 export abstract class AbstractRoutes {
 	protected app: Application;
-	protected auth?: AuthService;
+	protected auth?: AuthConfig;
 
-	protected constructor(app: Application, auth?: AuthService) {
+	protected constructor(app: Application, auth?: AuthConfig) {
 		this.app = app;
 		this.auth = auth;
 	}

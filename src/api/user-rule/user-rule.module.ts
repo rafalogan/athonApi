@@ -1,7 +1,7 @@
 import { Application } from 'express';
 
 import { ResponseController } from 'src/core/controller';
-import { AuthService, UserRuleService } from 'src/services';
+import { LoginService, UserRuleService } from 'src/services';
 import { UserRuleController } from 'src/api/user-rule/user-rule.controller';
 import { UserRuleRouter } from 'src/api/user-rule/user-rule.router';
 
@@ -13,7 +13,7 @@ export default class UserRuleModule {
 		private userRulsService: UserRuleService,
 		private responseController: ResponseController,
 		app: Application,
-		auth: AuthService
+		auth: LoginService
 	) {
 		this.userRuleController = new UserRuleController(this.userRulsService, this.responseController);
 		this.userRuleRouter = new UserRuleRouter(this.userRuleController, app, auth);

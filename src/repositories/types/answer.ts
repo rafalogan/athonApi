@@ -1,5 +1,5 @@
 import { TimestampsFields } from 'src/repositories/types/timestamps';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 export interface AnswerEntity extends TimestampsFields {
 	id?: number;

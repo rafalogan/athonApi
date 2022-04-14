@@ -1,6 +1,6 @@
 import { ServerOptions } from 'https';
 
-import { execDotenv, onDebug, onError, onLog, onWarn } from 'src/util';
+import { execDotenv } from 'src/util';
 import { Environment } from 'src/config/environment.config';
 import { AppConfig } from 'src/config/app.config';
 import { LoggerConfig } from 'src/config/logger.config';
@@ -18,12 +18,12 @@ export const env = new Environment();
 
 export const logger = new LoggerConfig(env.nodeEnv).logger;
 const httpsOptions: ServerOptions = new HttpsOptions(env.security);
-const knexfile = new KnexFileConfig(env.databaseEnv);
-const dbConnection = new ConnectionController(knexfile);
+const keyfile = new KnexFileConfig(env.databaseEnv);
+const dbConnection = new ConnectionController(keyfile);
 const cacheConnection = new CacheConnectionController(env.cacheEnv);
 const services = new ServicesModule(dbConnection, cacheConnection, env);
-const autCongig = new AuthConfig(env.security.authSecret, services.userService);
+const authConfig = new AuthConfig(env.security.authSecret, services.userService);
 
-const app = new AppConfig(env.nodeEnv, logger, services).express;
+const app = new AppConfig(env.nodeEnv, logger, authConfig, services).express;
 export const server = new ServerController(app, env, httpsOptions);
 export const appModule = new AppModule(dbConnection, cacheConnection, server);

@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
 
 import { MediaEntity, Timestampsfileds } from 'src/repositories/entities';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 export interface ArticleEntity extends Timestampsfileds {
 	_id?: any;

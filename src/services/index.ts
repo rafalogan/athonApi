@@ -1,5 +1,5 @@
 // services
-export * from './auth.service';
+export * from './login.service';
 export * from './newsletter.service';
 export * from './profile-rule.service';
 export * from './profile.service';

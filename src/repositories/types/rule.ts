@@ -2,7 +2,7 @@ import { TimestampsFields } from 'src/repositories/types/timestamps';
 
 import { Rule } from 'src/repositories/entities';
 import { PaginationDomain } from 'src/core/types';
-import { Pagination } from 'src/core/domains';
+import { Pagination } from 'src/repositories/models';
 
 export interface RuleEntity extends TimestampsFields {
 	id?: number;
