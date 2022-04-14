@@ -1,13 +1,13 @@
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
-import httpStatus from 'http-status';
 
-import { ProfileService, RuleService, UserRuleService, UserServiceOptions } from 'src/services';
+import { ProfileService, RuleService, UserRuleService } from 'src/services';
 import { User } from 'src/repositories/entities';
 import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
-import { UserEntity } from 'src/repositories/types';
-import { equalsOrError, existsOrError, hashString, notExistisOrError, onError } from 'src/util';
+import { RuleEntity, UserEntity, UserRuleEntity, UsersEntity } from 'src/repositories/types';
+import { clearTimestamp, equalsOrError, existsOrError, hashString, notExistisOrError, onError } from 'src/util';
+import { Pagination } from 'src/core/domains';
 
 const fields = ['id', 'name', 'email', 'password', 'profile_id as profileId', 'deleted_at as deletedAt'];
 
@@ -47,48 +47,40 @@ export class UserService extends AbstractDatabaseService {
 		return super.create(item);
 	}
 
-	async read(options?: RelationalReadOptions) {
-		return super.read(options).then(result => (result.data ? this.setUserList(result) : this._setUserRules(result)));
+	read(options?: RelationalReadOptions): Promise<UsersEntity | UserEntity> {
+		return super
+			.read(options)
+			.then(async (result: UserEntity | UsersEntity) =>
+				'data' in result ? this.setUsers(result as UsersEntity) : this.setUser(result as UserEntity)
+			)
+			.catch(error => error);
 	}
 
 	findByEmail(email: string) {
 		return this.instance(this.table)
 			.select()
 			.where({ email })
-			.then((user: any) => user)
+			.first()
+			.then((user: UserEntity) => this.setUser(user))
 			.catch(err => err);
 	}
 
-	private setUserList(result: any) {
-		result.data = result.data
-			.map(this._setUserRules)
-			.map((item: UserEntity) => new User(item))
-			.map((item: User) => {
-				Reflect.deleteProperty(item, 'password');
-				Reflect.deleteProperty(item, 'profileId');
-				Reflect.deleteProperty(item, 'permissions');
-				return item;
-			});
-		return result;
+	private setUsers(result: UsersEntity): UsersEntity {
+		const data = result.data.map(item => clearTimestamp(item)) as UserEntity[];
+		const pagination = new Pagination(result.pagination);
+		return { data, pagination };
 	}
 
-	private async setUserRules(user: any) {
-		const { id } = user;
+	private async setUser(result: UserEntity): Promise<UserEntity> {
+		const profile = await this.profileService.readOne(result.profileId);
+		const permissions: RuleEntity[] = await this.setUserRules(Number(result?.id));
 
-		user.profile = await this.profileService.read({ id });
-		user.permissions = await this._findRulesByUser(id);
-
-		return new User(user);
+		return { ...result, profile, permissions };
 	}
 
-	private async _findRulesByUser(userId: number) {
-		const rulesIds = await this.userRuleService.findRulesByUserId(userId);
+	private async setUserRules(userId: number): Promise<RuleEntity[]> {
+		const rulesIds = await this.userRuleService.read({ userId });
 
-		return Array.isArray(rulesIds)
-			? rulesIds.map(async (item: { ruleId: number }) => {
-					const { ruleId: id } = item;
-					return await this.ruleService.read({ id });
-			  })
-			: [];
+		return rulesIds.map((rule: UserRuleEntity) => this.ruleService.read({ id: rule.ruleId }));
 	}
 }

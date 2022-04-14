@@ -1,4 +1,4 @@
-import { RelationalServiceOptions } from 'src/core/types';
+import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 import { SecurityOptions } from 'src/environment';
 
 export interface IServicesOptions extends RelationalServiceOptions {
@@ -6,9 +6,7 @@ export interface IServicesOptions extends RelationalServiceOptions {
 	security: SecurityOptions;
 }
 
-export interface RulesReadOptions {
-	id?: string;
-	page?: number;
-	limit?: number;
-	fields?: string[];
+export interface RulesReadOptions extends RelationalReadOptions {
+	userId?: number;
+	ruleId?: number;
 }

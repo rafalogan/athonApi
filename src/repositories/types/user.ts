@@ -1,6 +1,8 @@
 import { Profile, Rule, User } from 'src/repositories/entities';
 import { RuleEntity } from 'src/repositories/types/rule';
 import { PaginationDomain } from 'src/core/types';
+import { Pagination } from 'src/core/domains';
+import { ProfileEntity } from 'src/repositories/types/profile';
 
 export interface UserEntity {
 	id?: number;
@@ -9,12 +11,12 @@ export interface UserEntity {
 	password: string;
 	confirmPassword?: string;
 	profileId: number;
-	profile?: Profile;
+	profile?: Profile | ProfileEntity;
 	permissions?: Rule[] | RuleEntity[];
 	deleteAt?: Date;
 }
 
-export interface ListUsers {
-	data: User[];
-	pagination: PaginationDomain;
+export interface UsersEntity {
+	data: User[] | UserEntity[];
+	pagination: PaginationDomain | Pagination;
 }

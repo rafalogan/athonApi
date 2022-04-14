@@ -1,54 +1,50 @@
-import httpStatus from 'http-status';
+import { Knex } from 'knex';
+import { RedisClientType } from 'redis';
 
-import { AbstractDatabaseService } from 'src/core/services';
-import { RelationalServiceOptions } from 'src/core/types';
+import { PaginationOptions, RelationalServiceOptions } from 'src/core/types';
 import { RulesReadOptions } from 'src/services/types/services';
-import { clearTimestamp, existsOrError, notExistisOrError } from 'src/util';
-import { UserRule, UserRuleEntity, UserRulesEntity } from 'src/repositories/entities';
+import { clearTimestamp, existsOrError, notExistisOrError, onError } from 'src/util';
+import { UserRuleEntity } from 'src/repositories/types';
+import { UserRule } from 'src/repositories/entities';
+import { Pagination } from 'src/core/domains';
+import { AbstractDatabaseService } from 'src/core/services';
 
 const fields = ['user_id as userId', 'rule_id as ruleId', 'created_at as createdAt', 'updated_at as updatedAt'];
 
 export class UserRuleService extends AbstractDatabaseService {
-	constructor(options: RelationalServiceOptions) {
-		super({ ...options, serviceName: UserRuleService.name, table: 'user_rules', fields });
-	}
-
-	createDataList(raw: UserRulesEntity) {
-		const { pagination } = raw;
-		const data = raw.data.map(item => new UserRule(item)).map(clearTimestamp);
-
-		return { data, pagination };
+	constructor(conn: Knex, cache: RedisClientType, options: RelationalServiceOptions) {
+		super(conn, cache, 'user_rules', { ...options, fields });
 	}
 
 	async validateFields(raw: UserRuleEntity) {
-		const id = `${raw.userId}-${raw.ruleId}`;
 		try {
-			const fromDB = await this.read({ id });
+			const { userId, ruleId } = raw;
+			const fromDB = await this.read({ userId, ruleId });
 
 			notExistisOrError(fromDB, 'This user already has that rule.');
 			existsOrError(raw.userId, 'User filed is required.');
 			existsOrError(raw.ruleId, 'Rule filed is required.');
 
 			return new UserRule(raw);
-		} catch (message) {
-			return { code: httpStatus.BAD_REQUEST, message };
+		} catch (err) {
+			return err;
 		}
 	}
 
-	async read(options: RulesReadOptions): Promise<any> {
-		if (this.enableCache) return this._findByCache(options);
+	async read(options: RulesReadOptions) {
+		if (this.clientActive) return this.checkCache(options);
 
-		return options.id ? await this._findRuleByIds(options.id, options.fields) : await this._findAll(options);
+		return options.userId || options.ruleId ? await this.readOne(options) : await this.readAll(options);
 	}
 
-	async delete(id: string): Promise<any> {
+	async delete(id: string) {
 		const [userId, ruleId] = id.split('-').map(Number);
-		const element = await this.read({ id });
+		const element = await this.read({ userId, ruleId });
 
 		try {
 			existsOrError(element, 'User Ruler not found.');
-		} catch (message) {
-			return { code: httpStatus.BAD_REQUEST, message };
+		} catch (err) {
+			return err;
 		}
 
 		return this.instance(this.table)
@@ -56,36 +52,46 @@ export class UserRuleService extends AbstractDatabaseService {
 			.andWhere({ user_id: userId })
 			.del()
 			.then(result => ({ deleted: !!result, result, element }))
-			.catch(err => this.log.error('Deleted User Rule failed', err));
+			.catch(err => err);
 	}
 
-	findRulesByUserId(id: number) {
+	private readOne(options: RulesReadOptions) {
 		return this.instance(this.table)
-			.select('rule_id as ruleId')
-			.where({ id })
-			.then((result: any[]) => result)
-			.catch(err => this.log.error(`find rules by User ${id} failed`, err));
+			.select(...(options.fields || this.fields))
+			.where({ user_id: options.userId })
+			.orWhere({ rule_id: options.ruleId })
+			.then((data: UserRuleEntity[]) => clearTimestamp(data))
+			.catch(err => err);
 	}
 
-	private _findRuleByIds(id: string, cols?: string[]) {
-		const [userId, ruleId] = id.split('-').map(Number);
-		const columns = cols ?? this.fields;
+	private async readAll(options: RulesReadOptions) {
+		const page = Number(options?.page || 1);
+		const limit = Number(options.limit || 10);
+		const count = await this.countRules();
 
 		return this.instance(this.table)
-			.select(...columns)
-			.where({ userId })
-			.andWhere({ ruleId })
+			.select(...(options.fields || this.fields))
+			.where({ user_id: options.userId })
+			.orWhere({ rule_id: options.ruleId })
+			.then((data: UserRuleEntity[]) => this.setRules(data, { page, limit, count }))
+			.catch(err => err);
+	}
+
+	private countRules() {
+		return this.instance(this.table)
+			.count({ count: 'rules_id' })
 			.first()
-			.then((data: any) => data)
-			.catch(err => this.log.error(`Find rule ${id} failed`, err));
+			.then((data: any) => Number(data.count))
+			.catch(err => {
+				onError('Count rules failed', err);
+				return 0;
+			});
 	}
 
-	private async _findByCache(options: RulesReadOptions) {
-		const serviceName = this.serviceName;
-		const id = options.id ?? 'list';
+	private setRules(items: UserRuleEntity[], pagesOptions: PaginationOptions) {
+		const data = items.map(item => clearTimestamp(item));
+		const pagination = new Pagination(pagesOptions);
 
-		return options.id
-			? this.findCahce({ serviceName, id }, await this._findRuleByIds(id, options.fields), this.cacheTime)
-			: this.findCahce({ serviceName, id }, await this._findAll(options), this.cacheTime);
+		return { data, pagination };
 	}
 }

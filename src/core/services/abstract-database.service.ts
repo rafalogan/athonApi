@@ -80,7 +80,7 @@ export abstract class AbstractDatabaseService extends AbstractCacheService imple
 		return this.deleteCache(['GET:allContent', this.read.name]);
 	}
 
-	private findOneById(id: number, options?: ReadTableOptions) {
+	protected findOneById(id: number, options?: ReadTableOptions) {
 		return this.instance(this.table)
 			.select(...(options?.fields ?? this.fields))
 			.where({ id })

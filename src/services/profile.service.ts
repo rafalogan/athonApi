@@ -21,12 +21,19 @@ export class ProfileService extends AbstractDatabaseService {
 		super(conn, cache, 'profiles', { ...options, fields });
 	}
 
-	async read(options?: RelationalReadOptions): Promise<ProfilesList | ProfileEntity> {
+	read(options?: RelationalReadOptions): Promise<ProfilesList | ProfileEntity> {
 		return super
 			.read(options)
 			.then(async (result: ProfileEntity | ProfilesList) =>
 				'data' in result ? this.setProfiles(result as ProfilesList) : this.setProfile(result as ProfileEntity)
 			)
+			.catch(error => error);
+	}
+
+	readOne(id: number, options?: RelationalReadOptions): Promise<ProfileEntity> {
+		return super
+			.findOneById(id, options)
+			.then(async (result: ProfileEntity) => this.setProfile(result))
 			.catch(error => error);
 	}
 
