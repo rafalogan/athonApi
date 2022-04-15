@@ -7,7 +7,7 @@ import { ResponseException } from 'src/util/exceptions';
 
 const isValid = !process.env.NODE_ENV || process.env.NODE_ENV !== 'production';
 
-export const existsOrError = (value: any, message: string) => {
+export const existsOrError = (value: any, message: string): void | Error => {
 	if (isEmpty(value)) throw new ResponseException(message);
 	if (!value) throw new ResponseException(message);
 	if (Array.isArray(value) && value.length === 0) throw new ResponseException(message);

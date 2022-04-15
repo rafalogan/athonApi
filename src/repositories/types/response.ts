@@ -32,3 +32,5 @@ export interface ValidateTokenResponse {
 	message?: string;
 	token?: string;
 }
+
+export type IResponseExepiton = Error;

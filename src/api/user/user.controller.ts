@@ -1,33 +1,37 @@
 import { Request, Response } from 'express';
+import httpStatus from 'http-status';
 
 import { AbstractController, ResponseController } from 'src/core/controller';
 import { UserService } from 'src/services';
 import { User } from 'src/repositories/entities';
 
 export class UserController extends AbstractController {
-	constructor(private userService: UserService, private response: ResponseController) {
+	constructor(private userService: UserService) {
 		super();
 	}
 
 	async save(req: Request, res: Response) {
 		const user = new User(req.body);
-		const isNotValidUser = await this.userService.userValidate(user);
 
-		if (isNotValidUser) return this.response.onError(res, isNotValidUser.msg, { status: isNotValidUser.code });
+		try {
+			await this.userService.userValidate(user);
+		} catch (error: any) {
+			return ResponseController.onError(res, error.message, { status: httpStatus.BAD_REQUEST });
+		}
 
 		this.userService
 			.create(user)
-			.then(result => this.response.onSuccess(res, result))
-			.catch(err => this.response.onError(res, 'unexpected error', { err }));
+			.then(result => ResponseController.onSuccess(res, result))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	async edit(req: Request, res: Response) {
 		const user = new User(req.body, Number(req.params.id));
 
 		this.userService
-			.update(user, user.id)
-			.then(data => this.response.onSuccess(res, data))
-			.catch(err => this.response.onError(res, 'unexpected error', { err }));
+			.update(user.id, user)
+			.then(data => ResponseController.onSuccess(res, data))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	list(req: Request, res: Response) {
@@ -37,21 +41,16 @@ export class UserController extends AbstractController {
 
 		this.userService
 			.read({ id, page, limit })
-			.then(data => this.response.onSuccess(res, data))
-			.catch(err => this.response.onError(res, 'unexpected error', { err }));
+			.then(data => ResponseController.onSuccess(res, data))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	async remove(req: Request, res: Response) {
 		const id = Number(req.params.id);
 
-		try {
-			const deleted = await this.userService.delete(id);
-
-			return deleted.status
-				? this.response.onError(res, deleted.message, { status: deleted.status })
-				: this.response.onSuccess(res, deleted);
-		} catch (err) {
-			return this.response.onError(res, 'unexpected error', { err });
-		}
+		this.userService
+			.delete(id)
+			.then(data => ResponseController.onSuccess(res, data))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 }
