@@ -21,19 +21,13 @@ export class RuleService extends AbstractDatabaseService {
 			.catch(err => err);
 	}
 
-	async validateFields(item: any) {
-		try {
-			const id = Number(item.id);
-			const ruleDB = await this.read({ id });
+	async validateFields(item: Rule) {
+		const id = Number(item.id);
+		const ruleDB = await this.read({ id });
 
-			notExistisOrError(ruleDB, `Rule ID: ${id} already exists`);
-			existsOrError(item.name, 'Rule Name is a required field.');
-			existsOrError(item.description, 'Rule Description is a required field.');
-
-			return new Rule(item);
-		} catch (err) {
-			return err;
-		}
+		notExistisOrError(ruleDB, `Rule ID: ${id} already exists`);
+		existsOrError(item.name, 'Rule Name is a required field.');
+		existsOrError(item.description, 'Rule Description is a required field.');
 	}
 
 	private setRules(result: RulesEntity): RulesEntity {
