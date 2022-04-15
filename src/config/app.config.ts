@@ -40,6 +40,6 @@ export class AppConfig {
 	}
 
 	private initApi(): void {
-		return new ApiModule(this.express, this.authConfig, this.services).exec();
+		return new ApiModule(this.express, this.authConfig.auth, this.services).exec();
 	}
 }

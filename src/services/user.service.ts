@@ -71,6 +71,23 @@ export class UserService extends AbstractDatabaseService {
 			.catch(err => err);
 	}
 
+	async delete(id: number): Promise<any> {
+		const user = await this.findOneById(id);
+
+		try {
+			existsOrError(user, `The register nº ${id} not find in table: ${this.table}`);
+		} catch (err) {
+			return err;
+		}
+
+		user.deletedAt = new Date();
+
+		return super
+			.update(id, user)
+			.then(result => result)
+			.catch(err => err);
+	}
+
 	private setUsers(result: UsersEntity): UsersEntity {
 		const data = result.data.map(item => clearTimestampFields(item)) as UserEntity[];
 		const pagination = new Pagination(result.pagination);
