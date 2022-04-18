@@ -14,7 +14,7 @@ export class RoutesModule {
 
 	constructor(private controllers: ControllersModule, private app: Application, private auth: IAuthConfig) {
 		this.loginRoutes = new LoginRoutes(this.controllers.loginController, this.app);
-		this.userRoutes = new UserRoutes(this.controllers.userController, t, this.app, this.auth);
+		this.userRoutes = new UserRoutes(this.controllers.userController, this.controllers.userRuleController, this.app, this.auth);
 		this.ruleRoutes = new RuleRoutes(this.controllers.ruleController, this.app, this.auth);
 		this.profileRoutes = new ProfileRoutes(this.controllers.profileController, this.controllers.profileRuleController, this.app, this.auth);
 	}
