@@ -1,6 +1,7 @@
-import { IProfile, IRule, Rule } from 'src/repositories/entities/index';
+import { Rule } from 'src/repositories/entities';
+import { ProfileEntity, RuleEntity } from 'src/repositories/types';
 
-export class Profile implements IProfile {
+export class Profile implements ProfileEntity {
 	id: number;
 	title: string;
 	description: string;
@@ -8,16 +9,16 @@ export class Profile implements IProfile {
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(props: IProfile, id?: number) {
+	constructor(props: ProfileEntity, id?: number) {
 		this.id = Number(id ? id : props.id);
 		this.title = props.title;
 		this.description = props.description;
-		this.permissions = this._setPermissions(props?.permissions);
+		this.permissions = this.setPermissions(props?.permissions);
 		this.createdAt = props?.createdAt;
 		this.updatedAt = props?.updatedAt;
 	}
 
-	private _setPermissions(rules: IRule[] | undefined): Rule[] | [] {
+	private setPermissions(rules: RuleEntity[] | undefined): Rule[] | [] {
 		return rules ? rules.map(item => new Rule(item)) : [];
 	}
 }

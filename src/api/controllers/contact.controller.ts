@@ -1,31 +1,38 @@
 import { Request, Response } from 'express';
+import httpStatus from 'http-status';
+
 import { AbstractController, ResponseController } from 'src/core/controller';
 import { ContactService } from 'src/services';
 import { Contact } from 'src/repositories/entities';
+import { ContactsEntity } from 'src/repositories/types';
 
 export class ContactController extends AbstractController {
-	constructor(private contactService: ContactService, private response: ResponseController) {
+	constructor(private contactService: ContactService) {
 		super();
 	}
 
 	save(req: Request, res: Response) {
-		const data = this.contactService.validateFields(req.body);
+		const data = new Contact(req.body);
 
-		if (!(data instanceof Contact)) return this.response.onError(res, data.message, { status: data.code });
+		try {
+			this.contactService.validateFields(data);
+		} catch (error: any) {
+			return ResponseController.onError(res, error.message, { err: error, status: httpStatus.BAD_REQUEST });
+		}
 
 		this.contactService
 			.create(data)
-			.then(result => this.response.onSuccess(res, result))
-			.catch(err => this.response.onError(res, 'unexpected error', { err }));
+			.then(result => ResponseController.onSuccess(res, result))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	edit(req: Request, res: Response) {
 		const contact = new Contact(req.body, Number(req.params.id));
 
 		this.contactService
-			.update(contact, contact.id)
-			.then(result => this.response.onSuccess(res, result))
-			.catch(err => this.response.onError(res, 'unexpected error', { err }));
+			.update(contact.id, contact)
+			.then(result => ResponseController.onSuccess(res, result))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	list(req: Request, res: Response) {
@@ -35,19 +42,22 @@ export class ContactController extends AbstractController {
 
 		this.contactService
 			.read({ id, page, limit })
-			.then(item => this.response.onSuccess(res, item.data ? this.contactService.listContacts(item) : new Contact(item)))
-			.catch(err => this.response.onError(res, 'unexpected error', { err }));
+			.then(result => (result.data ? this.setContacts(result) : new Contact(result)))
+			.then(result => ResponseController.onSuccess(res, result))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	async remove(req: Request, res: Response) {
 		const id = Number(req.params.id);
 
-		try {
-			const deleted = await this.contactService.delete(id);
+		this.contactService
+			.delete(id)
+			.then(result => ResponseController.onSuccess(res, result))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
+	}
 
-			return deleted.status ? this.response.onError(res, deleted.message, deleted) : this.response.onSuccess(res, deleted);
-		} catch (err) {
-			this.response.onError(res, 'unexpected error', { err });
-		}
+	private setContacts(result: ContactsEntity) {
+		const data = result.data.map(item => new Contact(item));
+		return { ...result, data };
 	}
 }

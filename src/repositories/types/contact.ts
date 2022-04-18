@@ -1,7 +1,8 @@
-import { CreatedAtField } from 'src/repositories/entities';
 import { Pagination } from 'src/repositories/models';
+import { TimestampsFields } from 'src/repositories/types/timestamps';
+import { Contact } from 'src/repositories/entities';
 
-export interface ContactEntity extends CreatedAtField {
+export interface ContactEntity extends TimestampsFields {
 	id: number;
 	name: string;
 	email: string;
@@ -10,7 +11,7 @@ export interface ContactEntity extends CreatedAtField {
 	message: string;
 }
 
-export interface ContactListEntity {
-	data: ContactEntity[];
+export interface ContactsEntity {
+	data: ContactEntity[] | Contact[];
 	pagination: Pagination;
 }
