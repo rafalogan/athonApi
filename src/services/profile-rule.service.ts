@@ -16,22 +16,16 @@ export class ProfileRuleService extends AbstractDatabaseService {
 	}
 
 	async validateRequireFields(data: ProfileRuleEntity) {
-		try {
-			const { profileId, ruleId } = data;
-			const ProfileRuleDB = await this.read({ profileId, ruleId });
+		const { profileId, ruleId } = data;
+		const ProfileRuleDB = await this.read({ profileId, ruleId });
 
-			notExistisOrError(ProfileRuleDB, 'This rule already exist for this profile.');
-			existsOrError(data.profileId, 'Field Profile is Required.');
-			existsOrError(data.ruleId, 'Field Rule is Required.');
-
-			return new ProfileRule(data);
-		} catch (err) {
-			return err;
-		}
+		notExistisOrError(ProfileRuleDB, 'This rule already exist for this profile.');
+		existsOrError(data.profileId, 'Field Profile is Required.');
+		existsOrError(data.ruleId, 'Field Rule is Required.');
 	}
 
 	async read(options?: ReadRulesOptions) {
-		const id = `${options?.profileId}-${options?.ruleId}`;
+		const id = options?.id || `${options?.profileId}-${options?.ruleId}`;
 
 		if (this.clientActive) return this.checkCache({ ...options, id });
 

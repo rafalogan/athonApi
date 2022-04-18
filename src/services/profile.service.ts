@@ -6,7 +6,8 @@ import { AbstractDatabaseService } from 'src/core/services';
 import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 import { ProfileEntity, ProfileRuleEntity, ProfilesList, RuleEntity } from 'src/repositories/types';
 import { Pagination } from 'src/repositories/models';
-import { clearTimestampFields } from 'src/util';
+import { clearTimestampFields, existsOrError, notExistisOrError } from 'src/util';
+import { Profile } from 'src/repositories/entities';
 
 const fields = ['id', 'title', 'description', 'created_at as createdAt', 'updated_at as updatedAt'];
 
@@ -19,6 +20,13 @@ export class ProfileService extends AbstractDatabaseService {
 		options?: RelationalServiceOptions
 	) {
 		super(conn, cache, 'profiles', { ...options, fields });
+	}
+
+	async profileValeidate(profile: ProfileEntity | Profile) {
+		const profileDB = await this.readOne(Number(profile?.id));
+
+		notExistisOrError(profileDB, 'Title is required');
+		existsOrError(profile.title, 'Title is required');
 	}
 
 	read(options?: RelationalReadOptions): Promise<ProfilesList | ProfileEntity> {

@@ -1,6 +1,7 @@
 import { Pagination } from 'src/repositories/models';
 import { TimestampsFields } from 'src/repositories/types/timestamps';
 import { PaginationOptions, RelationalReadOptions } from 'src/core/types';
+import { ProfileRule } from 'src/repositories/entities';
 
 export interface ProfileRuleEntity extends TimestampsFields {
 	profileId: number;
@@ -8,7 +9,7 @@ export interface ProfileRuleEntity extends TimestampsFields {
 }
 
 export interface ProfileRuleListEntity {
-	data: ProfileRuleEntity[];
+	data: ProfileRuleEntity[] | ProfileRule[];
 	pagination: Pagination;
 }
 
