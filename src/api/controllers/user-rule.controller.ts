@@ -6,23 +6,23 @@ import { UserRuleService } from 'src/services';
 import { UserRule } from 'src/repositories/entities';
 
 export class UserRuleController extends AbstractController {
-	constructor(private userRuleService: UserRuleService, private response: ResponseController) {
+	constructor(private userRuleService: UserRuleService) {
 		super();
 	}
 
 	async save(req: Request, res: Response) {
 		const data = await this.userRuleService.validateFields(req.body);
 
-		if (!(data instanceof UserRule)) return this.response.onError(res, data.message, undefined, data.code);
+		if (!(data instanceof UserRule)) return ResponseController.onError(res, data.message, undefined, data.code);
 
 		this.userRuleService
 			.create(data)
-			.then(result => this.response.onSuccess(res, result))
-			.catch(err => this.response.onError(res, 'unexpected error', err));
+			.then(result => ResponseController.onSuccess(res, result))
+			.catch(err => ResponseController.onError(res, 'unexpected error', err));
 	}
 
 	edit(req: Request, res: Response) {
-		this.response.onError(res, 'Not Found', undefined, httpStatus.BAD_REQUEST);
+		ResponseController.onError(res, 'Not Found', undefined, httpStatus.BAD_REQUEST);
 	}
 
 	list(req: Request, res: Response) {
@@ -32,16 +32,16 @@ export class UserRuleController extends AbstractController {
 
 		this.userRuleService
 			.read({ id, page, limit })
-			.then(raw => this.response.onSuccess(res, raw.data ? this.userRuleService.createDataList(raw) : new UserRule(raw)))
-			.catch(err => this.response.onError(res, 'unexpected error', err));
+			.then(raw => ResponseController.onSuccess(res, raw.data ? this.userRuleService.createDataList(raw) : new UserRule(raw)))
+			.catch(err => ResponseController.onError(res, 'unexpected error', err));
 	}
 
 	remove(req: Request, res: Response) {
 		this.userRuleService
 			.delete(req.params.id)
 			.then(result =>
-				result.code ? this.response.onError(res, result.message, undefined, result.code) : this.response.onSuccess(res, result)
+				result.code ? ResponseController.onError(res, result.message, undefined, result.code) : ResponseController.onSuccess(res, result)
 			)
-			.catch(err => this.response.onError(res, 'unexpected error', err));
+			.catch(err => ResponseController.onError(res, 'unexpected error', err));
 	}
 }

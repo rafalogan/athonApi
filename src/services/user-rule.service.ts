@@ -17,18 +17,12 @@ export class UserRuleService extends AbstractDatabaseService {
 	}
 
 	async validateFields(raw: UserRuleEntity) {
-		try {
-			const { userId, ruleId } = raw;
-			const fromDB = await this.read({ userId, ruleId });
+		const { userId, ruleId } = raw;
+		const fromDB = await this.read({ userId, ruleId });
 
-			notExistisOrError(fromDB, 'This user already has that rule.');
-			existsOrError(raw.userId, 'User filed is required.');
-			existsOrError(raw.ruleId, 'Rule filed is required.');
-
-			return new UserRule(raw);
-		} catch (err) {
-			return err;
-		}
+		notExistisOrError(fromDB, 'This user already has that rule.');
+		existsOrError(raw.userId, 'User filed is required.');
+		existsOrError(raw.ruleId, 'Rule filed is required.');
 	}
 
 	async read(options: RulesReadOptions) {
