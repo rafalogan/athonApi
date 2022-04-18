@@ -11,9 +11,13 @@ export class UserRuleController extends AbstractController {
 	}
 
 	async save(req: Request, res: Response) {
-		const data = await this.userRuleService.validateFields(req.body);
+		const data = new UserRule(req.body);
 
-		if (!(data instanceof UserRule)) return ResponseController.onError(res, data.message, undefined, data.code);
+		try {
+			await this.userRuleService.validateFields(data);
+		} catch (err: any) {
+			return ResponseController.onError(res, err.message, { err, status: httpStatus.BAD_REQUEST });
+		}
 
 		this.userRuleService
 			.create(data)

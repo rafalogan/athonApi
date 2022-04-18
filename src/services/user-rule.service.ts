@@ -3,7 +3,7 @@ import { RedisClientType } from 'redis';
 
 import { PaginationOptions, RelationalServiceOptions } from 'src/core/types';
 import { RulesReadOptions } from 'src/services/types/services';
-import { clearTimestamp, existsOrError, notExistisOrError, onError } from 'src/util';
+import { clearTimestampFields, existsOrError, notExistisOrError, onError } from 'src/util';
 import { UserRuleEntity } from 'src/repositories/types';
 import { UserRule } from 'src/repositories/entities';
 import { Pagination } from 'src/repositories/models';
@@ -16,7 +16,7 @@ export class UserRuleService extends AbstractDatabaseService {
 		super(conn, cache, 'user_rules', { ...options, fields });
 	}
 
-	async validateFields(raw: UserRuleEntity) {
+	async validateFields(raw: UserRuleEntity | UserRule) {
 		const { userId, ruleId } = raw;
 		const fromDB = await this.read({ userId, ruleId });
 
@@ -54,7 +54,7 @@ export class UserRuleService extends AbstractDatabaseService {
 			.select(...(options.fields || this.fields))
 			.where({ user_id: options.userId })
 			.orWhere({ rule_id: options.ruleId })
-			.then((data: UserRuleEntity[]) => clearTimestamp(data))
+			.then((data: UserRuleEntity[]) => clearTimestampFields(data))
 			.catch(err => err);
 	}
 
@@ -83,7 +83,7 @@ export class UserRuleService extends AbstractDatabaseService {
 	}
 
 	private setRules(items: UserRuleEntity[], pagesOptions: PaginationOptions) {
-		const data = items.map(item => clearTimestamp(item));
+		const data = items.map(item => clearTimestampFields(item));
 		const pagination = new Pagination(pagesOptions);
 
 		return { data, pagination };
