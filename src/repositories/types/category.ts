@@ -1,29 +1,19 @@
-import { Schema, Document } from 'mongoose';
-
-import { Category, Timestampsfileds } from 'src/repositories/entities';
+import { Category } from 'src/repositories/entities';
 import { Pagination } from 'src/repositories/models';
+import { TimestampsFields } from 'src/repositories/types/timestamps';
 
-export interface CategoryEntity extends Timestampsfileds {
-	_id: Schema.Types.ObjectId;
+export interface CategoryEntity extends TimestampsFields {
+	id?: number;
 	name: string;
 	description: string;
 	url: string;
 	status: boolean;
-	parentId: Schema.Types.ObjectId;
+	parentId?: number;
 	userId: number;
-	subCategories?: Category[];
+	subCategories?: Category[] | CategoryEntity[];
 }
 
-export interface CategoriesListEntity {
-	data: CategoryEntity[];
+export interface CategoriesEntity {
+	data: CategoryEntity[] | Category[];
 	pagination: Pagination;
-}
-
-export interface ICategoryModel extends Document {
-	name: string;
-	description: string;
-	url: string;
-	status: boolean;
-	parentId: Schema.Types.ObjectId;
-	userId: number;
 }

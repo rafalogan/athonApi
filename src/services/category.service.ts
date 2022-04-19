@@ -1,49 +1,102 @@
-import httpStatus from 'http-status';
 import { Request } from 'express';
+import { Knex } from 'knex';
+import { RedisClientType } from 'redis';
 
-import { NoRelationalServiceOptions } from 'src/core/types';
-import { CategoriesListEntity, Category, CategoryEntity, ICategoryModel } from 'src/repositories/entities';
-import { AbstractNoRelationalService } from 'src/core/services';
-import { existsOrError, ResponseException } from 'src/util';
+import { existsOrError, notExistisOrError } from 'src/util';
 import { LoginService } from 'src/services/login.service';
+import { AbstractDatabaseService } from 'src/core/services';
+import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
+import { Category } from 'src/repositories/entities';
+import { CategoriesEntity, CategoryEntity } from 'src/repositories/types';
 
-export class CategoryService {
-	constructor(private authService: LoginService, options: NoRelationalServiceOptions) {}
+const fields = [
+	'id',
+	'name',
+	'description',
+	'url',
+	'status',
+	'parent_id as parentId',
+	'user_id as userId',
+	'created_at as createAt',
+	'updated_at as updateAt',
+];
 
-	setFields(req: Request) {
+export class CategoryService extends AbstractDatabaseService {
+	constructor(private loginService: LoginService, conn: Knex, cache: RedisClientType, options: RelationalServiceOptions) {
+		super(conn, cache, 'categories', { ...options, fields });
+	}
+
+	setCategory(req: Request) {
+		const id = Number(req.params.id);
+		const userId = this.loginService.getPayload(req)?.id;
+
+		return new Category(req.body, id, userId);
+	}
+
+	async categoryValidate(category: Category) {
+		const fromDB = await this.read({ id: category?.id });
+
+		notExistisOrError(fromDB, 'Category is already registered');
+		existsOrError(category.name, 'Name is required');
+		existsOrError(category.status, 'Status is required');
+	}
+
+	async create(item: Category) {
 		try {
-			const raw: CategoryEntity = req.body;
-			const payload = this.authService.getPayload(req);
-			raw.userId = raw.userId ?? payload?.id;
-
-			existsOrError(raw.name, 'Field Name is required.');
-			existsOrError(raw.status, 'Field Status is required.');
-			existsOrError(payload, 'User Token invalid');
-
-			return new Category(raw);
-		} catch (message) {
-			const err = new ResponseException(message);
-			return { status: httpStatus.BAD_REQUEST, message, err };
+			await this.categoryValidate(item);
+		} catch (err) {
+			return err;
 		}
+
+		return super
+			.create(item)
+			.then(result => result)
+			.catch(err => err);
 	}
 
-	setCategoriesList(raw: CategoriesListEntity) {
-		const { pagination } = raw;
-		const data = raw.data.map(item => new Category(item));
-
-		return { data: this._getToTree(data), pagination };
+	read(options?: ReadTableOptions) {
+		return super
+			.read(options)
+			.then(result => ('data' in result ? this.setCategories(result) : this.setCategoryResult(result)))
+			.catch(err => err);
 	}
 
-	private _getToTree(categories: Category[], tree?: Category[]) {
-		let result;
-		if (!tree) result = categories.filter(root => !root.parentId);
+	private setCategories(categories: CategoriesEntity) {
+		const data = categories.data.map(category => this.setCategoryResult(category));
 
-		result = result?.map(root => {
-			const isChild = (node: Category) => node.parentId === root._id;
-			root.subCategories = this._getToTree(categories, categories.filter(isChild));
-			return root;
-		});
+		return {
+			...categories,
+			data,
+		};
+	}
 
-		return result;
+	private setCategoryResult(category: CategoryEntity) {
+		return category?.id
+			? this.subCategories(category)
+					.then(result => new Category(result))
+					.catch(err => err)
+			: new Category(category);
+	}
+
+	private async subCategories(category: Category | CategoryEntity): Promise<CategoryEntity> {
+		const subCategories: CategoryEntity[] = (await this.readByParentId(Number(category?.id))) || [];
+
+		if (subCategories.length > 0) {
+			for (const subCategory of subCategories) {
+				await this.subCategories(subCategory);
+			}
+		}
+
+		category.subCategories = subCategories;
+
+		return category;
+	}
+
+	readByParentId(parentId: number) {
+		return this.instance(this.table)
+			.select(...this.fields)
+			.where({ parentId })
+			.then((result: CategoryEntity[]) => result)
+			.catch(err => err);
 	}
 }
