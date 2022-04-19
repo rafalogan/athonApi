@@ -1,5 +1,6 @@
 import { TimestampsFields } from 'src/repositories/types/timestamps';
 import { Pagination } from 'src/repositories/models';
+import { Answer } from 'src/repositories/entities';
 
 export interface AnswerEntity extends TimestampsFields {
 	id?: number;
@@ -9,7 +10,7 @@ export interface AnswerEntity extends TimestampsFields {
 	userId: number;
 }
 
-export interface AnswerListEntity {
-	data: AnswerEntity[];
+export interface AnswerstEntity {
+	data: AnswerEntity[] | Answer[];
 	pagination: Pagination;
 }

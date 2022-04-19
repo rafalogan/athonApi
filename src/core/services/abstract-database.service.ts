@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 
-import { convertDataValues, existsOrError, onError } from 'src/util';
+import { convertDataValues, DatabaseException, existsOrError, onError, ResponseException } from 'src/util';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
 import { ReadTableOptions, RelationalContext, RelationalServiceOptions } from 'src/core/types';
 import { Pagination } from 'src/repositories/models';
@@ -45,7 +45,7 @@ export abstract class AbstractDatabaseService extends AbstractCacheService imple
 			.update(data)
 			.where({ id })
 			.then(result => result)
-			.catch(err => onError(`Update on register nº ${id} in table: ${this.table}`, err));
+			.catch(err => err);
 	}
 
 	async delete(id: any): Promise<any> {
@@ -53,8 +53,8 @@ export abstract class AbstractDatabaseService extends AbstractCacheService imple
 
 		try {
 			existsOrError(element, `The register nº ${id} not find in table: ${this.table}`);
-		} catch (error) {
-			return error;
+		} catch (error: ResponseException | any) {
+			throw new DatabaseException(error.message);
 		}
 
 		if (this.clientActive) await this.clearCache(id);
@@ -63,7 +63,7 @@ export abstract class AbstractDatabaseService extends AbstractCacheService imple
 			.where({ id })
 			.del()
 			.then(async result => ({ deleted: result > 0, element }))
-			.catch(err => onError(`Not possible to delete nº ${id} in table: ${this.table}`, err));
+			.catch(err => err);
 	}
 
 	protected async countById() {

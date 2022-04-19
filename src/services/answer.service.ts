@@ -1,10 +1,13 @@
 import httpStatus from 'http-status';
 
 import { AbstractDatabaseService } from 'src/core/services';
-import { RelationalServiceOptions } from 'src/core/types';
-import { Answer, AnswerEntity, AnswerListEntity, Contact } from 'src/repositories/entities';
-import { clearTimestamp, existsOrError, ResponseException } from 'src/util';
+import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
+import { Answer, Contact } from 'src/repositories/entities';
+import { clearTimestampFields, existsOrError, notExistisOrError, ResponseException } from 'src/util';
 import { ContactService } from 'src/services';
+import { Knex } from 'knex';
+import { RedisClientType } from 'redis';
+import { AnswerEntity, AnswerstEntity } from 'src/repositories/types';
 
 const fields = [
 	'id',
@@ -17,36 +20,65 @@ const fields = [
 ];
 
 export class AnswerService extends AbstractDatabaseService {
-	constructor(private contactService: ContactService, options: RelationalServiceOptions) {
-		super({ ...options, serviceName: AnswerService.name, table: 'answers', fields });
+	constructor(private contactService: ContactService, conn: Knex, cache: RedisClientType, options: RelationalServiceOptions) {
+		super(conn, cache, 'answers', { ...options, fields });
 	}
 
-	validateFields(raw: AnswerEntity) {
+	async validateFields(raw: Answer | AnswerEntity) {
+		const fromDB = await this.read({ id: raw?.id });
+
+		notExistisOrError(fromDB, 'This answer already exists');
+		existsOrError(raw.subject, 'Subject is a required field.');
+		existsOrError(raw.content, 'Content is a required field.');
+		existsOrError(raw.contactId, 'ContactId is a required field.');
+		existsOrError(raw.userId, 'UserId is a required field.');
+	}
+
+	async create(item: Answer) {
 		try {
-			existsOrError(raw.subject, 'Subject is a requiresd field.');
-			existsOrError(raw.content, 'Content is a requiresd field.');
-			existsOrError(raw.contactId, 'ContactId is a requiresd field.');
-			existsOrError(raw.userId, 'UserId is a requiresd field.');
-
-			return new Answer(raw);
-		} catch (message) {
-			const err = new ResponseException(message);
-
-			return { status: httpStatus.BAD_REQUEST, message, err };
+			await this.validateFields(item);
+		} catch (err: ResponseException | any) {
+			return err;
 		}
+
+		return super.create(item);
 	}
 
-	createAnswerList(raw: AnswerListEntity) {
-		const { pagination } = raw;
-		const data = raw.data.map(item => new Answer(item)).map(clearTimestamp);
-
-		return { data, pagination };
+	read(options?: ReadTableOptions) {
+		return super
+			.read(options)
+			.then(async result => (result.data ? this.setAnswerList(result) : this.setAnswer(result)))
+			.then(result => result)
+			.catch(error => error);
 	}
 
-	findContact(id: number) {
+	private setAnswerList(result: AnswerstEntity) {
+		const data = result.data
+			.map(async item => {
+				const answer = new Answer(item);
+				answer.contact = await this.searchContact(answer.contactId);
+
+				return answer;
+			})
+			.map(clearTimestampFields);
+
+		return {
+			...result,
+			data,
+		};
+	}
+
+	private async setAnswer(result: AnswerEntity) {
+		const answer = new Answer(result);
+		answer.contact = await this.searchContact(answer.contactId);
+
+		return answer;
+	}
+
+	private searchContact(id: number) {
 		return this.contactService
 			.read({ id })
-			.then(data => new Contact(data))
-			.catch(err => this.log.error('Find contact failed', err));
+			.then(result => new Contact(result))
+			.catch(error => error);
 	}
 }

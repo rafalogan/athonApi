@@ -8,6 +8,7 @@ import { RuleService } from 'src/services/rule.service';
 import { ProfileRuleService } from 'src/services/profile-rule.service';
 import { RelationalServiceOptions } from 'src/core/types';
 import { ContactService } from 'src/services/contact.service';
+import { AnswerService } from 'src/services/answer.service';
 
 export class ServicesModule {
 	ruleService: RuleService;
@@ -17,6 +18,7 @@ export class ServicesModule {
 	userService: UserService;
 	loginService: LoginService;
 	contactService: ContactService;
+	answerService: AnswerService;
 
 	constructor(private databaseConn: ConnectionController, private cacheConn: CacheConnectionController, private env: Environment) {
 		const conn = this.databaseConn.connection;
@@ -30,6 +32,7 @@ export class ServicesModule {
 		this.userService = new UserService(this.profileService, this.userRuleService, this.ruleService, this.env.salt, conn, cache, options);
 		this.loginService = new LoginService(this.userService, this.env.security.authSecret);
 		this.contactService = new ContactService(conn, cache, options);
+		this.answerService = new AnswerService(this.contactService, conn, cache, options);
 	}
 
 	private setOptions(): RelationalServiceOptions {

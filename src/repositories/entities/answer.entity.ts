@@ -1,4 +1,5 @@
-import { AnswerEntity, Contact } from 'src/repositories/entities/index';
+import { AnswerEntity, ContactEntity } from 'src/repositories/types';
+import { Contact } from 'src/repositories/entities/contact.entity';
 
 export class Answer implements AnswerEntity {
 	id: number;
@@ -6,7 +7,7 @@ export class Answer implements AnswerEntity {
 	content: string;
 	contactId: number;
 	userId: number;
-	contact?: Contact | void;
+	contact?: Contact | ContactEntity;
 	createdAt?: Date;
 	updatedAt?: Date;
 

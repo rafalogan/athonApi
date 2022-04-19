@@ -1,4 +1,4 @@
-export * from './answer.router';
+export * from './answer.routes';
 export * from './article.router';
 export * from './category.router';
 export * from './contact.routes';
