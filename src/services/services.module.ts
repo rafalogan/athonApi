@@ -1,3 +1,4 @@
+import { RelationalServiceOptions } from 'src/core/types';
 import { CacheConnectionController, ConnectionController } from 'src/core/controller';
 import { Environment } from 'src/config/environment.config';
 import { UserService } from 'src/services/user.service';
@@ -6,9 +7,9 @@ import { ProfileService } from 'src/services/profile.service';
 import { UserRuleService } from 'src/services/user-rule.service';
 import { RuleService } from 'src/services/rule.service';
 import { ProfileRuleService } from 'src/services/profile-rule.service';
-import { RelationalServiceOptions } from 'src/core/types';
 import { ContactService } from 'src/services/contact.service';
 import { AnswerService } from 'src/services/answer.service';
+import { SocialMediaService } from 'src/services/social-media.service';
 
 export class ServicesModule {
 	ruleService: RuleService;
@@ -19,6 +20,7 @@ export class ServicesModule {
 	loginService: LoginService;
 	contactService: ContactService;
 	answerService: AnswerService;
+	socialMediaService: SocialMediaService;
 
 	constructor(private databaseConn: ConnectionController, private cacheConn: CacheConnectionController, private env: Environment) {
 		const conn = this.databaseConn.connection;
@@ -33,6 +35,7 @@ export class ServicesModule {
 		this.loginService = new LoginService(this.userService, this.env.security.authSecret);
 		this.contactService = new ContactService(conn, cache, options);
 		this.answerService = new AnswerService(this.contactService, conn, cache, options);
+		this.socialMediaService = new SocialMediaService(this.loginService, conn, cache, options);
 	}
 
 	private setOptions(): RelationalServiceOptions {

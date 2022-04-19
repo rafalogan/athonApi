@@ -7,6 +7,7 @@ import { ProfileRuleController } from 'src/api/controllers/profile-rule.controll
 import { UserRuleController } from 'src/api/controllers/user-rule.controller';
 import { ContactController } from 'src/api/controllers/contact.controller';
 import { AnswerController } from 'src/api/controllers/answer.controller';
+import { SocialMediaController } from 'src/api/controllers/social-media.controller';
 
 export class ControllersModule {
 	loginController: LoginController;
@@ -17,6 +18,7 @@ export class ControllersModule {
 	profileRuleController: ProfileRuleController;
 	contactController: ContactController;
 	answerController: AnswerController;
+	socialMediaController: SocialMediaController;
 
 	constructor(private servers: ServicesModule) {
 		this.loginController = new LoginController(this.servers.loginService);
@@ -27,5 +29,6 @@ export class ControllersModule {
 		this.profileRuleController = new ProfileRuleController(this.servers.profileRuleService);
 		this.contactController = new ContactController(this.servers.contactService);
 		this.answerController = new AnswerController(this.servers.answerService);
+		this.socialMediaController = new SocialMediaController(this.servers.socialMediaService);
 	}
 }

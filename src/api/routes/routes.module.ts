@@ -8,6 +8,7 @@ import { RuleRoutes } from 'src/api/routes/rule.routes';
 import { ProfileRoutes } from 'src/api/routes/profile.routes';
 import { ContactRoutes } from 'src/api/routes/contact.routes';
 import { AnswerRoutes } from 'src/api/routes/answer.routes';
+import { SocialMediaRoutes } from 'src/api/routes/social-media.routes';
 
 export class RoutesModule {
 	userRoutes: UserRoutes;
@@ -16,6 +17,7 @@ export class RoutesModule {
 	profileRoutes: ProfileRoutes;
 	contactRoutes: ContactRoutes;
 	answerRoutes: AnswerRoutes;
+	socialMediaRoutes: SocialMediaRoutes;
 
 	constructor(private controllers: ControllersModule, private app: Application, private auth: IAuthConfig) {
 		this.loginRoutes = new LoginRoutes(this.controllers.loginController, this.app);
@@ -24,6 +26,7 @@ export class RoutesModule {
 		this.profileRoutes = new ProfileRoutes(this.controllers.profileController, this.controllers.profileRuleController, this.app, this.auth);
 		this.contactRoutes = new ContactRoutes(this.controllers.contactController, this.app, this.auth);
 		this.answerRoutes = new AnswerRoutes(this.controllers.answerController, this.app, this.auth);
+		this.socialMediaRoutes = new SocialMediaRoutes(this.controllers.socialMediaController, this.app, this.auth);
 	}
 
 	exec() {
@@ -33,5 +36,6 @@ export class RoutesModule {
 		this.profileRoutes.exec();
 		this.contactRoutes.exec();
 		this.answerRoutes.exec();
+		this.socialMediaRoutes.exec();
 	}
 }

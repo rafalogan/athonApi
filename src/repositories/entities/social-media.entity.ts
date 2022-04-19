@@ -1,21 +1,21 @@
-import { SocialmediaEntity } from 'src/repositories/types/social-media';
+import { SocialMediaEntity } from 'src/repositories/types';
 
-export class SocialMedia implements SocialmediaEntity {
-	_id?: any;
-	label: string;
+export class SocialMedia implements SocialMediaEntity {
+	id?: any;
+	title: string;
 	url: string;
-	visible: boolean;
-	userId: number;
+	iconName: string;
+	userId?: number;
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(params: SocialmediaEntity, id?: any) {
-		this._id = id ?? params._id;
-		this.label = params.label;
+	constructor(params: SocialMediaEntity | SocialMedia, id?: number, userId?: number) {
+		this.id = Number(id ?? params.id);
+		this.title = params.title;
 		this.url = params.url;
-		this.visible = params.visible;
-		this.userId = params.userId;
-		this.createdAt = params.createdAt;
-		this.updatedAt = params.updatedAt;
+		this.iconName = params.iconName;
+		this.userId = Number(userId || params?.userId);
+		this.createdAt = params?.createdAt;
+		this.updatedAt = params?.updatedAt;
 	}
 }

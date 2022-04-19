@@ -1,23 +1,16 @@
-import { Document } from 'mongoose';
-
-import { Timestampsfileds } from 'src/repositories/entities';
 import { Pagination } from 'src/repositories/models';
+import { TimestampsFields } from 'src/repositories/types/timestamps';
+import { SocialMedia } from 'src/repositories/entities';
 
-export interface SocialmediaEntity extends Timestampsfileds {
-	_id?: any;
-	label: string;
+export interface SocialMediaEntity extends TimestampsFields {
+	id?: any;
+	title: string;
 	url: string;
-	visible: boolean;
-	userId: number;
+	iconName: string;
+	userId?: number;
 }
 
-export interface SocialmediaListEntity {
-	data: SocialmediaEntity[];
+export interface SocialMediasEntity {
+	data: SocialMediaEntity[] | SocialMedia[];
 	pagination: Pagination;
-}
-
-export interface ISocialMediaModel extends Document {
-	url: string;
-	visible: boolean;
-	userId: number;
 }

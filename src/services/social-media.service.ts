@@ -1,34 +1,59 @@
-import { NoRelationalServiceOptions } from 'src/core/types';
-import { ISocialMediaModel, SocialMedia, SocialmediaEntity } from 'src/repositories/entities';
-import { clearTimestamp, existsOrError, ResponseException } from 'src/util';
-import httpStatus from 'http-status';
 import { Request } from 'express';
+import { Knex } from 'knex';
+import { RedisClientType } from 'redis';
+
+import { SocialMedia } from 'src/repositories/entities';
+import { clearTimestampFields, existsOrError, notExistisOrError } from 'src/util';
+import { AbstractDatabaseService } from 'src/core/services';
+import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
 import { LoginService } from 'src/services/login.service';
+import { SocialMediaEntity, SocialMediasEntity } from 'src/repositories/types';
 
-export class SocialMediaService {
-	constructor(private authService: LoginService, options: any) {}
+const fields = ['id', 'title', 'url', 'icon_name  as iconName', 'user_id as userId', 'created_at as createdAt', 'updated_at as updatedAt'];
 
-	socialmediaFilter(req: Request) {
-		try {
-			const data: SocialmediaEntity = req.body;
-			data.userId = Number(data.userId || this.authService.getPayload(req)?.id);
-
-			existsOrError(data.label, 'Field label is required.');
-			existsOrError(data.url, 'Field url is required.');
-			existsOrError(data.visible, 'Field url is required.');
-
-			return new SocialMedia(data);
-		} catch (message) {
-			const err = new ResponseException(message);
-
-			return { status: httpStatus.BAD_REQUEST, message, err };
-		}
+export class SocialMediaService extends AbstractDatabaseService {
+	constructor(private loginService: LoginService, conn: Knex, cache: RedisClientType, options: RelationalServiceOptions) {
+		super(conn, cache, 'social_medias', { ...options, fields });
 	}
 
-	createSocialmediaslist(raw: SocialmediaListEntity) {
-		const { pagination } = raw;
-		const data = raw.data.map(item => new SocialMedia(item)).map(clearTimestamp);
+	async setSocialMedia(req: Request): Promise<SocialMedia> {
+		const userId = await this.loginService.getPayload(req)?.id;
+		const id = Number(req.params.id);
 
-		return { data, pagination };
+		return new SocialMedia(req.body, id, userId);
+	}
+
+	async socialMediaValidate(data: SocialMedia) {
+		const fromDB = await this.read({ id: data.id });
+
+		notExistisOrError(fromDB, 'Social media already exists');
+		existsOrError(data.title, 'Field title is required.');
+		existsOrError(data.url, 'Field url is required.');
+	}
+
+	async create(data: SocialMedia) {
+		try {
+			await this.socialMediaValidate(data);
+		} catch (error) {
+			return error;
+		}
+
+		return super.create(data);
+	}
+
+	read(options?: ReadTableOptions) {
+		return super
+			.read(options)
+			.then((result: SocialMediasEntity | SocialMediaEntity) => ('data' in result ? this.setSocialMedias(result) : new SocialMedia(result)))
+			.catch(err => err);
+	}
+
+	private setSocialMedias(socialMedias: SocialMediasEntity) {
+		const data = socialMedias.data.map(item => new SocialMedia(item)).map(clearTimestampFields);
+
+		return {
+			...socialMedias,
+			data,
+		};
 	}
 }

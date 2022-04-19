@@ -9,6 +9,6 @@ export * from './newsletter.controller';
 export * from './profile.controller';
 export * from './profile-rule.controller';
 export * from './rule.controller';
-export * from './socialmedia.controller';
+export * from './social-media.controller';
 export * from './user.controller';
 export * from './user-rule.controller';

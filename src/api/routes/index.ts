@@ -8,5 +8,5 @@ export * from './newsletter.router';
 export * from './profile.routes';
 export * from './routes.module';
 export * from './rule.routes';
-export * from './socialmedia.router';
+export * from './social-media.routes';
 export * from './user.routes';
