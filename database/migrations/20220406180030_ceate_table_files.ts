@@ -5,8 +5,10 @@ export async function up(knex: Knex): Promise<void> {
 	return knex.schema.createTable('files', (table: TableBuilder) => {
 		table.increments('id').primary();
 		table.string('title').notNullable();
-		table.string('description');
 		table.string('file_name').notNullable();
+		table.string('file_path').notNullable();
+		table.string('file_type').notNullable();
+		table.string('description');
 		table.string('alt');
 		table.integer('category_id').unsigned().references('id').inTable('categories').nullable();
 		table.integer('article_id').unsigned().references('id').inTable('articles').nullable();

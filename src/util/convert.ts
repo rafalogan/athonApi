@@ -49,3 +49,5 @@ export const deleteField = (data: any, field: string) => {
 
 	return data;
 };
+
+export const setTimestampFields = (data?: Date | string | number) => (data ? new Date(data) : undefined);

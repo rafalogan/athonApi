@@ -11,6 +11,7 @@ import { ContactService } from 'src/services/contact.service';
 import { AnswerService } from 'src/services/answer.service';
 import { SocialMediaService } from 'src/services/social-media.service';
 import { CategoryService } from 'src/services/category.service';
+import { FileService } from 'src/services/file.service';
 
 export class ServicesModule {
 	ruleService: RuleService;
@@ -23,6 +24,7 @@ export class ServicesModule {
 	answerService: AnswerService;
 	socialMediaService: SocialMediaService;
 	categoryService: CategoryService;
+	fileService: FileService;
 
 	constructor(private databaseConn: ConnectionController, private cacheConn: CacheConnectionController, private env: Environment) {
 		const conn = this.databaseConn.connection;
@@ -39,6 +41,7 @@ export class ServicesModule {
 		this.answerService = new AnswerService(this.contactService, conn, cache, options);
 		this.socialMediaService = new SocialMediaService(this.loginService, conn, cache, options);
 		this.categoryService = new CategoryService(this.loginService, conn, cache, options);
+		this.fileService = new FileService(this.loginService, conn, cache, options);
 	}
 
 	private setOptions(): RelationalServiceOptions {

@@ -9,7 +9,7 @@ export * from './answer';
 export * from './article';
 export * from './category';
 export * from './contact';
-export * from './media';
+export * from './iFlie';
 export * from './newsletter';
 export * from './profile';
 export * from './profile-rule';

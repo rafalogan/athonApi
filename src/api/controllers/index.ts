@@ -4,7 +4,7 @@ export * from './category.controller';
 export * from './contact.controller';
 export * from './controllers.module';
 export * from './login.controller';
-export * from './media.controller';
+export * from './file.controller';
 export * from './newsletter.controller';
 export * from './profile.controller';
 export * from './profile-rule.controller';

@@ -12,3 +12,4 @@ export * from './article.service';
 export * from './category.service';
 export * from './contact.service';
 export * from './services.module';
+export * from './file.service';
