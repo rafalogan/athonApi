@@ -99,11 +99,9 @@ To use ```https``` or ```ssl``` in the development environment is necessary to c
 directory ssl with the tree:
 
 ```tree
-ssl
-├── cert
-│   └── server.crt
-├── server.csr
-└── server.key
+certs
+├── cert.pem
+└── key.pem
 ```
 
 the directory must contain in root:
