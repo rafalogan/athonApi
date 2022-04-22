@@ -1,11 +1,5 @@
-# Athon API 
-
-New REST API Athon rewrite in [TypeScript](https://www.typescriptlang.org/docs/home.html).
-To working with CMS
-
-Versão: 2.0.0
-
-> Default baseURL http://localhost:9000
+# Athon API
+***
 
 ## Requires
 
@@ -42,24 +36,27 @@ DB_USER=
 DB_PASSWORD=
 DB_PORT=
 
-# DATA BASE CONFIG CONNECTIONS NO RELATIONAL
-DBNR_PREFIX=
-DBNR_USER=
-DBNR_PASSWORD=
-DBNR_HOST=
-DBNR_PORT=
-DBNR_DATABASE=
-
 # CACHE CONFIGS
+CACHE_CONFIG=
+CACHE_TIME=
 REDISHOST=
 REDISPORT=
 
 # SECURITY CONFIGS
 SALT_ROUNDS=
+STORAGE_TYPE=
 ENABLE_HTTPS=
-CERT=
-KEY=
+CERT_FILE=
+KEY_FILE=
+
+# AWS CONFIGS
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=
+AWS_BUCKET=
+
 AUTHSECRET=
+
 ```
 On test environment create ```.env.testing```:
 ```.dotenv
