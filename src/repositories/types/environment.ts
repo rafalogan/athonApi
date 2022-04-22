@@ -9,11 +9,20 @@ export interface IEnvironment {
 	databaseEnv: IDatabaseEnvironment;
 	cacheEnv?: ICacheEnvironment;
 	security: ISecurityEnvironment;
+	aws: IAWSEnvironment;
 }
 
 export interface IDatabaseEnvironment {
 	client: string;
 	connection: string | IConnectionConfigs;
+}
+
+export interface IAWSEnvironment {
+	storageType: string;
+	accessKeyId: string;
+	secretAccessKey: string;
+	region: string;
+	bucket: string;
 }
 
 export interface ISecurityEnvironment extends ServerOptions {

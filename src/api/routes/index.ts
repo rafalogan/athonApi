@@ -3,7 +3,7 @@ export * from './article.router';
 export * from './category.routes';
 export * from './contact.routes';
 export * from './login.routes';
-export * from './media.router';
+export * from './file.routes';
 export * from './newsletter.router';
 export * from './profile.routes';
 export * from './routes.module';

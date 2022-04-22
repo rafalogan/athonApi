@@ -1,5 +1,9 @@
 import { Request } from 'express';
 import { Knex } from 'knex';
+import { S3 } from 'aws-sdk';
+import { unlink } from 'fs';
+import { resolve } from 'path';
+import { promisify } from 'util';
 
 import { AbstractDatabaseService } from 'src/core/services';
 import { RedisClientType } from 'redis';
@@ -7,14 +11,16 @@ import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
 import { LoginService } from 'src/services/login.service';
 import { FileMedia } from 'src/repositories/entities';
 import { existsOrError, notExistisOrError } from 'src/util';
-import { FilesEntity } from 'src/repositories/types';
+import { FilesEntity, IAWSEnvironment } from 'src/repositories/types';
 
 const fields = [
 	'id',
 	'title',
+	'name',
 	'file_name as fileName',
 	'file_path as filePath',
 	'file_type as fileType',
+	'url',
 	'description',
 	'alt',
 	'category_id as categoryId',
@@ -25,7 +31,13 @@ const fields = [
 ];
 
 export class FileService extends AbstractDatabaseService {
-	constructor(private loginService: LoginService, conn: Knex, cache: RedisClientType, options: RelationalServiceOptions) {
+	constructor(
+		private loginService: LoginService,
+		private awsEnv: IAWSEnvironment,
+		conn: Knex,
+		cache: RedisClientType,
+		options: RelationalServiceOptions
+	) {
 		super(conn, cache, 'files', { ...options, fields });
 	}
 
@@ -60,7 +72,7 @@ export class FileService extends AbstractDatabaseService {
 	read(options?: ReadTableOptions) {
 		return super
 			.read(options)
-			.then(result => ('aata' in result ? this.setFiles(result) : new FileMedia(result)))
+			.then(result => ('data' in result ? this.setFiles(result) : new FileMedia(result)))
 			.catch(error => error);
 	}
 
@@ -71,5 +83,33 @@ export class FileService extends AbstractDatabaseService {
 			...result,
 			data,
 		};
+	}
+
+	async delete(id: number) {
+		return this.deleteAws3(id)
+			.then(() => super.delete(id))
+			.catch(error => error);
+	}
+
+	private async deleteAws3(id: number) {
+		const fromDB = await this.findOneById(id);
+		const s3 = new S3();
+
+		try {
+			existsOrError(fromDB, 'File not found');
+		} catch (error) {
+			return error;
+		}
+
+		const file = new FileMedia(fromDB);
+
+		return this.awsEnv.storageType === 's3'
+			? s3
+					.deleteObject({
+						Bucket: this.awsEnv.bucket,
+						Key: file.fileName,
+					})
+					.promise()
+			: promisify(unlink)(resolve(__dirname, '..', '..', 'tmp', 'uploads', file.fileName));
 	}
 }

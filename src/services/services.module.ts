@@ -41,7 +41,7 @@ export class ServicesModule {
 		this.answerService = new AnswerService(this.contactService, conn, cache, options);
 		this.socialMediaService = new SocialMediaService(this.loginService, conn, cache, options);
 		this.categoryService = new CategoryService(this.loginService, conn, cache, options);
-		this.fileService = new FileService(this.loginService, conn, cache, options);
+		this.fileService = new FileService(this.loginService, this.env.aws, conn, cache, options);
 	}
 
 	private setOptions(): RelationalServiceOptions {

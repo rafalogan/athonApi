@@ -1,4 +1,5 @@
-import { Application } from 'express';
+import express, { Application } from 'express';
+import { resolve } from 'path';
 
 import { ServicesModule } from 'src/services';
 import { notfoundRoute } from 'src/core/routes';
@@ -16,6 +17,7 @@ export class ApiModule {
 
 	exec() {
 		this.routes.exec();
+		this.app.use('/files', express.static(resolve(__dirname, '..', 'tmp', 'uploads')));
 		this.app.use(notfoundRoute);
 	}
 }

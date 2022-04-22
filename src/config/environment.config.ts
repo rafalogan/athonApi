@@ -1,4 +1,4 @@
-import { ICacheEnvironment, IDatabaseEnvironment, IEnvironment, ISecurityEnvironment } from 'src/repositories/types';
+import { IAWSEnvironment, ICacheEnvironment, IDatabaseEnvironment, IEnvironment, ISecurityEnvironment } from 'src/repositories/types';
 
 export class Environment implements IEnvironment {
 	nodeEnv: string;
@@ -8,6 +8,7 @@ export class Environment implements IEnvironment {
 	databaseEnv: IDatabaseEnvironment;
 	cacheEnv: ICacheEnvironment;
 	security: ISecurityEnvironment;
+	aws: IAWSEnvironment;
 
 	baseUrl: string;
 
@@ -19,11 +20,12 @@ export class Environment implements IEnvironment {
 		this.databaseEnv = this.setConnection(props?.databaseEnv);
 		this.cacheEnv = this.setCacheConfigs(props?.cacheEnv);
 		this.security = this.setSecurity(props?.security);
+		this.aws = this.setAwsConfig(props?.aws);
 
 		this.baseUrl = `${this.security.enableHTTPS ? 'https' : 'http'}://${this.host}:${this.port}`;
 	}
 
-	private setConnection(dataEvn?: IDatabaseEnvironment): IDatabaseEnvironment {
+	setConnection(dataEvn?: IDatabaseEnvironment): IDatabaseEnvironment {
 		if (dataEvn) return dataEvn;
 
 		return {
@@ -37,6 +39,18 @@ export class Environment implements IEnvironment {
 				debug: process.env.DB_LOGGING === 'true',
 				filename: process.env.DB_FILENAME,
 			},
+		};
+	}
+
+	setAwsConfig(options?: IAWSEnvironment) {
+		if (options) return options;
+
+		return {
+			storageType: process.env.STORAGE_TYPE || 'local',
+			accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+			secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+			region: process.env.AWS_REGION || '',
+			bucket: process.env.AWS_BUCKET || '',
 		};
 	}
 

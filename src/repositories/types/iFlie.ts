@@ -1,15 +1,15 @@
 import { TimestampsFields } from 'src/repositories/types/timestamps';
 import { Pagination } from 'src/repositories/models';
-import multer, { Multer } from 'multer';
-import { RequestHandler } from 'express';
 import { FileMedia } from 'src/repositories/entities';
 
 export interface FileEntity extends TimestampsFields {
 	id?: number;
 	title: string;
+	name: string;
 	fileName: string;
 	filePath: string;
 	fileType: string;
+	url: string;
 	description?: string;
 	alt?: string;
 	categoryId?: number;
@@ -26,4 +26,8 @@ export interface FileEntityOptions {
 	id?: number;
 	userId?: number;
 	file?: any;
+}
+
+export interface CustomFile extends Express.Multer.File {
+	key: string;
 }

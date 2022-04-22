@@ -1,6 +1,5 @@
 export interface RelationalServiceOptions extends CacheServiceOptions {
 	fields?: string[];
-	cacheTime?: number;
 }
 
 export interface CacheServiceOptions {

@@ -1,14 +1,12 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 
-import { AbstractController, ResponseController } from 'src/core/controller';
+import { ResponseController } from 'src/core/controller';
 import { FileService } from 'src/services';
 import { DatabaseException, ResponseException } from 'src/util';
 
-export class FileController extends AbstractController {
-	constructor(private fileService: FileService) {
-		super();
-	}
+export class FileController {
+	constructor(private fileService: FileService) {}
 
 	save(req: Request, res: Response) {
 		const file = this.fileService.setFileFields(req);
@@ -21,15 +19,6 @@ export class FileController extends AbstractController {
 					? ResponseController.onError(res, err.message, { err, status: httpStatus.BAD_REQUEST })
 					: ResponseController.onError(res, 'unexpected error', { err })
 			);
-	}
-
-	edit(req: Request, res: Response) {
-		const data = this.fileService.setFileFields(req);
-
-		this.fileService
-			.update(Number(data?.id), data)
-			.then(result => ResponseController.onSuccess(res, result))
-			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	list(req: Request, res: Response) {
