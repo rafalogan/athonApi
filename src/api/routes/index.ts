@@ -1,5 +1,5 @@
 export * from './answer.routes';
-export * from './article.router';
+export * from './article.routes';
 export * from './category.routes';
 export * from './contact.routes';
 export * from './login.routes';

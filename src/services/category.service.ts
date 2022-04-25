@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
 
-import { existsOrError, notExistisOrError } from 'src/util';
+import { categoryWithChildren, existsOrError, notExistisOrError } from 'src/util';
 import { LoginService } from 'src/services/login.service';
 import { AbstractDatabaseService } from 'src/core/services';
 import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
@@ -97,6 +97,13 @@ export class CategoryService extends AbstractDatabaseService {
 			.select(...this.fields)
 			.where({ parentId })
 			.then((result: CategoryEntity[]) => result)
+			.catch(err => err);
+	}
+
+	categoryWithChildren(categoryId: number) {
+		return this.instance
+			.raw(categoryWithChildren, [categoryId])
+			.then(result => result[0])
 			.catch(err => err);
 	}
 }

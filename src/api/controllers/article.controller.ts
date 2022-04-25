@@ -3,63 +3,68 @@ import { Request, Response } from 'express';
 import { AbstractController, ResponseController } from 'src/core/controller';
 import { ArticleService } from 'src/services';
 import { Article } from 'src/repositories/entities';
+import { DatabaseException, ResponseException } from 'src/util';
+import httpStatus from 'http-status';
 
 export class ArticleController extends AbstractController {
-	constructor(private articleService: ArticleService, private responseController: ResponseController) {
+	constructor(private articleService: ArticleService) {
 		super();
 	}
 
 	save(req: Request, res: Response) {
-		const data = this.articleService.articleFilter(req);
-
-		if (!(data instanceof Article)) return this.responseController.onError(res, data.message, data);
+		const article = this.articleService.setArticle(req);
 
 		this.articleService
-			.create(data)
-			.then(result => this.responseController.onSuccess(res, result))
-			.catch(err => this.responseController.onError(res, 'unexpected error', { err }));
+			.create(article)
+			.then(result => ResponseController.onSuccess(res, result))
+			.catch(err =>
+				err instanceof ResponseException
+					? ResponseController.onError(res, err.message, { err, status: httpStatus.BAD_REQUEST })
+					: ResponseController.onError(res, 'unexpected error', { err })
+			);
 	}
 
 	edit(req: Request, res: Response) {
-		const _id = req.params.id;
-		const data = new Article(req.body, _id);
+		const data = this.articleService.setArticle(req);
 
 		this.articleService
-			.update(data, data._id)
-			.then(result => this.responseController.onSuccess(res, result))
-			.catch(err => this.responseController.onError(res, 'unexpected error', { err }));
+			.update(Number(data.id), data)
+			.then(result => ResponseController.onSuccess(res, result))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	list(req: Request, res: Response) {
-		const _id = req.params.id;
+		const id = req.params.id;
 		const page = Number(req.query.page);
 		const limit = Number(req.query.limit);
 
 		this.articleService
-			.read({ _id, page, limit })
-			.then(raw => this.responseController.onSuccess(res, raw.data ? this.articleService.creatListAitcles(raw) : new Article(raw)))
-			.catch(err => this.responseController.onError(res, 'unexpected error', { err }));
+			.read({ id, page, limit })
+			.then(data => ResponseController.onSuccess(res, data))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	listByCategory(req: Request, res: Response) {
-		const categoryID = req.params.id;
+		const categoryID = Number(req.params.id);
+		const page = Number(req.query.page);
+		const limit = Number(req.query.limit);
 
 		this.articleService
-			.articlesByCategoryId(categoryID)
-			.then(data => this.responseController.onSuccess(res, data))
-			.catch(err => this.responseController.onError(res, 'unexpected error', { err }));
+			.getArticlesByCategoryId(categoryID, { page, limit })
+			.then(data => ResponseController.onSuccess(res, data))
+			.catch(err => ResponseController.onError(res, 'unexpected error', { err }));
 	}
 
 	async remove(req: Request, res: Response) {
-		try {
-			const _id = req.params.id;
-			const deleted = await this.articleService.delete(_id);
+		const id = Number(req.params.id);
 
-			return deleted?.status
-				? this.responseController.onError(res, deleted.message, deleted)
-				: this.responseController.onSuccess(res, deleted);
-		} catch (err) {
-			this.responseController.onError(res, 'unexpected error', { err });
-		}
+		this.articleService
+			.delete(id)
+			.then(result => ResponseController.onSuccess(res, result))
+			.catch(err =>
+				err instanceof DatabaseException
+					? ResponseController.onError(res, err.message, { err, status: httpStatus.BAD_REQUEST })
+					: ResponseController.onError(res, 'unexpected error', { err })
+			);
 	}
 }

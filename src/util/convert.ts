@@ -1,4 +1,6 @@
 import bcrypt from 'bcrypt';
+import { FileEntity } from 'src/repositories/types';
+import { FileMedia } from 'src/repositories/entities';
 
 export const snakeToCamel = (field: string): string => {
 	let toArray = field.split('_');
@@ -51,3 +53,6 @@ export const deleteField = (data: any, field: string) => {
 };
 
 export const setTimestampFields = (data?: Date | string | number) => (data ? new Date(data) : undefined);
+
+export const setFilesMeda = (data?: FileEntity[] | FileMedia[]) =>
+	data ? data.map(file => (file instanceof FileMedia ? file : new FileMedia(file))) : [];

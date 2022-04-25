@@ -1,29 +1,33 @@
-import { Schema } from 'mongoose';
-
-import { ArticleEntity, MediaEntity } from 'src/repositories/entities/index';
+import { ArticleEntity, FileEntity } from 'src/repositories/types';
+import { FileMedia } from 'src/repositories/entities/file-media.entity';
+import { setFilesMeda, setTimestampFields } from 'src/util';
 
 export class Article implements ArticleEntity {
-	_id?: Schema.Types.ObjectId;
+	id?: number;
 	title: string;
-	subtitle: string;
+	subtitle?: string;
 	description: string;
 	content: string;
-	medias: MediaEntity[];
 	userId: number;
-	categoryId: Schema.Types.ObjectId;
+	categoryId: number;
+	images?: FileEntity[] | FileMedia[];
+	videos?: FileEntity[] | FileMedia[];
+	files?: FileEntity[] | FileMedia[];
 	createdAt?: Date;
 	updatedAt?: Date;
 
-	constructor(params: ArticleEntity, id?: any) {
-		this._id = id ?? params._id;
+	constructor(params: ArticleEntity, id?: number, userId?: number) {
+		this.id = Number(params.id || id);
 		this.title = params.title;
 		this.subtitle = params.subtitle;
 		this.description = params.description;
 		this.content = params.content;
-		this.medias = params.medias;
-		this.userId = params.userId;
-		this.categoryId = params.categoryId;
-		this.createdAt = params.createdAt;
-		this.updatedAt = params.updatedAt;
+		this.userId = Number(params.userId ?? userId);
+		this.categoryId = Number(params.categoryId);
+		this.images = setFilesMeda(params.images);
+		this.videos = setFilesMeda(params.videos);
+		this.files = setFilesMeda(params.files);
+		this.createdAt = setTimestampFields(params.createdAt);
+		this.updatedAt = setTimestampFields(params.updatedAt);
 	}
 }

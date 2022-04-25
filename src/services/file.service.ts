@@ -11,7 +11,7 @@ import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
 import { LoginService } from 'src/services/login.service';
 import { FileMedia } from 'src/repositories/entities';
 import { existsOrError, notExistisOrError } from 'src/util';
-import { FilesEntity, IAWSEnvironment } from 'src/repositories/types';
+import { FileEntity, FilesEntity, IAWSEnvironment, ReadFileOptions } from 'src/repositories/types';
 
 const fields = [
 	'id',
@@ -69,10 +69,21 @@ export class FileService extends AbstractDatabaseService {
 		return super.create(data);
 	}
 
-	read(options?: ReadTableOptions) {
+	read(options?: ReadFileOptions) {
+		if (options?.categoryId || options?.articleId) return this.getFilesByArticleOrCategory(options);
+
 		return super
 			.read(options)
 			.then(result => ('data' in result ? this.setFiles(result) : new FileMedia(result)))
+			.catch(error => error);
+	}
+
+	getFilesByArticleOrCategory(options?: ReadFileOptions) {
+		return this.instance(this.table)
+			.select(...(options?.fields || this.fields))
+			.where({ article_id: Number(options?.articleId) })
+			.orWhere({ category_id: Number(options?.categoryId) })
+			.then((result: FileEntity[]) => result.map(item => new FileMedia(item)))
 			.catch(error => error);
 	}
 

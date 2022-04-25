@@ -17,3 +17,7 @@ export interface CategoriesEntity {
 	data: CategoryEntity[] | Category[];
 	pagination: Pagination;
 }
+
+export interface ICategoryWithChildren {
+	ids: number[];
+}

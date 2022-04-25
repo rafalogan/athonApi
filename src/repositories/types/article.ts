@@ -1,30 +1,19 @@
-import { Document } from 'mongoose';
-
-import { MediaEntity, Timestampsfileds } from 'src/repositories/entities';
+import { TimestampsFields } from 'src/repositories/types/timestamps';
+import { Article } from 'src/repositories/entities';
 import { Pagination } from 'src/repositories/models';
+import { FilesFiledsTypes } from 'src/repositories/types/iFlie';
 
-export interface ArticleEntity extends Timestampsfileds {
-	_id?: any;
+export interface ArticleEntity extends TimestampsFields, FilesFiledsTypes {
+	id?: number;
 	title: string;
-	subtitle: string;
+	subtitle?: string;
 	description: string;
 	content: string;
-	medias: MediaEntity[];
 	userId: number;
-	categoryId: any;
+	categoryId: number;
 }
 
-export interface ArticleListEntity {
-	data: ArticleEntity[];
+export interface ArticlestEntity {
+	data: ArticleEntity[] | Article[];
 	pagination: Pagination;
-}
-
-export interface IArticleModel extends Document {
-	title: string;
-	subtitle: string;
-	description: string;
-	content: string;
-	medias: MediaEntity[];
-	userId: number;
-	categoryId: any;
 }
