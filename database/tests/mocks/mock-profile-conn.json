@@ -1,0 +1,35 @@
+{
+	"env": "test",
+	"host": "localhost",
+	"port": 5001,
+	"timezone": "America/Sao_Paulo",
+	"relationalDatabase": {
+		"client": "sqlite3",
+		"port": 0,
+		"connection": {
+			"host": "",
+			"user": "",
+			"password": "",
+			"database": ""
+		}
+	},
+	"noRelationalDatabase": {
+		"prefix": "mongodb",
+		"user": "root",
+		"password": "root",
+		"host": "localhost",
+		"port": 27017,
+		"database": "athonDBTest"
+	},
+	"cache": {
+		"host": "localhost",
+		"port": 6379
+	},
+	"security": {
+		"saltRounds": 5,
+		"EnableHTTPS": false,
+		"cert": "",
+		"key": "",
+		"authSecret": "@teste-Api-Athon@2"
+	}
+}

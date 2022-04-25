@@ -1,129 +1,151 @@
-Athon API
--
-API RestFull Nodejs and MySQL
+# Athon API
+***
 
-Requires:
+## Requires
 
-- NodJs
-- MySQL
-- Knex
+* [NodeJS](https://nodejs.org/en/docs/)
+* [TypeScript](https://www.typescriptlang.org/docs/home.html)
+* [Docker](https://www.docker.com/products/docker-hub)
 
-Install:
+## To run Developer environment
 
-- Clone this repositore in your project folder
-     - Open your terminal in the project folder 
-     - Run this code  { npm install }
+* Up database ```docker-composer up```
+* Up Dev ```npm run dev```
+* Test dist ```npm start```
 
-configurations:
+## Environment Variables 
 
-- Open the file: env_file
-     
-        module.exports = {
-          authSecret: 'yourAuthsecret',
-          connection: {
-              database: 'your_database_name',
-              user: 'yourUserDb',
-              password: 'yourPasswordDb'
-          },
-          mailer: {
-              service: 'yourEmailService ex.: gmail',
-              mail: 'youremail@youremail',
-              pass: 'yourEmalPassword'
-          }
-      };
-    - Next save this file as .env
+On Development environment need to create a file `.env` with then variables:
+```.dotenv
+# VARIABLES OF ENVIROMENT
+# ENVIRONMENT
+NODE_ENV=
 
-***Ps.: Don't forget to create your database in mysql before***
+# SERVER CONFIGS
+PORT=
+HOST=
 
-Run API:
+# TIMEZONE
+TIMEZONE=
 
-- With the terminal open:
-    - Run { npm start } to development environment
-    - Run { npm run production } to production environment
+# DATA BASE CONFIG CONNECTIONS RELATIONAL
+DB_CLIENT=
+DB_HOST=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_PORT=
+
+# CACHE CONFIGS
+CACHE_CONFIG=
+CACHE_TIME=
+REDISHOST=
+REDISPORT=
+
+# SECURITY CONFIGS
+SALT_ROUNDS=
+STORAGE_TYPE=
+ENABLE_HTTPS=
+CERT_FILE=
+KEY_FILE=
+
+# AWS CONFIGS
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=
+AWS_BUCKET=
+
+AUTHSECRET=
+
+```
+On test environment create ```.env.testing```:
+```.dotenv
+# VARIABLES OF ENVIROMENT
+# ENVIRONMENT
+NODE_ENV=
+
+# SERVER CONFIGS
+PORT=
+HOST=
+
+# TIMEZONE
+TIMEZONE=
+
+# DATA BASE CONFIG CONNECTIONS RELATIONAL
+# USE SQLITE3
+DB_CLIENT=
+DB_FILENAME=
+
+# DATA BASE CONFIG CONNECTIONS NO RELATIONAL
+DBNR_PREFIX=
+DBNR_USER=
+DBNR_PASSWORD=
+DBNR_HOST=
+DBNR_PORT=
+DBNR_DATABASE=
+
+# CACHE CONFIGS
+REDISHOST=
+REDISPORT=
+
+# SECURITY CONFIGS
+SALT_ROUNDS=
+ENABLE_HTTPS=
+AUTHSECRET=
+```
+## To use Https in Dev
+
+To use ```https``` or ```ssl``` in the development environment is necessary to create a 
+directory ssl with the tree:
+
+```tree
+certs
+├── cert.pem
+└── key.pem
+```
+
+the directory must contain in root:
+* ```server.csr``` file;
+* ```server.key``` file;
+* ```cert``` directory;
+	* ```server.crt``` file;
+	
+To generate self-signed certificate is suitable for the development environment. To generate the certificate files and ``openssl`` must be installed on the computer.  
+First generate a private key:
+```shell
+openssl genrsa -des3 -out server.key 1024
+```
+_this command need to type a private phrase_
+
+Next step generate ``file.csr`` use this command
+
+```shell
+openssl req -new -key server.key -out old_server.csr
+```
+_Answer all questions this step will request your private phrase_
+
+Last step generate ``file.crt`` use this command;
+
+```shell
+openssl x509 -req -days 365 -in old_server.csr -signkey server.key -out server.crt
+```
+_To generate this file it is necessary to have generated the two previous files_
+
+to configure the application for https work's, fill in the following environment variables in the ``.env`` file
+```dotenv
+ENABLE_HTTPS=#Set value 'true' falue defaut is 'false'
+CERT=#path for file.crt
+KEY=#path for file.key
+```
+
+## End-Points
+
+##### LOGIN ON APLLICATION AND GENERATE TOKEN: ###
+* Method: POST
+* security: Open
+* url: "/signin"
+* Params:
+	* **email:** "String, Required"
+	* **password:** "String, Required"
 
 
-Português
--
-API RestFull Nodejs e MySQL
-
-Requisitos:
-
-- NodJs
-- MySQL
-- Knex
-
-Instalação:
-
-- Clone esse repositório na pasta do seu projeto
-     - Abra o terminal na pasta do seu projeto 
-     - Rode o seguinte comando  { npm install }
-
-Configurações:
-
-- Abra o arquivo: env_file
-     
-        module.exports = {
-          authSecret: 'seuAuthsecret',
-          connection: {
-              database: 'nome_do_bancoDeDados',
-              user: 'seu usuário MySQL',
-              password: 'sua Senha'
-          },
-          mailer: {
-              service: 'seu serviço de e-mail ex.: gmail',
-              mail: 'seuemail@seuemail',
-              pass: 'sua senha de e-mail'
-          }
-      };
-    - Em seguida salve o arquivo como .env
-
-***Obs.: não se esqueça de criar antes seu banco de dados no MySQL***
-
-Rodando API:
-
-- Com o terminal aberto:
-    - Rode { npm start } para o ambiente de desenvolvimento
-    - Rode { npm run production } para o ambiente de produção
-
-Français
--
-API RestFull Nodejs et MySQL
-
-exigence:
-
-- NodJs
-- MySQL
-- Knex
-
-l'installation:
-
-- Cloner ce référentiel dans votre dossier de projet
-     - Ouvrez le terminal dans votre dossier de projet 
-     - Tournez la commande suivante  { npm install }
-
-Paramètres:
-
-- Ouvrir le fichier: env_file
-     
-        module.exports = {
-          authSecret: 'voterAuthsecret',
-          connection: {
-              database: 'nom de la base de données',
-              user: 'votre utilisateur MySQL',
-              password: 'votre mot de passe MySQL'
-          },
-          mailer: {
-              service: 'Votre service de e-mail ex.: gmail',
-              mail: 'votreemail@voteremail',
-              pass: 'votre mot de passe e-mail'
-          }
-      };
-    - Puis enregistrez le fichier sous .env
-
-***Obs.:n'oubliez pas de créer votre base de données dans le MySQL***
-
-Exécution API:
-
-- Avec le terminal ouvert:
-    - Tournez { npm start } à l'environnement de développement
-    - Tournez { npm run production } à l'environnement de production
