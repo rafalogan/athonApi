@@ -1,10 +1,10 @@
 import passport from 'passport';
 import { ExtractJwt, Strategy, StrategyOptions, VerifiedCallback } from 'passport-jwt';
 
-import { IAuthConfig } from 'src/repositories/types';
 import { UserService } from 'src/services';
-import { PayloadDomain } from 'src/core/types';
+import { PayloadDomain, IAuthConfig } from 'src/repositories/types';
 import { User } from 'src/repositories/entities';
+import { deleteField } from 'src/util';
 
 export class AuthConfig {
 	auth: IAuthConfig;
@@ -12,7 +12,7 @@ export class AuthConfig {
 	private readonly params: StrategyOptions;
 
 	constructor(private authSecret: string, private userService: UserService) {
-		this.params = this.setStategyOtions();
+		this.params = this.setStrategyOptions();
 		this.auth = this.exec();
 	}
 
@@ -30,19 +30,14 @@ export class AuthConfig {
 		const id = Number(payload.id);
 		this.userService
 			.read({ id })
-			.then(data => done(null, data instanceof User ? this.prepareUserToToken(data) : false))
+			.then(data => done(null, data instanceof User ? deleteField(data, 'password') : false))
 			.catch(error => done(error, false));
 	}
 
-	private setStategyOtions(): StrategyOptions {
+	private setStrategyOptions(): StrategyOptions {
 		const secretOrKey = this.authSecret;
 		const jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 
 		return { secretOrKey, jwtFromRequest };
-	}
-
-	private prepareUserToToken(data: User) {
-		Reflect.deleteProperty(data, 'password');
-		return data;
 	}
 }
