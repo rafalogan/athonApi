@@ -8,11 +8,18 @@ import { ApiModule } from 'src/api/api.module';
 import { ServicesModule } from 'src/services';
 import { DEFAULT_CORSOPTIONS } from 'src/util';
 import { AuthConfig } from 'src/config/auth.config';
+import { MulterConfig } from 'src/config/multer.config';
 
 export class AppConfig {
 	private readonly _express: Application;
 
-	constructor(private nodeEnv: string, private logger: Logger, private authConfig: AuthConfig, private services: ServicesModule) {
+	constructor(
+		private nodeEnv: string,
+		private logger: Logger,
+		private authConfig: AuthConfig,
+		private services: ServicesModule,
+		private multer: MulterConfig
+	) {
 		this._express = express();
 
 		this.configExpress();
@@ -40,6 +47,6 @@ export class AppConfig {
 	}
 
 	private initApi(): void {
-		return new ApiModule(this.express, this.authConfig.auth, this.services).exec();
+		return new ApiModule(this.express, this.authConfig.auth, this.services, this.multer).exec();
 	}
 }

@@ -9,7 +9,7 @@ export interface IEnvironment {
 	databaseEnv: IDatabaseEnvironment;
 	cacheEnv?: ICacheEnvironment;
 	security: ISecurityEnvironment;
-	aws: IAWSEnvironment;
+	awsConfig: IAWSEnvironment;
 }
 
 export interface IDatabaseEnvironment {

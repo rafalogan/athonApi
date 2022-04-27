@@ -39,7 +39,13 @@
     "up:tags": "git push --follow-tags",
     "knex:migrate:make": "npx knex migrate:make --knexfile knexfile.ts -x ts",
     "knex:migrate:latest": "npx knex migrate:latest --knexfile knexfile.ts",
-    "knex:migrate:rollback": "npx knex migrate:rollback --knexfile knexfile.ts"
+    "knex:migrate:rollback": "npx knex migrate:rollback --knexfile knexfile.ts",
+		"athon:create:config": "zsh ./bin/create.config.sh",
+		"athon:create:entity": "zsh ./bin/create.entity.sh",
+		"athon:create:module": "zsh ./bin/create.module.sh",
+		"athon:create:service": "zsh ./bin/create.service.sh",
+		"athon:create:model": "zsh ./bin/create.model.sh",
+		"athon:create:type": "zsh ./bin/create.type.sh"
   },
   "keywords": [
     "API",

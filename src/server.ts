@@ -11,6 +11,7 @@ import { CacheConnectionController, ConnectionController } from 'src/core/contro
 import { KnexFileConfig } from 'src/config/knexfile.config';
 import { ServicesModule } from 'src/services';
 import { AuthConfig } from 'src/config/auth.config';
+import { MulterConfig } from 'src/config/multer.config';
 
 execDotenv();
 
@@ -23,7 +24,8 @@ const dbConnection = new ConnectionController(keyfile);
 const cacheConnection = new CacheConnectionController(env.cacheEnv);
 const services = new ServicesModule(dbConnection, cacheConnection, env);
 const authConfig = new AuthConfig(env.security.authSecret, services.userService);
+const multerConfig = new MulterConfig(env.awsConfig);
 
-const app = new AppConfig(env.nodeEnv, logger, authConfig, services).express;
+const app = new AppConfig(env.nodeEnv, logger, authConfig, services, multerConfig).express;
 export const server = new ServerController(app, env, httpsOptions);
 export const appModule = new AppModule(dbConnection, cacheConnection, server);
