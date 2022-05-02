@@ -2,9 +2,9 @@ import knex, { Knex } from 'knex';
 import Config = Knex.Config;
 import MigratorConfig = Knex.MigratorConfig;
 
-import { onError, onInfo, terminalColors } from 'src/util';
+import { onError, onInfo, TERMINAL_COLORS } from 'src/util';
 
-const { greenBg, black, reset, red, cyan } = terminalColors;
+const { greenBg, black, reset, red, cyan } = TERMINAL_COLORS;
 
 export class ConnectionController {
 	connection: Knex;

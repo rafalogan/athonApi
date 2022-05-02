@@ -6,7 +6,6 @@
 .DS_Store
 .env
 .env.testing
-.env.test
 .env.development
 .env.staging
 .env.production

@@ -1,6 +1,8 @@
 import { CacheConnectionController, ConnectionController } from 'src/core/controller';
 import { ServerController } from 'src/server.controller';
 import { onError } from 'src/util';
+import http from 'http';
+import https from 'https';
 
 export class AppModule {
 	constructor(
@@ -16,5 +18,13 @@ export class AppModule {
 			.then(() => this.cacheConnectionController.isConnect())
 			.then(() => this.serverController.exec())
 			.catch(error => onError('Erro ao iniciar o servidor', error));
+	}
+
+	close() {
+		return this.serverController.close();
+	}
+
+	clearDatabase() {
+		return this.connectionController.rollback();
 	}
 }

@@ -1,11 +1,11 @@
 import { IDatabaseEnvironment, IknexConnection, IKnexFile, IKnexMigrationConfig, IKnexPoolConfig } from 'src/repositories/types';
-import { env } from 'src/server';
 
 export class KnexFileConfig implements IKnexFile {
 	client: string;
 	connection: string | IknexConnection;
 	migrations: IKnexMigrationConfig;
 	pool: IKnexPoolConfig;
+	useNullAsDefault = true;
 
 	constructor(databaseEnv: IDatabaseEnvironment, migrationConfig?: IKnexMigrationConfig, poolConfig?: IKnexPoolConfig) {
 		this.client = databaseEnv.client || 'pg';

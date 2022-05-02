@@ -4,10 +4,16 @@ import { Article, FileMedia } from 'src/repositories/entities';
 import { CategoryService, FileService, LoginService } from 'src/services';
 import { clearTimestampFields, existsOrError, IMAGE_MIME_TYPE, VIDEO_MIME_TYPE } from 'src/util';
 import { AbstractDatabaseService } from 'src/core/services';
-import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
-import { ArticleEntity, ArticlestEntity, CategoryEntity, FileEntity } from 'src/repositories/types';
+import {
+	ArticleEntity,
+	ArticlestEntity,
+	CategoryEntity,
+	FileEntity,
+	ReadTableOptions,
+	RelationalServiceOptions,
+} from 'src/repositories/types';
 
 const fields = [
 	'id',

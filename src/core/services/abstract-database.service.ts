@@ -1,12 +1,10 @@
 import { Knex } from 'knex';
 
-import { convertDataValues, DatabaseException, existsOrError, onError, ResponseException } from 'src/util';
+import { convertDataValues, DatabaseException, existsOrError, onError } from 'src/util';
 import { AbstractCacheService } from 'src/core/services/abstract-cache.service';
-import { ReadTableOptions, RelationalContext, RelationalServiceOptions } from 'src/core/types';
 import { Pagination } from 'src/repositories/models';
 import { RedisClientType } from 'redis';
-import { QueryResult } from 'pg';
-import QueryBuilder = Knex.QueryBuilder;
+import { ReadTableOptions, RelationalContext, RelationalServiceOptions } from 'src/repositories/types';
 
 export abstract class AbstractDatabaseService extends AbstractCacheService implements RelationalContext {
 	protected instance: Knex;
@@ -53,7 +51,7 @@ export abstract class AbstractDatabaseService extends AbstractCacheService imple
 
 		try {
 			existsOrError(element, `The register nº ${id} not find in table: ${this.table}`);
-		} catch (error: ResponseException | any) {
+		} catch (error: any) {
 			throw new DatabaseException(error.message);
 		}
 

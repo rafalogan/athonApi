@@ -3,8 +3,14 @@ import { RedisClientType } from 'redis';
 
 import { ProfileRuleService, RuleService } from 'src/services';
 import { AbstractDatabaseService } from 'src/core/services';
-import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
-import { ProfileEntity, ProfileRuleEntity, ProfilesList, RuleEntity } from 'src/repositories/types';
+import {
+	ProfileEntity,
+	ProfileRuleEntity,
+	ProfilesList,
+	RelationalReadOptions,
+	RelationalServiceOptions,
+	RuleEntity,
+} from 'src/repositories/types';
 import { Pagination } from 'src/repositories/models';
 import { clearTimestampFields, existsOrError, notExistisOrError } from 'src/util';
 import { Profile } from 'src/repositories/entities';

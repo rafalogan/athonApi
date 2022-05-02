@@ -5,9 +5,8 @@ import { RedisClientType } from 'redis';
 import { categoryWithChildren, existsOrError, notExistisOrError } from 'src/util';
 import { LoginService } from 'src/services/login.service';
 import { AbstractDatabaseService } from 'src/core/services';
-import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
 import { Category } from 'src/repositories/entities';
-import { CategoriesEntity, CategoryEntity } from 'src/repositories/types';
+import { CategoriesEntity, CategoryEntity, ReadTableOptions, RelationalServiceOptions } from 'src/repositories/types';
 
 const fields = [
 	'id',

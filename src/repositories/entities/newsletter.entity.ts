@@ -1,4 +1,5 @@
 import { NewsletterEntity } from 'src/repositories/types/newsletter';
+import { setTimestampFields } from 'src/util';
 
 export class Newsletter implements NewsletterEntity {
 	id: number;
@@ -13,7 +14,7 @@ export class Newsletter implements NewsletterEntity {
 		this.name = props.name;
 		this.email = props.email;
 		this.active = props.active;
-		this.createAt = props.createdAt;
-		this.updateAt = props.updatedAt;
+		this.createAt = setTimestampFields(props?.createdAt);
+		this.updateAt = setTimestampFields(props?.updatedAt);
 	}
 }

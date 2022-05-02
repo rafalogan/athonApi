@@ -2,11 +2,9 @@ import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
 
 import { AbstractDatabaseService } from 'src/core/services';
-import { RelationalServiceOptions } from 'src/core/types';
-import { ProfileRule } from 'src/repositories/entities';
 import { Pagination } from 'src/repositories/models';
 import { existsOrError, notExistisOrError, onError } from 'src/util';
-import { ProfileRuleEntity, ReadRulesOptions } from 'src/repositories/types';
+import { ProfileRuleEntity, ReadRulesOptions, RelationalServiceOptions } from 'src/repositories/types';
 
 const fields = ['profile_id as profileId', 'rule_id as ruleId', 'created_at as createdAt', 'updated_at as updatedAt'];
 

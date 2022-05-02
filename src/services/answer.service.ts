@@ -1,13 +1,10 @@
-import httpStatus from 'http-status';
-
 import { AbstractDatabaseService } from 'src/core/services';
-import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
 import { Answer, Contact } from 'src/repositories/entities';
-import { clearTimestampFields, existsOrError, notExistisOrError, ResponseException } from 'src/util';
+import { clearTimestampFields, existsOrError, notExistisOrError } from 'src/util';
 import { ContactService } from 'src/services';
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
-import { AnswerEntity, AnswerstEntity } from 'src/repositories/types';
+import { AnswerEntity, AnswerstEntity, ReadTableOptions, RelationalServiceOptions } from 'src/repositories/types';
 
 const fields = [
 	'id',
@@ -37,7 +34,7 @@ export class AnswerService extends AbstractDatabaseService {
 	async create(item: Answer) {
 		try {
 			await this.validateFields(item);
-		} catch (err: ResponseException | any) {
+		} catch (err) {
 			return err;
 		}
 

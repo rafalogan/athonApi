@@ -1,5 +1,5 @@
 import { Profile, Rule, User } from 'src/repositories/entities';
-import { PayloadDomain } from 'src/core/types';
+import { PayloadDomain } from 'src/repositories/types';
 
 export class Payload implements PayloadDomain {
 	id: number;

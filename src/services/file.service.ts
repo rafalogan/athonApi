@@ -7,11 +7,10 @@ import { promisify } from 'util';
 
 import { AbstractDatabaseService } from 'src/core/services';
 import { RedisClientType } from 'redis';
-import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
 import { LoginService } from 'src/services/login.service';
 import { FileMedia } from 'src/repositories/entities';
 import { existsOrError, notExistisOrError } from 'src/util';
-import { FileEntity, FilesEntity, IAWSEnvironment, ReadFileOptions } from 'src/repositories/types';
+import { FileEntity, FilesEntity, IAWSEnvironment, ReadFileOptions, RelationalServiceOptions } from 'src/repositories/types';
 
 const fields = [
 	'id',
@@ -34,6 +33,7 @@ export class FileService extends AbstractDatabaseService {
 	constructor(
 		private loginService: LoginService,
 		private awsEnv: IAWSEnvironment,
+		private baseUrl: string,
 		conn: Knex,
 		cache: RedisClientType,
 		options: RelationalServiceOptions
@@ -46,7 +46,7 @@ export class FileService extends AbstractDatabaseService {
 		const userId = this.loginService.getPayload(req)?.id;
 		const file = req.file;
 
-		return new FileMedia(req.body, { id, userId, file });
+		return new FileMedia(req.body, { id, userId, file, baseUrl: this.baseUrl });
 	}
 
 	validateFields(item: FileMedia) {

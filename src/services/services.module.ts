@@ -1,4 +1,3 @@
-import { RelationalServiceOptions } from 'src/core/types';
 import { CacheConnectionController, ConnectionController } from 'src/core/controller';
 import { Environment } from 'src/config/environment.config';
 import { UserService } from 'src/services/user.service';
@@ -13,6 +12,8 @@ import { SocialMediaService } from 'src/services/social-media.service';
 import { CategoryService } from 'src/services/category.service';
 import { FileService } from 'src/services/file.service';
 import { ArticleService } from 'src/services/article.service';
+import { RelationalServiceOptions } from 'src/repositories/types';
+import { NewsletterService } from 'src/services/newsletter.service';
 
 export class ServicesModule {
 	ruleService: RuleService;
@@ -27,6 +28,7 @@ export class ServicesModule {
 	categoryService: CategoryService;
 	fileService: FileService;
 	articleService: ArticleService;
+	newsletterService: NewsletterService;
 
 	constructor(private databaseConn: ConnectionController, private cacheConn: CacheConnectionController, private env: Environment) {
 		const conn = this.databaseConn.connection;
@@ -43,8 +45,9 @@ export class ServicesModule {
 		this.answerService = new AnswerService(this.contactService, conn, cache, options);
 		this.socialMediaService = new SocialMediaService(this.loginService, conn, cache, options);
 		this.categoryService = new CategoryService(this.loginService, conn, cache, options);
-		this.fileService = new FileService(this.loginService, this.env.aws, conn, cache, options);
+		this.fileService = new FileService(this.loginService, this.env.awsConfig, this.env.baseUrl, conn, cache, options);
 		this.articleService = new ArticleService(this.loginService, this.fileService, this.categoryService, conn, cache, options);
+		this.newsletterService = new NewsletterService(conn, cache, options);
 	}
 
 	private setOptions(): RelationalServiceOptions {

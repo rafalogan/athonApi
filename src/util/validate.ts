@@ -1,9 +1,10 @@
 import isEmpty from 'is-empty';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import { CredentialsDomain } from 'src/core/types';
 import { User } from 'src/repositories/entities';
 import { ResponseException } from 'src/util/exceptions';
+import { CredentialsDomain } from 'src/repositories/types';
+import { onLog } from 'src/util/log';
 
 const isValid = !process.env.NODE_ENV || process.env.NODE_ENV !== 'production';
 
@@ -29,6 +30,8 @@ export const equalsOrError = (valueA: any, valueB: any, message: string) => {
 	if (valueA !== valueB) throw new ResponseException(message);
 };
 
-export const execDotenv = () => (isValid ? dotenv.config({ path: process.env.NODE_ENV === 'test' ? './.emv.testing' : './.env' }) : null);
+onLog('validate', isValid);
+
+export const execDotenv = () => (isValid ? dotenv.config({ path: process.env.NODE_ENV === 'test' ? './.env.testing' : './.env' }) : null);
 
 export const isMatch = (credentials: CredentialsDomain, user: User) => bcrypt.compareSync(credentials.password, user.password);

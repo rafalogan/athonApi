@@ -4,8 +4,15 @@ import { RedisClientType } from 'redis';
 import { ProfileService, RuleService, UserRuleService } from 'src/services';
 import { User } from 'src/repositories/entities';
 import { AbstractDatabaseService } from 'src/core/services';
-import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
-import { ResponseCreateUser, RuleEntity, UserEntity, UserRuleEntity, UsersEntity } from 'src/repositories/types';
+import {
+	RelationalReadOptions,
+	RelationalServiceOptions,
+	ResponseCreateUser,
+	RuleEntity,
+	UserEntity,
+	UserRuleEntity,
+	UsersEntity,
+} from 'src/repositories/types';
 import { clearTimestampFields, deleteField, equalsOrError, existsOrError, hashString, notExistisOrError, onError } from 'src/util';
 import { Pagination } from 'src/repositories/models';
 

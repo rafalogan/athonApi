@@ -4,7 +4,7 @@ export * from './category.routes';
 export * from './contact.routes';
 export * from './login.routes';
 export * from './file.routes';
-export * from './newsletter.router';
+export * from './newsletter.routes';
 export * from './profile.routes';
 export * from './routes.module';
 export * from './rule.routes';

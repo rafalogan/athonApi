@@ -13,6 +13,7 @@ import { CategoryRoutes } from 'src/api/routes/category.routes';
 import { FileRoutes } from 'src/api/routes/file.routes';
 import { ArticleRoutes } from 'src/api/routes/article.routes';
 import { MulterConfig } from 'src/config/multer.config';
+import { NewsletterRoutes } from 'src/api/routes/newsletter.routes';
 
 export class RoutesModule {
 	userRoutes: UserRoutes;
@@ -25,6 +26,7 @@ export class RoutesModule {
 	categoryRoutes: CategoryRoutes;
 	fileRutes: FileRoutes;
 	articleRoutes: ArticleRoutes;
+	newsletterRoutes: NewsletterRoutes;
 
 	constructor(private controllers: ControllersModule, private app: Application, private auth: IAuthConfig, private multer: MulterConfig) {
 		this.loginRoutes = new LoginRoutes(this.controllers.loginController, this.app);
@@ -37,6 +39,7 @@ export class RoutesModule {
 		this.categoryRoutes = new CategoryRoutes(this.controllers.categoryController, this.app, this.auth);
 		this.fileRutes = new FileRoutes(this.controllers.fileController, this.app, this.auth, this.multer.upload);
 		this.articleRoutes = new ArticleRoutes(this.controllers.articleController, this.app, this.auth);
+		this.newsletterRoutes = new NewsletterRoutes(this.controllers.newsletterController, this.app, this.auth);
 	}
 
 	exec() {

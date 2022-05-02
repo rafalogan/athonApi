@@ -1,10 +1,9 @@
 import { Application } from 'express';
+import { Multer } from 'multer';
 
 import { AbstractRoutes } from 'src/core/routes';
 import { FileController } from 'src/api/controllers/file.controller';
 import { IAuthConfig } from 'src/repositories/types';
-import { upload } from 'src/util';
-import { Multer } from 'multer';
 
 export class FileRoutes extends AbstractRoutes {
 	constructor(private fileController: FileController, app: Application, auth: IAuthConfig, private upload: Multer) {
