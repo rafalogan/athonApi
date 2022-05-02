@@ -4,7 +4,7 @@ import { RedisClientType } from 'redis';
 import md5 from 'md5';
 
 import { convertToJson, existsOrError, onError, onInfo, onLog, onWarn, stringify } from 'src/util';
-import { CacheServiceOptions } from 'src/core/types';
+import { CacheServiceOptions } from 'src/repositories/types';
 
 export abstract class AbstractCacheService {
 	private readonly getAsync: (key: any) => Promise<any>;

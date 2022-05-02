@@ -11,6 +11,7 @@ import { SocialMediaController } from 'src/api/controllers/social-media.controll
 import { CategoryController } from 'src/api/controllers/category.controller';
 import { FileController } from 'src/api/controllers/file.controller';
 import { ArticleController } from 'src/api/controllers/article.controller';
+import { NewsletterController } from 'src/api/controllers/newsletter.controller';
 
 export class ControllersModule {
 	loginController: LoginController;
@@ -25,6 +26,7 @@ export class ControllersModule {
 	categoryController: CategoryController;
 	fileController: FileController;
 	articleController: ArticleController;
+	newsletterController: NewsletterController;
 
 	constructor(private servers: ServicesModule) {
 		this.loginController = new LoginController(this.servers.loginService);
@@ -39,5 +41,6 @@ export class ControllersModule {
 		this.categoryController = new CategoryController(this.servers.categoryService);
 		this.fileController = new FileController(this.servers.fileService);
 		this.articleController = new ArticleController(this.servers.articleService);
+		this.newsletterController = new NewsletterController(this.servers.newsletterService);
 	}
 }

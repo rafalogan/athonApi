@@ -1,10 +1,9 @@
 import { AbstractDatabaseService } from 'src/core/services';
-import { RelationalReadOptions, RelationalServiceOptions } from 'src/core/types';
 import { Rule } from 'src/repositories/entities';
 import { clearTimestampFields, existsOrError, notExistisOrError } from 'src/util';
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
-import { RuleEntity, RulesEntity } from 'src/repositories/types';
+import { RelationalReadOptions, RelationalServiceOptions, RuleEntity, RulesEntity } from 'src/repositories/types';
 import { Pagination } from 'src/repositories/models';
 
 const fields = ['id', 'name', 'description', 'created_at as createdAt', 'updated_at as updatedAt'];

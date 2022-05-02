@@ -1,39 +1,54 @@
-import { RelationalServiceOptions } from 'src/core/types';
+import { Knex } from 'knex';
+import { RedisClientType } from 'redis';
+
 import { AbstractDatabaseService } from 'src/core/services';
-import { Newsletter, NewsletterEntity, NewsletterListEntities } from 'src/repositories/entities';
-import { clearTimestamp, existsOrError, ResponseException } from 'src/util';
-import httpStatus from 'http-status';
+import { Newsletter } from 'src/repositories/entities';
+import { clearTimestampFields, existsOrError, notExistisOrError } from 'src/util';
+import { NewsletterEntity, NewslettersEntity, ReadTableOptions, RelationalServiceOptions } from 'src/repositories/types';
 
 const fields = ['id', 'name', 'active', 'created_at as createdAt', 'updated_at as updatedAt'];
 
 export class NewsletterService extends AbstractDatabaseService {
-	constructor(options: RelationalServiceOptions) {
-		super({ ...options, serviceName: NewsletterService.name, table: 'newsletter', fields });
+	constructor(conn: Knex, cache: RedisClientType, options: RelationalServiceOptions) {
+		super(conn, cache, 'newsletter', { ...options, fields });
 	}
 
-	fieldsFilter(raw: NewsletterEntity) {
+	async fieldsFilter(raw: Newsletter | NewsletterEntity) {
+		const fromDB = await this.findSubscribeByEmail(raw.email);
+
+		notExistisOrError(fromDB, 'E-mail already exists');
+		existsOrError(raw.email, 'Email field is required');
+	}
+
+	async create(item: Newsletter) {
 		try {
-			existsOrError(raw.email, 'Email field is required');
-
-			return new Newsletter(raw);
-		} catch (message) {
-			const err = new ResponseException(message);
-			return { status: httpStatus.BAD_REQUEST, message, err };
+			await this.fieldsFilter(item);
+		} catch (error) {
+			return error;
 		}
+
+		return super.create(item);
 	}
 
-	renderList(raw: NewsletterListEntities) {
-		const { pagination } = raw;
-		const data = raw.data.map(item => new Newsletter(item)).map(clearTimestamp);
+	read(options?: ReadTableOptions): Promise<any> {
+		return super
+			.read(options)
+			.then(result => ('data' in result ? this.renderList(result) : new Newsletter(result)))
+			.catch(err => err);
+	}
 
-		return { data, pagination };
+	renderList(raw: NewslettersEntity) {
+		const data = raw.data.map(item => new Newsletter(item)).map(clearTimestampFields);
+
+		return { ...raw, data };
 	}
 
 	findSubscribeByEmail(email: string) {
 		return this.instance(this.table)
 			.select(...this.fields)
 			.where({ email })
-			.then((data: any) => data)
-			.catch(err => this.log.error(`Find Subscribe by Email: ${email}`, err));
+			.first()
+			.then((data: NewsletterEntity) => new Newsletter(data))
+			.catch(err => err);
 	}
 }

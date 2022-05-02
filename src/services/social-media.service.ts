@@ -5,9 +5,8 @@ import { RedisClientType } from 'redis';
 import { SocialMedia } from 'src/repositories/entities';
 import { clearTimestampFields, existsOrError, notExistisOrError } from 'src/util';
 import { AbstractDatabaseService } from 'src/core/services';
-import { ReadTableOptions, RelationalServiceOptions } from 'src/core/types';
 import { LoginService } from 'src/services/login.service';
-import { SocialMediaEntity, SocialMediasEntity } from 'src/repositories/types';
+import { ReadTableOptions, RelationalServiceOptions, SocialMediaEntity, SocialMediasEntity } from 'src/repositories/types';
 
 const fields = ['id', 'title', 'url', 'icon_name  as iconName', 'user_id as userId', 'created_at as createdAt', 'updated_at as updatedAt'];
 

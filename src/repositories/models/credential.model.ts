@@ -1,4 +1,4 @@
-import { CredentialsDomain } from 'src/core/types';
+import { CredentialsDomain } from 'src/repositories/types';
 
 export class Credential implements CredentialsDomain {
 	email: string;

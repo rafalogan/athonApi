@@ -4,6 +4,12 @@ export * from './response';
 export * from './knex';
 export * from './auth';
 
+export * from './abstract-services';
+export * from './credentials';
+export * from './pagination';
+export * from './payload';
+export * from './relational-context';
+
 // interfaces based on table structure
 export * from './answer';
 export * from './article';

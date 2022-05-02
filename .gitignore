@@ -6,7 +6,6 @@
 .DS_Store
 .env
 .env.testing
-.env.test
 .env.development
 .env.staging
 .env.production
@@ -15,7 +14,7 @@
 
 # FOLDERS
 # TYPESCRIPT COPILETD CODE
-dist
+\dist
 \build
 ssl/
 **/database/postgres

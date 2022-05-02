@@ -1,4 +1,4 @@
-import { PaginationDomain, PaginationOptions } from 'src/core/types';
+import { PaginationDomain, PaginationOptions } from 'src/repositories/types';
 
 export class Pagination implements PaginationDomain {
 	count: number;

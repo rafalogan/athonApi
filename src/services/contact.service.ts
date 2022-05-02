@@ -3,8 +3,7 @@ import { RedisClientType } from 'redis';
 
 import { AbstractDatabaseService } from 'src/core/services';
 import { Contact } from 'src/repositories/entities';
-import { RelationalServiceOptions } from 'src/core/types';
-import { ContactEntity } from 'src/repositories/types';
+import { ContactEntity, RelationalServiceOptions } from 'src/repositories/types';
 import { existsOrError } from 'src/util';
 
 const fields = ['id', 'name', 'email', 'subject', 'phone', 'message', 'created_at as createdAt'];

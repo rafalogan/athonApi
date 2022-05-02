@@ -1,10 +1,8 @@
 import { Knex } from 'knex';
 import { RedisClientType } from 'redis';
 
-import { PaginationOptions, RelationalServiceOptions } from 'src/core/types';
-import { RulesReadOptions } from 'src/services/types/services';
 import { clearTimestampFields, existsOrError, notExistisOrError, onError } from 'src/util';
-import { UserRuleEntity } from 'src/repositories/types';
+import { PaginationOptions, ReadRulesOptions, RelationalServiceOptions, UserRuleEntity } from 'src/repositories/types';
 import { UserRule } from 'src/repositories/entities';
 import { Pagination } from 'src/repositories/models';
 import { AbstractDatabaseService } from 'src/core/services';
@@ -25,10 +23,10 @@ export class UserRuleService extends AbstractDatabaseService {
 		existsOrError(raw.ruleId, 'Rule filed is required.');
 	}
 
-	async read(options: RulesReadOptions) {
+	async read(options: ReadRulesOptions) {
 		if (this.clientActive) return this.checkCache(options);
 
-		return options.userId || options.ruleId ? await this.readOne(options) : await this.readAll(options);
+		return options?.userId || options.ruleId ? await this.readOne(options) : await this.readAll(options);
 	}
 
 	async delete(id: string) {
@@ -49,7 +47,7 @@ export class UserRuleService extends AbstractDatabaseService {
 			.catch(err => err);
 	}
 
-	private readOne(options: RulesReadOptions) {
+	private readOne(options: ReadRulesOptions) {
 		return this.instance(this.table)
 			.select(...(options.fields || this.fields))
 			.where({ user_id: options.userId })
@@ -58,7 +56,7 @@ export class UserRuleService extends AbstractDatabaseService {
 			.catch(err => err);
 	}
 
-	private async readAll(options: RulesReadOptions) {
+	private async readAll(options: ReadRulesOptions) {
 		const page = Number(options?.page || 1);
 		const limit = Number(options.limit || 10);
 		const count = await this.countRules();

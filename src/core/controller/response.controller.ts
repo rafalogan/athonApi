@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
 import { Response } from 'express';
 
-import { ErrorResponseParams, SucessResponseParams } from 'src/core/types';
 import { onError, onWarn } from 'src/util';
+import { ErrorResponseParams, SucessResponseParams } from 'src/repositories/types';
 
 export class ResponseController {
 	static status = httpStatus;

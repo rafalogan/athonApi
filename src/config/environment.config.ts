@@ -8,7 +8,7 @@ export class Environment implements IEnvironment {
 	databaseEnv: IDatabaseEnvironment;
 	cacheEnv: ICacheEnvironment;
 	security: ISecurityEnvironment;
-	aws: IAWSEnvironment;
+	awsConfig: IAWSEnvironment;
 
 	baseUrl: string;
 
@@ -20,7 +20,7 @@ export class Environment implements IEnvironment {
 		this.databaseEnv = this.setConnection(props?.databaseEnv);
 		this.cacheEnv = this.setCacheConfigs(props?.cacheEnv);
 		this.security = this.setSecurity(props?.security);
-		this.aws = this.setAwsConfig(props?.aws);
+		this.awsConfig = this.setAwsConfig(props?.awsConfig);
 
 		this.baseUrl = `${this.security.enableHTTPS ? 'https' : 'http'}://${this.host}:${this.port}`;
 	}

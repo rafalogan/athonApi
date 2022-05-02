@@ -1,12 +1,12 @@
 import { Application } from 'express';
+import { Multer } from 'multer';
 
 import { AbstractRoutes } from 'src/core/routes';
 import { FileController } from 'src/api/controllers/file.controller';
 import { IAuthConfig } from 'src/repositories/types';
-import { upload } from 'src/util';
 
 export class FileRoutes extends AbstractRoutes {
-	constructor(private fileController: FileController, app: Application, auth: IAuthConfig) {
+	constructor(private fileController: FileController, app: Application, auth: IAuthConfig, private upload: Multer) {
 		super(app, auth);
 	}
 
@@ -15,7 +15,7 @@ export class FileRoutes extends AbstractRoutes {
 			.route('/files')
 			.all(this.auth?.authenticate())
 			.get(this.fileController.list.bind(this.fileController))
-			.post(upload.single('file'), this.fileController.save.bind(this.fileController));
+			.post(this.upload.single('file'), this.fileController.save.bind(this.fileController));
 
 		this.app
 			.route('/files/:id')

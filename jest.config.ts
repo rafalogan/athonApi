@@ -8,9 +8,15 @@ export default {
 	moduleNameMapper: {
 		'src/(.*)': '<rootDir>/src/$1',
 	},
-	roots: ['<rootDir>/src'],
+	roots: ['<rootDir>/src', '<rootDir>/test'],
 	modulePaths: ['<rootDir>'],
+	resolvedModuleNames: {
+		'src/(.*)': '<rootDir>/src/$1',
+		'test/(.*)': '<rootDir>/test/$1',
+	},
+	testMatch: ['**/__tests__/**/*.+(ts|tsx|js)', '**/?(*.)+(spec|test).+(ts|tsx|js)'],
 	testEnvironment: 'node',
+	preset: 'ts-jest',
 	transform: {
 		'.+\\.ts$': 'ts-jest',
 	},
@@ -22,6 +28,7 @@ export default {
 			statements: 100,
 		},
 	},
+	setupFilesAfterEnv: ['<rootDir>/test/jest-setup.ts'],
 	maxWorkers: '50%',
-	watchPathIgnorePatterns: ['node_modules', '<rootDir>/test'],
+	watchPathIgnorePatterns: ['node_modules'],
 };
