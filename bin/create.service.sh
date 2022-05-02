@@ -1,22 +1,19 @@
 #!/bin/zsh
 
-DIR_SERVICES="./src/services"
+ROOT_DIR="./src"
+DIR_SERVICES="$ROOT_DIR/services"
+DIR_SERVICES_MODULES="$ROOT_DIR/modules"
 
-if [ ! -d "$DIR_SERVICES" ]; then
-    mkdir "$DIR_SERVICES"
-fi
-
-if [ ! -f "$DIR_SERVICES/index.ts" ]; then
-		touch "$DIR_SERVICES/index.ts"
-fi
-
-if [ ! -f "$DIR_SERVICES/services.module.ts" ]; then
+if [ ! -d "$DIR_SERVICES_MODULES/$1" ]; then
+    mkdir "$DIR_SERVICES" &&
+    touch "$DIR_SERVICES/index.ts" &&
     touch "$DIR_SERVICES/services.module.ts" &&
-		echo "export * from './services.module';" >> "$DIR_SERVICES/index.ts" &&
-		echo "export class ServicesModule {}" >> "$DIR_SERVICES/services.module.ts"
+    touch "$DIR_SERVICES/$1.service.ts" &&
+    echo "export * from './$1.service';" >> "$DIR_SERVICES/index.ts"
+
+else
+	touch "$DIR_SERVICES_MODULES/$1/$1.service.ts" &&
+	echo "export * from './$1.service';" >> "$DIR_SERVICES_DIR_SERVICES_MODULES/$1/index.ts"
 fi
 
-touch "$DIR_SERVICES/$1.service.ts"
-
-echo "export * from './$1.service';" >> "$DIR_SERVICES/index.ts"
 echo "Service file $1 is created"
