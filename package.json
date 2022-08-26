@@ -77,7 +77,7 @@
     "md5": "^2.3.0",
     "module-alias": "^2.2.2",
     "mongodb": "^4.5.0",
-    "mongoose": "^6.3.1",
+    "mongoose": "^6.4.6",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
     "multer-s3": "^2.10.0",
